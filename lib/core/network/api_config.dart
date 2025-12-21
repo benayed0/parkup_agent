@@ -1,10 +1,16 @@
+import 'package:flutter/foundation.dart';
+
 /// API Configuration
 /// Centralized API settings
 class ApiConfig {
   ApiConfig._();
 
-  // Base URL - change this for different environments
-  static const String baseUrl = 'http://localhost:3000/api/v1';
+  // Base URLs for different environments
+  static const String _devBaseUrl = 'http://localhost:3000/api/v1';
+  static const String _prodBaseUrl = 'https://parkup-api.onrender.com/api/v1';
+
+  // Base URL - automatically switches based on build mode
+  static String get baseUrl => kReleaseMode ? _prodBaseUrl : _devBaseUrl;
 
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 30);
