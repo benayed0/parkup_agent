@@ -1,0 +1,35 @@
+name: parkup_agent
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Network
+  dio: ^5.7.0
+
+  # Local Storage
+  shared_preferences: ^2.3.3
+
+  # Location
+  geolocator: ^13.0.2
+
+  # Map integration
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/parkup-logo.png
