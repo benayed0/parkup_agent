@@ -22,29 +22,26 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
   bool _isGettingLocation = false;
   models.TicketReason? _selectedReason;
   models.Position? _currentPosition;
-  String _currentPlate = '';
-  PlateType _currentPlateType = PlateType.tunis;
-  String? _initialPlate;
+  LicensePlate _currentPlate = const LicensePlate.empty();
+  LicensePlate? _initialPlate;
 
-  void _onPlateChanged(String plate) {
+  void _onPlateChanged(LicensePlate plate) {
     setState(() {
       _currentPlate = plate;
     });
   }
 
-  void _onPlateTypeChanged(PlateType type) {
-    setState(() {
-      _currentPlateType = type;
-    });
-  }
-
   bool get _isPlateValid {
     if (_currentPlate.isEmpty) return false;
-    final parsed = parseLicensePlate(_currentPlate, _currentPlateType);
-    if (parsed.type.hasRightLabel) {
-      return parsed.leftNumber.isNotEmpty;
+    if (_currentPlate.type.hasRightLabel ||
+        _currentPlate.type.isEu ||
+        _currentPlate.type.isLibya ||
+        _currentPlate.type.isAlgeria ||
+        _currentPlate.type.isOther) {
+      return _currentPlate.left?.isNotEmpty ?? false;
     }
-    return parsed.leftNumber.isNotEmpty && parsed.rightNumber.isNotEmpty;
+    return (_currentPlate.left?.isNotEmpty ?? false) &&
+           (_currentPlate.right?.isNotEmpty ?? false);
   }
 
   // Fine amounts based on reason
@@ -67,11 +64,10 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
     // Pre-fill license plate if passed from check vehicle
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is String && _initialPlate == null) {
-      _initialPlate = args;
-      _currentPlate = args;
-      // Detect plate type from the initial value
+      // Parse the string and convert to LicensePlate
       final parsed = parseLicensePlate(args);
-      _currentPlateType = parsed.type;
+      _initialPlate = parsed.toLicensePlate();
+      _currentPlate = _initialPlate!;
     }
   }
 
@@ -195,7 +191,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
 
     try {
       final ticket = await ticketRepository.createTicket(
-        licensePlate: _currentPlate,
+        licensePlate: _currentPlate.formatted,
         position: _currentPosition!,
         reason: _selectedReason!,
         fineAmount: _fineAmounts[_selectedReason!] ?? 50.0,
@@ -265,9 +261,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                 // License plate (required)
                 LicensePlateInput(
                   initialValue: _initialPlate,
-                  initialType: _currentPlateType,
                   onChanged: _onPlateChanged,
-                  onTypeChanged: _onPlateTypeChanged,
                 ),
 
                 const SizedBox(height: 32),

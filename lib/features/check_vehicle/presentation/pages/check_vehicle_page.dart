@@ -17,28 +17,25 @@ class CheckVehiclePage extends StatefulWidget {
 class _CheckVehiclePageState extends State<CheckVehiclePage> {
   bool _isLoading = false;
   VehicleCheckResult? _checkResult;
-  String _currentPlate = '';
-  PlateType _currentPlateType = PlateType.tunis;
+  LicensePlate _currentPlate = const LicensePlate.empty();
 
-  void _onPlateChanged(String plate) {
+  void _onPlateChanged(LicensePlate plate) {
     setState(() {
       _currentPlate = plate;
     });
   }
 
-  void _onPlateTypeChanged(PlateType type) {
-    setState(() {
-      _currentPlateType = type;
-    });
-  }
-
   bool get _isPlateValid {
     if (_currentPlate.isEmpty) return false;
-    final parsed = parseLicensePlate(_currentPlate, _currentPlateType);
-    if (parsed.type.hasRightLabel) {
-      return parsed.leftNumber.isNotEmpty;
+    if (_currentPlate.type.hasRightLabel ||
+        _currentPlate.type.isEu ||
+        _currentPlate.type.isLibya ||
+        _currentPlate.type.isAlgeria ||
+        _currentPlate.type.isOther) {
+      return _currentPlate.left?.isNotEmpty ?? false;
     }
-    return parsed.leftNumber.isNotEmpty && parsed.rightNumber.isNotEmpty;
+    return (_currentPlate.left?.isNotEmpty ?? false) &&
+           (_currentPlate.right?.isNotEmpty ?? false);
   }
 
   Future<void> _handleCheck() async {
@@ -59,7 +56,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 
     try {
       final result = await vehicleRepository.checkVehicle(
-        _currentPlate,
+        _currentPlate.formatted,
       );
 
       if (!mounted) return;
@@ -101,7 +98,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   void _clearResult() {
     setState(() {
       _checkResult = null;
-      _currentPlate = '';
+      _currentPlate = const LicensePlate.empty();
     });
   }
 
@@ -119,9 +116,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
             children: [
               // License plate input
               LicensePlateInput(
-                initialType: _currentPlateType,
+                initialValue: _currentPlate.isEmpty ? null : _currentPlate,
                 onChanged: _onPlateChanged,
-                onTypeChanged: _onPlateTypeChanged,
                 label: 'License Plate',
               ),
 
