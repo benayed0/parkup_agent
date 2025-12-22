@@ -22,8 +22,7 @@ class ApiConfig {
 
   // Endpoints - Parking Sessions
   static const String parkingSessions = '/parking-sessions';
-  static String activeSessionByPlate(String plate) =>
-      '/parking-sessions/plate/$plate/active';
+  static const String checkVehicle = '/parking-sessions/check-vehicle';
 
   // Endpoints - Tickets
   static const String tickets = '/tickets';

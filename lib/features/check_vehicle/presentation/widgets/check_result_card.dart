@@ -7,12 +7,10 @@ import '../../../../shared/widgets/widgets.dart';
 /// Displays the result of a vehicle check
 class CheckResultCard extends StatelessWidget {
   final VehicleCheckResult result;
-  final VoidCallback? onCreateTicket;
 
   const CheckResultCard({
     super.key,
     required this.result,
-    this.onCreateTicket,
   });
 
   @override
@@ -89,22 +87,6 @@ class CheckResultCard extends StatelessWidget {
               'Checked at',
               _formatTime(result.checkedAt),
             ),
-
-            // Create ticket button (only for issues)
-            if (result.hasIssue && onCreateTicket != null) ...[
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: onCreateTicket,
-                  icon: const Icon(Icons.receipt_long),
-                  label: const Text('Create Ticket'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.warning,
-                  ),
-                ),
-              ),
-            ],
           ],
         ),
       ),

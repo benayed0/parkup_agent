@@ -3,8 +3,6 @@ import 'app_routes.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/check_vehicle/presentation/pages/check_vehicle_page.dart';
-import '../../features/create_ticket/presentation/pages/create_ticket_page.dart';
-import '../../features/create_ticket/presentation/pages/quick_ticket_page.dart';
 import '../../features/history/presentation/pages/history_page.dart';
 
 /// Application router
@@ -23,12 +21,6 @@ class AppRouter {
 
       case AppRoutes.checkVehicle:
         return _buildRoute(const CheckVehiclePage(), settings);
-
-      case AppRoutes.createTicket:
-        return _buildRoute(const CreateTicketPage(), settings);
-
-      case AppRoutes.quickTicket:
-        return _buildRoute(const QuickTicketPage(), settings);
 
       case AppRoutes.history:
         return _buildRoute(const HistoryPage(), settings);
