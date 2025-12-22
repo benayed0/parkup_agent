@@ -7,15 +7,16 @@ import '../../../../shared/models/models.dart';
 class VehicleRepository {
   final Dio _dio = ApiClient.instance.dio;
 
-  /// Check a vehicle by license plate
+  /// Check a vehicle by structured license plate
   /// Calls the API to check for active parking sessions
-  Future<VehicleCheckResult> checkVehicle(String licensePlate) async {
-    final normalizedPlate = licensePlate.toUpperCase().replaceAll(' ', '');
-
+  Future<VehicleCheckResult> checkVehicle(LicensePlate plate) async {
     try {
-      // Check for active parking sessions
-      final response = await _dio.get(
-        ApiConfig.activeSessionByPlate(normalizedPlate),
+      // Check for active parking sessions with structured plate data
+      final response = await _dio.post(
+        ApiConfig.checkVehicle,
+        data: {
+          'plate': plate.toJson(),
+        },
       );
 
       final data = response.data as Map<String, dynamic>;
@@ -27,7 +28,7 @@ class VehicleRepository {
       if (sessions.isEmpty) {
         // No active session found
         return VehicleCheckResult(
-          licensePlate: normalizedPlate,
+          licensePlate: plate.formatted,
           status: VehicleStatus.notFound,
           message: 'No active parking session found for this vehicle',
           checkedAt: DateTime.now(),
@@ -44,7 +45,7 @@ class VehicleRepository {
       if (session.isExpired) {
         final expiredMinutesAgo = DateTime.now().difference(session.endTime).inMinutes;
         return VehicleCheckResult(
-          licensePlate: normalizedPlate,
+          licensePlate: plate.formatted,
           status: VehicleStatus.expired,
           message: 'Parking session expired ${_formatExpiredTime(expiredMinutesAgo)}',
           activeSession: session,
@@ -54,7 +55,7 @@ class VehicleRepository {
 
       // Valid active session
       return VehicleCheckResult(
-        licensePlate: normalizedPlate,
+        licensePlate: plate.formatted,
         status: VehicleStatus.valid,
         message: 'Parking is valid until ${_formatTime(session.endTime)}',
         activeSession: session,
@@ -64,7 +65,7 @@ class VehicleRepository {
       // Handle 404 - no session found
       if (e.response?.statusCode == 404) {
         return VehicleCheckResult(
-          licensePlate: normalizedPlate,
+          licensePlate: plate.formatted,
           status: VehicleStatus.notFound,
           message: 'No parking session found for this vehicle',
           checkedAt: DateTime.now(),

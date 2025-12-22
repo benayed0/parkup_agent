@@ -77,7 +77,8 @@ enum PlateType {
   bool get hasRightLabel => this == PlateType.rs;
 
   /// Check if this uses the standard center layout (number - label - number)
-  bool get hasCenterLabel => !hasRightLabel && !isEu && !isLibya && !isAlgeria && !isOther;
+  bool get hasCenterLabel =>
+      !hasRightLabel && !isEu && !isLibya && !isAlgeria && !isOther;
 
   /// Check if this is a government plate (red on white, dash separator)
   bool get isGovernment => this == PlateType.government;
@@ -227,17 +228,17 @@ class LicensePlate {
   final String? left;
   final String? right;
 
-  const LicensePlate({
-    required this.type,
-    this.left,
-    this.right,
-  });
+  const LicensePlate({required this.type, this.left, this.right});
 
   /// Create an empty plate with default type
-  const LicensePlate.empty() : type = PlateType.tunis, left = null, right = null;
+  const LicensePlate.empty()
+    : type = PlateType.tunis,
+      left = null,
+      right = null;
 
   /// Check if the plate has any data
-  bool get isEmpty => (left == null || left!.isEmpty) && (right == null || right!.isEmpty);
+  bool get isEmpty =>
+      (left == null || left!.isEmpty) && (right == null || right!.isEmpty);
   bool get isNotEmpty => !isEmpty;
 
   /// Get formatted display string
@@ -287,11 +288,7 @@ class LicensePlate {
   }
 
   /// Create a copy with updated values
-  LicensePlate copyWith({
-    PlateType? type,
-    String? left,
-    String? right,
-  }) {
+  LicensePlate copyWith({PlateType? type, String? left, String? right}) {
     return LicensePlate(
       type: type ?? this.type,
       left: left ?? this.left,
@@ -578,12 +575,10 @@ class LicensePlateDisplay extends StatelessWidget {
                 bottom: 0,
                 width: euBandWidth * scale,
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: euBlue,
-                  ),
+                  decoration: const BoxDecoration(color: euBlue),
                   child: Center(
                     child: Image.asset(
-                      'assets/images/Eu-stars.png',
+                      'images/Eu-stars.png',
                       width: (mini ? 16.0 : 24.0) * scale,
                       height: (mini ? 16.0 : 24.0) * scale,
                       fit: BoxFit.contain,
@@ -801,23 +796,23 @@ class LicensePlateDisplay extends StatelessWidget {
                   ),
                 )
               : type.isGovernment
-                  ? Container(
-                      width: 12 * scale,
-                      height: 3 * scale,
-                      decoration: BoxDecoration(
-                        color: style.accentColor,
-                        borderRadius: BorderRadius.circular(1.5 * scale),
-                      ),
-                    )
-                  : Text(
-                      type.displayLabel,
-                      style: TextStyle(
-                        fontSize: centerFontSize * scale,
-                        fontWeight: FontWeight.w700,
-                        color: style.accentColor,
-                        letterSpacing: type.usesArabicCenter ? 0 : 2,
-                      ),
-                    ),
+              ? Container(
+                  width: 12 * scale,
+                  height: 3 * scale,
+                  decoration: BoxDecoration(
+                    color: style.accentColor,
+                    borderRadius: BorderRadius.circular(1.5 * scale),
+                  ),
+                )
+              : Text(
+                  type.displayLabel,
+                  style: TextStyle(
+                    fontSize: centerFontSize * scale,
+                    fontWeight: FontWeight.w700,
+                    color: style.accentColor,
+                    letterSpacing: type.usesArabicCenter ? 0 : 2,
+                  ),
+                ),
         ),
       ),
       Text(
@@ -862,17 +857,20 @@ class PlateTypeChip extends StatelessWidget {
     final borderColor = isSelected
         ? style.borderColor
         : (showSpecialStyle
-            ? ((isRegular || isGov) ? style.borderColor : style.accentColor.withValues(alpha: 0.5))
-            : AppColors.border);
+              ? ((isRegular || isGov)
+                    ? style.borderColor
+                    : style.accentColor.withValues(alpha: 0.5))
+              : AppColors.border);
     final bgColor = isSelected
         ? (isEu ? euBlue : style.backgroundColor)
         : (showSpecialStyle
-            ? (isAlgeria
-                ? style.backgroundColor.withValues(alpha: 0.4)
-                : (isRegular || isGov)
-                    ? style.backgroundColor // Always use plate colors for tunis/rs/gov
+              ? (isAlgeria
+                    ? style.backgroundColor.withValues(alpha: 0.4)
+                    : (isRegular || isGov)
+                    ? style
+                          .backgroundColor // Always use plate colors for tunis/rs/gov
                     : style.accentColor.withValues(alpha: 0.15))
-            : Colors.transparent);
+              : Colors.transparent);
 
     return GestureDetector(
       onTap: onTap,
@@ -882,14 +880,13 @@ class PlateTypeChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: borderColor,
-            width: isSelected ? 2 : 1.5,
-          ),
+          border: Border.all(color: borderColor, width: isSelected ? 2 : 1.5),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: (isEu ? euBlue : style.backgroundColor).withValues(alpha: 0.3),
+                    color: (isEu ? euBlue : style.backgroundColor).withValues(
+                      alpha: 0.3,
+                    ),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -931,63 +928,73 @@ class PlateTypeChip extends StatelessWidget {
                     ],
                   )
                 : isEu
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 20,
-                            height: 24,
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: euBlue,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                            child: Image.asset(
-                              'assets/images/Eu-stars.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'EU',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: isSelected ? Colors.white : euBlue,
-                            ),
-                          ),
-                        ],
-                      )
-                    : type.isLibya
-                        ? Text(
-                            type.displayLabel,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: isSelected ? style.textColor : AppColors.textPrimary,
-                              fontFamily: 'serif',
-                            ),
-                          )
-                        : Text(
-                            type.displayLabel,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              // Always white for regular plates (tunis, rs) since they have black background
-                              color: isRegular ? style.textColor : (isSelected ? style.textColor : AppColors.textPrimary),
-                            ),
-                          ),
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 20,
+                        height: 24,
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: euBlue,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                        child: Image.asset(
+                          'images/Eu-stars.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'EU',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: isSelected ? Colors.white : euBlue,
+                        ),
+                      ),
+                    ],
+                  )
+                : type.isLibya
+                ? Text(
+                    type.displayLabel,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: isSelected
+                          ? style.textColor
+                          : AppColors.textPrimary,
+                      fontFamily: 'serif',
+                    ),
+                  )
+                : Text(
+                    type.displayLabel,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      // Always white for regular plates (tunis, rs) since they have black background
+                      color: isRegular
+                          ? style.textColor
+                          : (isSelected
+                                ? style.textColor
+                                : AppColors.textPrimary),
+                    ),
+                  ),
             const SizedBox(height: 2),
             Text(
               type.description,
               style: TextStyle(
                 fontSize: 9,
                 color: isSelected
-                    ? (isEu ? Colors.white.withValues(alpha: 0.8) : style.textColor.withValues(alpha: 0.7))
+                    ? (isEu
+                          ? Colors.white.withValues(alpha: 0.8)
+                          : style.textColor.withValues(alpha: 0.7))
                     // Regular and government plates always use their text color for description
                     : ((isRegular || isGov)
-                        ? style.textColor.withValues(alpha: 0.7)
-                        : (showSpecialStyle ? style.accentColor.withValues(alpha: 0.7) : AppColors.textTertiary)),
+                          ? style.textColor.withValues(alpha: 0.7)
+                          : (showSpecialStyle
+                                ? style.accentColor.withValues(alpha: 0.7)
+                                : AppColors.textTertiary)),
               ),
             ),
           ],
@@ -1019,7 +1026,8 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
   void initState() {
     super.initState();
     // Auto-expand if a diplomatic/consular type is selected
-    _diplomaticExpanded = widget.selectedType.category == PlateCategory.diplomatic ||
+    _diplomaticExpanded =
+        widget.selectedType.category == PlateCategory.diplomatic ||
         widget.selectedType.category == PlateCategory.consular;
   }
 
@@ -1080,7 +1088,8 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
 
   /// Build expandable diplomatic section with subcategories
   Widget _buildDiplomaticSection() {
-    final isDiplomaticSelected = widget.selectedType.category == PlateCategory.diplomatic ||
+    final isDiplomaticSelected =
+        widget.selectedType.category == PlateCategory.diplomatic ||
         widget.selectedType.category == PlateCategory.consular;
 
     return Column(
@@ -1088,7 +1097,8 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
       children: [
         // Header with expand/collapse
         GestureDetector(
-          onTap: () => setState(() => _diplomaticExpanded = !_diplomaticExpanded),
+          onTap: () =>
+              setState(() => _diplomaticExpanded = !_diplomaticExpanded),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             child: Row(
@@ -1098,7 +1108,9 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
                       ? Icons.keyboard_arrow_down_rounded
                       : Icons.keyboard_arrow_right_rounded,
                   size: 18,
-                  color: isDiplomaticSelected ? AppColors.secondary : AppColors.textTertiary,
+                  color: isDiplomaticSelected
+                      ? AppColors.secondary
+                      : AppColors.textTertiary,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -1106,14 +1118,19 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: isDiplomaticSelected ? AppColors.secondary : AppColors.textTertiary,
+                    color: isDiplomaticSelected
+                        ? AppColors.secondary
+                        : AppColors.textTertiary,
                     letterSpacing: 0.5,
                   ),
                 ),
                 if (isDiplomaticSelected) ...[
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.secondary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
@@ -1142,16 +1159,18 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Diplomatic subcategory
-                _buildSubcategory(
-                  'Corps Diplomatique',
-                  [PlateType.cmd, PlateType.cd, PlateType.md, PlateType.pat],
-                ),
+                _buildSubcategory('Corps Diplomatique', [
+                  PlateType.cmd,
+                  PlateType.cd,
+                  PlateType.md,
+                  PlateType.pat,
+                ]),
                 const SizedBox(height: 12),
                 // Consular subcategory
-                _buildSubcategory(
-                  'Corps Consulaire',
-                  [PlateType.cc, PlateType.mc],
-                ),
+                _buildSubcategory('Corps Consulaire', [
+                  PlateType.cc,
+                  PlateType.mc,
+                ]),
               ],
             ),
           ),
@@ -1225,8 +1244,7 @@ class PlateTypePicker extends StatelessWidget {
     PlateType.mc,
   ];
 
-  bool get _isDiplomaticSelected =>
-      _diplomaticTypes.contains(selectedType);
+  bool get _isDiplomaticSelected => _diplomaticTypes.contains(selectedType);
 
   @override
   Widget build(BuildContext context) {
@@ -1255,17 +1273,20 @@ class PlateTypePicker extends StatelessWidget {
     final bgColor = isSelected
         ? (isEu ? euBlue : style.backgroundColor)
         : (showSpecialStyle
-            ? (isAlgeria
-                ? style.backgroundColor.withValues(alpha: 0.4)
-                : (isRegular || isGov)
-                    ? style.backgroundColor // Always use plate colors for tunis/rs/gov
+              ? (isAlgeria
+                    ? style.backgroundColor.withValues(alpha: 0.4)
+                    : (isRegular || isGov)
+                    ? style
+                          .backgroundColor // Always use plate colors for tunis/rs/gov
                     : style.accentColor.withValues(alpha: 0.15))
-            : AppColors.surfaceVariant);
+              : AppColors.surfaceVariant);
     final borderColor = isSelected
         ? (isEu ? euBlue : style.borderColor)
         : (showSpecialStyle
-            ? ((isRegular || isGov) ? style.borderColor : style.accentColor.withValues(alpha: 0.4))
-            : Colors.transparent);
+              ? ((isRegular || isGov)
+                    ? style.borderColor
+                    : style.accentColor.withValues(alpha: 0.4))
+              : Colors.transparent);
 
     return Padding(
       padding: const EdgeInsets.only(right: 8),
@@ -1285,7 +1306,11 @@ class PlateTypePicker extends StatelessWidget {
     );
   }
 
-  Widget _buildTypeChipContent(PlateType type, bool isSelected, PlateStyle style) {
+  Widget _buildTypeChipContent(
+    PlateType type,
+    bool isSelected,
+    PlateStyle style,
+  ) {
     final isRegular = type.category == PlateCategory.regular; // tunis, rs
 
     if (type.isGovernment) {
@@ -1334,10 +1359,7 @@ class PlateTypePicker extends StatelessWidget {
               color: euBlue,
               borderRadius: BorderRadius.circular(2),
             ),
-            child: Image.asset(
-              'assets/images/Eu-stars.png',
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset('images/Eu-stars.png', fit: BoxFit.contain),
           ),
           const SizedBox(width: 3),
           Text(
@@ -1358,7 +1380,9 @@ class PlateTypePicker extends StatelessWidget {
         fontSize: 12,
         fontWeight: FontWeight.w600,
         // Always white for regular plates (tunis, rs) since they have black background
-        color: isRegular ? style.textColor : (isSelected ? style.textColor : AppColors.textSecondary),
+        color: isRegular
+            ? style.textColor
+            : (isSelected ? style.textColor : AppColors.textSecondary),
         fontFamily: type.isLibya ? 'serif' : null,
       ),
     );
@@ -1375,9 +1399,7 @@ class PlateTypePicker extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.secondary
-                : AppColors.surfaceVariant,
+            color: isSelected ? AppColors.secondary : AppColors.surfaceVariant,
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
               color: isSelected ? AppColors.secondary : Colors.transparent,
@@ -1459,9 +1481,9 @@ class _DiplomaticBottomSheet extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'Plaques Diplomatiques',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
 
@@ -1861,12 +1883,10 @@ class _LicensePlateInputState extends State<LicensePlateInput> {
                     bottom: 0,
                     width: 44,
                     child: Container(
-                      decoration: const BoxDecoration(
-                        color: euBlue,
-                      ),
+                      decoration: const BoxDecoration(color: euBlue),
                       child: Center(
                         child: Image.asset(
-                          'assets/images/Eu-stars.png',
+                          'images/Eu-stars.png',
                           width: 28,
                           height: 28,
                           fit: BoxFit.contain,
@@ -1884,14 +1904,14 @@ class _LicensePlateInputState extends State<LicensePlateInput> {
                   child: _selectedType.hasRightLabel
                       ? _buildRightLabelLayout(style)
                       : _selectedType.isEu
-                          ? _buildEuLayout(style)
-                          : _selectedType.isLibya
-                              ? _buildLibyaLayout(style)
-                              : _selectedType.isAlgeria
-                                  ? _buildAlgeriaLayout(style)
-                                  : _selectedType.isOther
-                                      ? _buildOtherLayout(style)
-                                      : _buildCenterLabelLayout(style),
+                      ? _buildEuLayout(style)
+                      : _selectedType.isLibya
+                      ? _buildLibyaLayout(style)
+                      : _selectedType.isAlgeria
+                      ? _buildAlgeriaLayout(style)
+                      : _selectedType.isOther
+                      ? _buildOtherLayout(style)
+                      : _buildCenterLabelLayout(style),
                 ),
               ],
             ),
@@ -2013,23 +2033,23 @@ class _LicensePlateInputState extends State<LicensePlateInput> {
                   ),
                 )
               : isGovernment
-                  ? Container(
-                      width: 16,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: style.accentColor,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    )
-                  : Text(
-                      _selectedType.displayLabel,
-                      style: TextStyle(
-                        fontSize: usesArabic ? 20 : 16,
-                        fontWeight: FontWeight.w700,
-                        color: style.accentColor,
-                        letterSpacing: usesArabic ? 1 : 3,
-                      ),
-                    ),
+              ? Container(
+                  width: 16,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: style.accentColor,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                )
+              : Text(
+                  _selectedType.displayLabel,
+                  style: TextStyle(
+                    fontSize: usesArabic ? 20 : 16,
+                    fontWeight: FontWeight.w700,
+                    color: style.accentColor,
+                    letterSpacing: usesArabic ? 1 : 3,
+                  ),
+                ),
         ),
 
         // Right number

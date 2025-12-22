@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
                 style: AppTextStyles.bodySmall,
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
               // Action cards
               Expanded(
@@ -52,25 +52,11 @@ class HomePage extends StatelessWidget {
                     ActionCard(
                       icon: Icons.search,
                       title: 'Check Vehicle',
-                      subtitle: 'Verify parking status',
+                      subtitle: 'Check status & create tickets',
                       backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                       iconColor: AppColors.primary,
                       onTap: () => Navigator.of(context).pushNamed(
                         AppRoutes.checkVehicle,
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    // Create ticket action
-                    ActionCard(
-                      icon: Icons.receipt_long,
-                      title: 'Create Ticket',
-                      subtitle: 'Issue a new parking ticket',
-                      backgroundColor: AppColors.warning.withValues(alpha: 0.1),
-                      iconColor: AppColors.warning,
-                      onTap: () => Navigator.of(context).pushNamed(
-                        AppRoutes.createTicket,
                       ),
                     ),
 
@@ -90,6 +76,8 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
+
+              const SizedBox(height: 16),
 
               // Agent info bar at bottom
               Container(

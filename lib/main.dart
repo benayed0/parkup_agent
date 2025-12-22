@@ -8,6 +8,10 @@ void main() async {
   // Initialize auth repository and check for saved session
   await authRepository.init();
 
+  // Pre-initialize location service for instant GPS availability
+  // Runs in background - doesn't block app startup
+  locationService.init();
+
   runApp(const ParkUpAgentApp());
 }
 

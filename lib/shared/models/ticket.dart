@@ -1,19 +1,27 @@
 /// Ticket reason enum matching backend
 enum TicketReason {
-  noSession('no_session', 'No Session'),
-  expiredSession('expired_session', 'Expired Session'),
-  overstayed('overstayed', 'Overstayed'),
-  wrongZone('wrong_zone', 'Wrong Zone');
+  carSabot('car_sabot', 'Car Sabot'),
+  pound('pound', 'Pound');
 
   final String value;
   final String label;
 
   const TicketReason(this.value, this.label);
 
+  /// Fine amounts for each reason
+  double get fineAmount {
+    switch (this) {
+      case TicketReason.carSabot:
+        return 50.0;
+      case TicketReason.pound:
+        return 100.0;
+    }
+  }
+
   static TicketReason fromValue(String value) {
     return TicketReason.values.firstWhere(
       (e) => e.value == value,
-      orElse: () => TicketReason.noSession,
+      orElse: () => TicketReason.carSabot,
     );
   }
 }
