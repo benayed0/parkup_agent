@@ -88,8 +88,9 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 
   void _handleCreateTicket() {
     if (_checkResult != null) {
+      // Use quick ticket for fast workflow
       Navigator.of(context).pushNamed(
-        AppRoutes.createTicket,
+        AppRoutes.quickTicket,
         arguments: _checkResult!.licensePlate,
       );
     }

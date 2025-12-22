@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
@@ -25,6 +26,21 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      // Quick Ticket FAB - Primary action for agents
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          HapticFeedback.mediumImpact();
+          Navigator.of(context).pushNamed(AppRoutes.quickTicket);
+        },
+        backgroundColor: AppColors.error,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.bolt),
+        label: const Text(
+          'QUICK TICKET',
+          style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -42,7 +58,7 @@ class HomePage extends StatelessWidget {
                 style: AppTextStyles.bodySmall,
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
               // Action cards
               Expanded(
@@ -62,11 +78,11 @@ class HomePage extends StatelessWidget {
 
                     const SizedBox(height: 12),
 
-                    // Create ticket action
+                    // Create ticket action (detailed form)
                     ActionCard(
                       icon: Icons.receipt_long,
-                      title: 'Create Ticket',
-                      subtitle: 'Issue a new parking ticket',
+                      title: 'Detailed Ticket',
+                      subtitle: 'Full form with notes & map',
                       backgroundColor: AppColors.warning.withValues(alpha: 0.1),
                       iconColor: AppColors.warning,
                       onTap: () => Navigator.of(context).pushNamed(
@@ -90,6 +106,9 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
+
+              // Spacer for FAB
+              const SizedBox(height: 64),
 
               // Agent info bar at bottom
               Container(
