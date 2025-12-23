@@ -38,14 +38,18 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
     super.dispose();
   }
 
-  void _initLocation() {
+  void _initLocation() async {
     _position = locationService.cachedPosition;
-    if (_position == null) {
-      locationService.getCurrentPosition().then((pos) {
-        if (mounted && pos != null) {
-          setState(() => _position = pos);
-        }
-      });
+    if (_position != null) return;
+
+    // Try to get position, retry a few times in background
+    for (int i = 0; i < 5 && mounted && _position == null; i++) {
+      final pos = await locationService.getCurrentPosition();
+      if (mounted && pos != null) {
+        setState(() => _position = pos);
+        break;
+      }
+      if (i < 4) await Future.delayed(const Duration(seconds: 2));
     }
   }
 
@@ -164,18 +168,38 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   }
 
   Future<void> _handleCreateTicket(TicketReason reason) async {
+    // Try to get position if not available
     if (_position == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Waiting for GPS location...'),
+          content: Text('Getting GPS location...'),
           backgroundColor: AppColors.warning,
+          duration: Duration(seconds: 2),
         ),
       );
-      final pos = await locationService.refreshPosition();
-      if (pos != null && mounted) {
-        setState(() => _position = pos);
+
+      // Try to get position with retries
+      for (int i = 0; i < 3 && _position == null; i++) {
+        final pos = await locationService.refreshPosition();
+        if (pos != null && mounted) {
+          setState(() => _position = pos);
+          break;
+        }
+        if (i < 2) await Future.delayed(const Duration(seconds: 1));
       }
-      return;
+
+      // If still no position, show error and abort
+      if (_position == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cannot get GPS location. Please try again.'),
+              backgroundColor: AppColors.error,
+            ),
+          );
+        }
+        return;
+      }
     }
 
     setState(() => _isCreatingTicket = true);
@@ -258,8 +282,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -271,52 +295,69 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                 label: 'License Plate',
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               // Loading indicator or Check button
               if (_isLoading)
                 const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: 16),
                   child: Center(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          width: 32,
+                          height: 32,
+                          child: CircularProgressIndicator(strokeWidth: 3),
                         ),
-                        SizedBox(width: 12),
-                        Text('Checking...'),
+                        SizedBox(width: 16),
+                        Text(
+                          'Checking...',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 )
               else if (_checkResult == null)
-                // Manual check button (fallback)
-                TextButton.icon(
-                  onPressed: _isPlateValid ? _handleManualCheck : null,
-                  icon: const Icon(Icons.search, size: 20),
-                  label: Text(
-                    _isPlateValid ? 'Check Now' : 'Enter plate to auto-check',
-                    style: TextStyle(
-                      color: _isPlateValid
-                          ? AppColors.primary
-                          : AppColors.textTertiary,
+                // Manual check button - large and easy to tap
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton.icon(
+                    onPressed: _isPlateValid ? _handleManualCheck : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _isPlateValid ? AppColors.primary : AppColors.surface,
+                      foregroundColor: _isPlateValid ? Colors.white : AppColors.textTertiary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: const Icon(Icons.search, size: 24),
+                    label: const Text(
+                      'Check',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
 
               // Result display
               if (_checkResult != null) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
+
                 CheckResultCard(result: _checkResult!),
+
+                const Spacer(),
 
                 // Only show ticket buttons if vehicle has an issue (not valid)
                 if (_checkResult!.hasIssue) ...[
-                  const SizedBox(height: 24),
-
-                  // Ticket reason buttons - prominent for quick action
+                  // Ticket reason buttons - large and easy to tap
                   Row(
                     children: [
                       Expanded(
@@ -340,36 +381,50 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 12),
                 ],
 
-                const SizedBox(height: 16),
-
-                // New search - quick reset
-                Center(
-                  child: TextButton.icon(
+                // New search button - large and prominent at bottom
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton.icon(
                     onPressed: _isCreatingTicket ? null : _clearAndReset,
-                    icon: const Icon(Icons.refresh, size: 18),
-                    label: const Text('New Search'),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.primary, width: 2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: const Icon(Icons.refresh, size: 22),
+                    label: const Text(
+                      'New Search',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
 
               // Empty state hint
               if (_checkResult == null && !_isLoading) ...[
-                const SizedBox(height: 32),
+                const Spacer(),
                 Icon(
-                  Icons.speed,
-                  size: 48,
+                  Icons.directions_car,
+                  size: 64,
                   color: AppColors.secondary.withValues(alpha: 0.4),
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Type plate number to auto-check',
-                  style: AppTextStyles.bodySmall.copyWith(
+                  'Enter license plate, then tap Check',
+                  style: AppTextStyles.body.copyWith(
                     color: AppColors.textTertiary,
                   ),
                   textAlign: TextAlign.center,
                 ),
+                const Spacer(),
               ],
             ],
           ),
@@ -379,7 +434,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   }
 }
 
-/// Reason button widget for ticket creation
+/// Reason button widget for ticket creation - compact but easy to tap
 class _ReasonButton extends StatelessWidget {
   final TicketReason reason;
   final IconData icon;
@@ -403,26 +458,28 @@ class _ReasonButton extends StatelessWidget {
         onTap: isLoading ? null : onPressed,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: color.withValues(alpha: 0.3),
+              color: color.withValues(alpha: 0.4),
               width: 2,
             ),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 icon,
-                size: 36,
+                size: 40,
                 color: color,
               ),
               const SizedBox(height: 8),
               Text(
                 reason.label,
-                style: AppTextStyles.body.copyWith(
+                style: const TextStyle(
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
@@ -430,7 +487,9 @@ class _ReasonButton extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '\$${reason.fineAmount.toStringAsFixed(0)}',
-                style: AppTextStyles.h3.copyWith(
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                   color: color,
                 ),
               ),

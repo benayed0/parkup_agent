@@ -6,24 +6,30 @@ import '../../core/theme/theme.dart';
 class StatusBadge extends StatelessWidget {
   final String text;
   final StatusBadgeType type;
+  final bool large;
 
   const StatusBadge({
     super.key,
     required this.text,
     required this.type,
+    this.large = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(
+        horizontal: large ? 16 : 12,
+        vertical: large ? 8 : 6,
+      ),
       decoration: BoxDecoration(
         color: _backgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         text,
-        style: AppTextStyles.caption.copyWith(
+        style: TextStyle(
+          fontSize: large ? 16 : 12,
           color: _textColor,
           fontWeight: FontWeight.w600,
         ),

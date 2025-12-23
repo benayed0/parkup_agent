@@ -74,7 +74,7 @@ class LocationService {
       final position = await Geolocator.getCurrentPosition(
         locationSettings: LocationSettings(
           accuracy: highAccuracy ? LocationAccuracy.high : LocationAccuracy.low,
-          timeLimit: const Duration(seconds: 5),
+          timeLimit: const Duration(seconds: 15),
         ),
       );
 
@@ -84,7 +84,21 @@ class LocationService {
       );
       _lastUpdate = DateTime.now();
     } catch (e) {
-      // Silent fail - keep using cached position
+      // Try to get last known position as fallback
+      if (_cachedPosition == null) {
+        try {
+          final lastKnown = await Geolocator.getLastKnownPosition();
+          if (lastKnown != null) {
+            _cachedPosition = models.Position(
+              longitude: lastKnown.longitude,
+              latitude: lastKnown.latitude,
+            );
+            _lastUpdate = DateTime.now();
+          }
+        } catch (_) {
+          // Ignore
+        }
+      }
     }
   }
 

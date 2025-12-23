@@ -21,6 +21,20 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    _checkIfLoggedIn();
+  }
+
+  /// Check if user is already logged in and redirect to home
+  Future<void> _checkIfLoggedIn() async {
+    final agent = await authRepository.getCurrentAgent();
+    if (agent != null && mounted) {
+      Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+    }
+  }
+
+  @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
-import '../../../../shared/widgets/widgets.dart';
 
 /// CheckResultCard widget
 /// Displays the result of a vehicle check
@@ -15,92 +14,67 @@ class CheckResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with status
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: _statusColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    _statusIcon,
-                    color: _statusColor,
-                    size: 32,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LicensePlateDisplay.fromString(
-                        result.licensePlate,
-                        scale: 0.85,
-                      ),
-                      const SizedBox(height: 8),
-                      StatusBadge(
-                        text: result.statusText,
-                        type: _badgeType,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-            const Divider(),
-            const SizedBox(height: 16),
-
-            // Message
-            Text(
-              result.message,
-              style: AppTextStyles.body,
-            ),
-            const SizedBox(height: 16),
-
-            // Session details if available
-            if (result.activeSession != null) ...[
-              if (result.activeSession!.zoneName.isNotEmpty)
-                _buildDetailRow('Zone', result.activeSession!.zoneName),
-              _buildDetailRow(
-                result.isValid ? 'Expires at' : 'Expired at',
-                _formatDateTime(result.activeSession!.endTime),
-              ),
-              if (result.remainingTime != null)
-                _buildDetailRow('Remaining', result.remainingTime!),
-              _buildDetailRow(
-                'Amount',
-                '${result.activeSession!.amount.toStringAsFixed(2)} TND',
-              ),
-            ],
-
-            _buildDetailRow(
-              'Checked at',
-              _formatTime(result.checkedAt),
-            ),
-          ],
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _statusColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: _statusColor.withValues(alpha: 0.3),
+          width: 2,
         ),
       ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppTextStyles.bodySmall),
-          Text(value, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w500)),
+          // Status icon
+          Icon(
+            _statusIcon,
+            color: _statusColor,
+            size: 48,
+          ),
+          const SizedBox(width: 16),
+          // Status info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  result.statusText,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: _statusColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  result.message,
+                  style: const TextStyle(fontSize: 14),
+                ),
+                // Show time info if session exists
+                if (result.activeSession != null && !result.isValid)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      'Expired: ${_formatDateTime(result.activeSession!.endTime)}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          // Check time
+          Text(
+            _formatTime(result.checkedAt),
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.textTertiary,
+            ),
+          ),
         ],
       ),
     );
@@ -143,19 +117,6 @@ class CheckResultCard extends StatelessWidget {
         return AppColors.secondary;
       case VehicleStatus.hasTickets:
         return AppColors.error;
-    }
-  }
-
-  StatusBadgeType get _badgeType {
-    switch (result.status) {
-      case VehicleStatus.valid:
-        return StatusBadgeType.success;
-      case VehicleStatus.expired:
-        return StatusBadgeType.warning;
-      case VehicleStatus.notFound:
-        return StatusBadgeType.neutral;
-      case VehicleStatus.hasTickets:
-        return StatusBadgeType.error;
     }
   }
 }
