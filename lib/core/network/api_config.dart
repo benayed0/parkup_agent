@@ -18,6 +18,7 @@ class ApiConfig {
 
   // Endpoints - Agents
   static const String agentsLogin = '/agents/login';
+  static const String agentsMe = '/agents/me';
   static const String agents = '/agents';
 
   // Endpoints - Parking Sessions

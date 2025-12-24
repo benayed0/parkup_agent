@@ -87,6 +87,7 @@ class Ticket {
   final DateTime issuedAt;
   final DateTime dueDate;
   final String agentId;
+  final String? parkingZoneId;
   final String? notes;
   final List<String>? evidencePhotos;
   final DateTime? paidAt;
@@ -104,6 +105,7 @@ class Ticket {
     required this.issuedAt,
     required this.dueDate,
     required this.agentId,
+    this.parkingZoneId,
     this.notes,
     this.evidencePhotos,
     this.paidAt,
@@ -126,6 +128,11 @@ class Ticket {
       agentId: json['agentId'] is String
           ? json['agentId'] as String
           : (json['agentId']['_id'] as String),
+      parkingZoneId: json['parkingZoneId'] == null
+          ? null
+          : (json['parkingZoneId'] is String
+              ? json['parkingZoneId'] as String
+              : (json['parkingZoneId']['_id'] as String)),
       notes: json['notes'] as String?,
       evidencePhotos: (json['evidencePhotos'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -148,6 +155,7 @@ class Ticket {
       'issuedAt': issuedAt.toIso8601String(),
       'dueDate': dueDate.toIso8601String(),
       'agentId': agentId,
+      'parkingZoneId': parkingZoneId,
       'notes': notes,
       'evidencePhotos': evidencePhotos,
     };

@@ -8,14 +8,15 @@ class VehicleRepository {
   final Dio _dio = ApiClient.instance.dio;
 
   /// Check a vehicle by structured license plate
-  /// Calls the API to check for active parking sessions
-  Future<VehicleCheckResult> checkVehicle(LicensePlate plate) async {
+  /// Calls the API to check for active parking sessions in the specified zone
+  Future<VehicleCheckResult> checkVehicle(LicensePlate plate, {String? zoneId}) async {
     try {
       // Check for active parking sessions with structured plate data
       final response = await _dio.post(
         ApiConfig.checkVehicle,
         data: {
           'plate': plate.toJson(),
+          if (zoneId != null) 'zoneId': zoneId,
         },
       );
 

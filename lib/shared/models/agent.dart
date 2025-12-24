@@ -1,3 +1,5 @@
+import 'parking_zone.dart';
+
 /// Agent model
 /// Represents a parking agent user
 class Agent {
@@ -7,7 +9,7 @@ class Agent {
   final String username;
   final String? phone;
   final bool isActive;
-  final List<String>? assignedZoneIds;
+  final List<ParkingZone>? assignedZones;
 
   const Agent({
     required this.id,
@@ -16,21 +18,32 @@ class Agent {
     required this.username,
     this.phone,
     this.isActive = true,
-    this.assignedZoneIds,
+    this.assignedZones,
   });
+
+  /// Get assigned zone IDs
+  List<String>? get assignedZoneIds => assignedZones?.map((z) => z.id).toList();
 
   /// Create from JSON (API response)
   factory Agent.fromJson(Map<String, dynamic> json) {
+    // Parse assignedZones - can be list of IDs or populated objects
+    final zonesRaw = json['assignedZones'] as List<dynamic>?;
+    List<ParkingZone>? zones;
+    if (zonesRaw != null) {
+      zones = zonesRaw
+          .whereType<Map<String, dynamic>>()
+          .map((e) => ParkingZone.fromJson(e))
+          .toList();
+    }
+
     return Agent(
       id: json['_id'] as String? ?? json['id'] as String,
-      agentCode: json['agentCode'] as String,
+      agentCode: json['agentCode'] as String? ?? '',
       name: json['name'] as String,
       username: json['username'] as String,
       phone: json['phone'] as String?,
       isActive: json['isActive'] as bool? ?? true,
-      assignedZoneIds: (json['assignedZones'] as List<dynamic>?)
-          ?.map((e) => e is String ? e : (e['_id'] as String))
-          .toList(),
+      assignedZones: zones,
     );
   }
 
@@ -43,7 +56,7 @@ class Agent {
       'username': username,
       'phone': phone,
       'isActive': isActive,
-      'assignedZones': assignedZoneIds,
+      'assignedZones': assignedZones?.map((z) => z.toJson()).toList(),
     };
   }
 
@@ -55,7 +68,7 @@ class Agent {
     String? username,
     String? phone,
     bool? isActive,
-    List<String>? assignedZoneIds,
+    List<ParkingZone>? assignedZones,
   }) {
     return Agent(
       id: id ?? this.id,
@@ -64,7 +77,7 @@ class Agent {
       username: username ?? this.username,
       phone: phone ?? this.phone,
       isActive: isActive ?? this.isActive,
-      assignedZoneIds: assignedZoneIds ?? this.assignedZoneIds,
+      assignedZones: assignedZones ?? this.assignedZones,
     );
   }
 }

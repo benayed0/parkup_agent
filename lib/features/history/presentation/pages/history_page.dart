@@ -49,7 +49,7 @@ class _HistoryPageState extends State<HistoryPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'Failed to load tickets';
+        _errorMessage = 'Failed to load tickets : $e';
         _isLoading = false;
       });
     }
@@ -81,10 +81,10 @@ class _HistoryPageState extends State<HistoryPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
-              ? _buildErrorState()
-              : _tickets.isEmpty
-                  ? _buildEmptyState()
-                  : _buildTicketList(),
+          ? _buildErrorState()
+          : _tickets.isEmpty
+          ? _buildEmptyState()
+          : _buildTicketList(),
     );
   }
 
@@ -101,10 +101,7 @@ class _HistoryPageState extends State<HistoryPage> {
               color: AppColors.error.withValues(alpha: 0.7),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Error',
-              style: AppTextStyles.h3,
-            ),
+            Text('Error', style: AppTextStyles.h3),
             const SizedBox(height: 8),
             Text(
               _errorMessage ?? 'Something went wrong',
@@ -136,10 +133,7 @@ class _HistoryPageState extends State<HistoryPage> {
               color: AppColors.secondary.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            Text(
-              'No tickets yet',
-              style: AppTextStyles.h3,
-            ),
+            Text('No tickets yet', style: AppTextStyles.h3),
             const SizedBox(height: 8),
             Text(
               'Tickets you create will appear here',

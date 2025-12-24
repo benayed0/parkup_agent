@@ -14,6 +14,7 @@ class TicketRepository {
     required Position position,
     required TicketReason reason,
     required double fineAmount,
+    required String parkingZoneId,
     String? notes,
   }) async {
     try {
@@ -40,6 +41,7 @@ class TicketRepository {
           'issuedAt': now.toIso8601String(),
           'dueDate': dueDate.toIso8601String(),
           'agentId': agent.id,
+          'parkingZoneId': parkingZoneId,
           'notes': notes,
         },
       );

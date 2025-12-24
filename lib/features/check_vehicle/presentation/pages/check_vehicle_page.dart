@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
+import '../../../auth/data/repositories/auth_repository.dart';
 import '../../../create_ticket/data/repositories/ticket_repository.dart';
 import '../../data/repositories/vehicle_repository.dart';
 import '../widgets/check_result_card.dart';
@@ -26,10 +27,25 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   Timer? _debounceTimer;
   int _inputKey = 0; // Key to force rebuild of input widget
 
+  // Parking zone selection
+  List<ParkingZone> _zones = [];
+  ParkingZone? _selectedZone;
+
   @override
   void initState() {
     super.initState();
     _initLocation();
+    _loadZones();
+  }
+
+  void _loadZones() {
+    final agent = authRepository.currentAgent;
+    if (agent != null && agent.assignedZones != null && agent.assignedZones!.isNotEmpty) {
+      setState(() {
+        _zones = agent.assignedZones!;
+        _selectedZone = _zones.first; // Default to first zone
+      });
+    }
   }
 
   @override
@@ -42,14 +58,41 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
     _position = locationService.cachedPosition;
     if (_position != null) return;
 
-    // Try to get position, retry a few times in background
-    for (int i = 0; i < 5 && mounted && _position == null; i++) {
-      final pos = await locationService.getCurrentPosition();
-      if (mounted && pos != null) {
-        setState(() => _position = pos);
-        break;
-      }
-      if (i < 4) await Future.delayed(const Duration(seconds: 2));
+    // Try to get position
+    await _refreshPosition();
+  }
+
+  Future<void> _refreshPosition() async {
+    print('[GPS] _refreshPosition called');
+
+    // Re-init the location service (handles hot reload)
+    print('[GPS] Calling locationService.init()...');
+    final initResult = await locationService.init();
+    print('[GPS] locationService.init() returned: $initResult');
+
+    print('[GPS] Calling locationService.refreshPosition()...');
+    final pos = await locationService.refreshPosition();
+    print('[GPS] refreshPosition returned: $pos');
+
+    if (mounted && pos != null) {
+      print('[GPS] Setting position: lat=${pos.latitude}, lng=${pos.longitude}');
+      setState(() => _position = pos);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('GPS location updated'),
+          backgroundColor: AppColors.success,
+          duration: Duration(seconds: 1),
+        ),
+      );
+    } else if (mounted) {
+      print('[GPS] Could not get position. mounted=$mounted, pos=$pos');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not get GPS location'),
+          backgroundColor: AppColors.warning,
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -130,7 +173,10 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
     });
 
     try {
-      final result = await vehicleRepository.checkVehicle(_currentPlate);
+      final result = await vehicleRepository.checkVehicle(
+        _currentPlate,
+        zoneId: _selectedZone?.id,
+      );
 
       if (!mounted) return;
 
@@ -168,49 +214,61 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   }
 
   Future<void> _handleCreateTicket(TicketReason reason) async {
-    // Try to get position if not available
-    if (_position == null) {
+    // Check if zone is selected
+    if (_selectedZone == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Getting GPS location...'),
-          backgroundColor: AppColors.warning,
-          duration: Duration(seconds: 2),
+          content: Text('Please select a parking zone'),
+          backgroundColor: AppColors.error,
         ),
       );
+      return;
+    }
 
-      // Try to get position with retries
-      for (int i = 0; i < 3 && _position == null; i++) {
-        final pos = await locationService.refreshPosition();
-        if (pos != null && mounted) {
-          setState(() => _position = pos);
-          break;
-        }
-        if (i < 2) await Future.delayed(const Duration(seconds: 1));
-      }
+    // Get position with fallbacks
+    Position? ticketPosition = _position;
 
-      // If still no position, show error and abort
-      if (_position == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Cannot get GPS location. Please try again.'),
-              backgroundColor: AppColors.error,
-            ),
-          );
-        }
-        return;
+    // Fallback 1: Try to get GPS position if not available
+    if (ticketPosition == null) {
+      final pos = await locationService.refreshPosition();
+      if (pos != null) {
+        ticketPosition = pos;
+        if (mounted) setState(() => _position = pos);
       }
     }
+
+    // Fallback 2: Use zone center location
+    if (ticketPosition == null && _selectedZone!.location != null) {
+      ticketPosition = _selectedZone!.location;
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Using zone location (GPS unavailable)'),
+            backgroundColor: AppColors.warning,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+
+    // Fallback 3: Default position (should rarely happen)
+    ticketPosition ??= const Position(longitude: 10.1815, latitude: 36.8065); // Tunis center
 
     setState(() => _isCreatingTicket = true);
     HapticFeedback.selectionClick();
 
+    // Get fine amount from zone prices
+    final fineAmount = reason == TicketReason.carSabot
+        ? _selectedZone!.prices.carSabot
+        : _selectedZone!.prices.pound;
+
     try {
       final ticket = await ticketRepository.createTicket(
         licensePlate: _checkResult!.licensePlate,
-        position: _position!,
+        position: ticketPosition,
         reason: reason,
-        fineAmount: reason.fineAmount,
+        fineAmount: fineAmount,
+        parkingZoneId: _selectedZone!.id,
       );
 
       if (!mounted) return;
@@ -271,13 +329,14 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
       appBar: AppBar(
         title: const Text('Check Vehicle'),
         actions: [
-          // GPS indicator
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Icon(
+          // GPS indicator - tappable to refresh
+          IconButton(
+            onPressed: _refreshPosition,
+            icon: Icon(
               _position != null ? Icons.gps_fixed : Icons.gps_not_fixed,
               color: _position != null ? AppColors.success : AppColors.secondary,
             ),
+            tooltip: 'Refresh GPS',
           ),
         ],
       ),
@@ -287,6 +346,49 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Parking zone selector
+              if (_zones.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<ParkingZone>(
+                      value: _selectedZone,
+                      isExpanded: true,
+                      icon: const Icon(Icons.arrow_drop_down),
+                      hint: const Text('Select Zone'),
+                      items: _zones.map((zone) {
+                        return DropdownMenuItem<ParkingZone>(
+                          value: zone,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.location_on, size: 18, color: AppColors.primary),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  '${zone.code} - ${zone.name}',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (zone) {
+                        if (zone != null) {
+                          setState(() => _selectedZone = zone);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+
               // License plate input
               LicensePlateInput(
                 key: ValueKey(_inputKey),
@@ -355,14 +457,15 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 
                 const Spacer(),
 
-                // Only show ticket buttons if vehicle has an issue (not valid)
-                if (_checkResult!.hasIssue) ...[
+                // Only show ticket buttons if vehicle has an issue (not valid) and zone is selected
+                if (_checkResult!.hasIssue && _selectedZone != null) ...[
                   // Ticket reason buttons - large and easy to tap
                   Row(
                     children: [
                       Expanded(
                         child: _ReasonButton(
                           reason: TicketReason.carSabot,
+                          fineAmount: _selectedZone!.prices.carSabot,
                           icon: Icons.lock,
                           color: AppColors.warning,
                           isLoading: _isCreatingTicket,
@@ -373,6 +476,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                       Expanded(
                         child: _ReasonButton(
                           reason: TicketReason.pound,
+                          fineAmount: _selectedZone!.prices.pound,
                           icon: Icons.local_shipping,
                           color: AppColors.error,
                           isLoading: _isCreatingTicket,
@@ -384,27 +488,58 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                   const SizedBox(height: 12),
                 ],
 
-                // New search button - large and prominent at bottom
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: OutlinedButton.icon(
-                    onPressed: _isCreatingTicket ? null : _clearAndReset,
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppColors.primary, width: 2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                // Recheck and New search buttons
+                Row(
+                  children: [
+                    // Recheck button
+                    Expanded(
+                      child: SizedBox(
+                        height: 52,
+                        child: ElevatedButton.icon(
+                          onPressed: _isCreatingTicket || _isLoading ? null : _handleManualCheck,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          icon: const Icon(Icons.refresh, size: 22),
+                          label: const Text(
+                            'Recheck',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    icon: const Icon(Icons.refresh, size: 22),
-                    label: const Text(
-                      'New Search',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    const SizedBox(width: 12),
+                    // New search button
+                    Expanded(
+                      child: SizedBox(
+                        height: 52,
+                        child: OutlinedButton.icon(
+                          onPressed: _isCreatingTicket ? null : _clearAndReset,
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: AppColors.primary, width: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          icon: const Icon(Icons.search, size: 22),
+                          label: const Text(
+                            'New Search',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
 
@@ -437,6 +572,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 /// Reason button widget for ticket creation - compact but easy to tap
 class _ReasonButton extends StatelessWidget {
   final TicketReason reason;
+  final double fineAmount;
   final IconData icon;
   final Color color;
   final bool isLoading;
@@ -444,6 +580,7 @@ class _ReasonButton extends StatelessWidget {
 
   const _ReasonButton({
     required this.reason,
+    required this.fineAmount,
     required this.icon,
     required this.color,
     required this.isLoading,
@@ -486,7 +623,7 @@ class _ReasonButton extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '\$${reason.fineAmount.toStringAsFixed(0)}',
+                '${fineAmount.toStringAsFixed(0)} TND',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

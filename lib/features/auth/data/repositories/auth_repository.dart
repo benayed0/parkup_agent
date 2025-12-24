@@ -16,12 +16,39 @@ class AuthRepository {
   /// Check if user is logged in
   bool get isLoggedIn => _currentAgent != null;
 
-  /// Initialize - check for saved session
+  /// Initialize - check for saved token and fetch agent
   Future<void> init() async {
-    final savedAgent = await authStorageService.getAgent();
-    if (savedAgent != null) {
-      _currentAgent = savedAgent;
+    final token = await authStorageService.getToken();
+    if (token != null && token.isNotEmpty) {
+      ApiClient.instance.setAuthToken(token);
+      try {
+        await _fetchCurrentAgent();
+      } catch (_) {
+        // Token is invalid, clear it
+        await authStorageService.clear();
+        ApiClient.instance.clearAuthToken();
+      }
     }
+  }
+
+  /// Fetch current agent from API using token
+  Future<Agent> _fetchCurrentAgent() async {
+    final response = await _dio.get(ApiConfig.agentsMe);
+    final data = response.data as Map<String, dynamic>;
+
+    if (data['success'] == true && data['data'] != null) {
+      final responseData = data['data'] as Map<String, dynamic>;
+      if (responseData['agent'] != null) {
+        final agent = Agent.fromJson(responseData['agent'] as Map<String, dynamic>);
+        _currentAgent = agent;
+        return agent;
+      }
+    }
+
+    throw const ApiException(
+      message: 'Failed to fetch agent',
+      statusCode: 401,
+    );
   }
 
   /// Login with username and password
@@ -38,23 +65,19 @@ class AuthRepository {
 
       final data = response.data as Map<String, dynamic>;
 
-      // API returns { success: true, data: { agent: {...} } }
+      // API returns { success: true, data: { agent: {...}, token: '...' } }
       if (data['success'] == true && data['data'] != null) {
         final responseData = data['data'] as Map<String, dynamic>;
 
-        if (responseData['agent'] != null) {
+        if (responseData['agent'] != null && responseData['token'] != null) {
           final agent = Agent.fromJson(responseData['agent'] as Map<String, dynamic>);
+          final token = responseData['token'] as String;
+
           _currentAgent = agent;
 
-          // Save to local storage
-          await authStorageService.saveAgent(agent);
-
-          // If token is returned, save and set it
-          final token = responseData['token'] as String? ?? data['token'] as String?;
-          if (token != null) {
-            await authStorageService.saveToken(token);
-            ApiClient.instance.setAuthToken(token);
-          }
+          // Save token to local storage and set in API client
+          await authStorageService.saveToken(token);
+          ApiClient.instance.setAuthToken(token);
 
           return agent;
         }
@@ -80,22 +103,24 @@ class AuthRepository {
     await authStorageService.clear();
   }
 
-  /// Get current agent from storage (for app startup)
+  /// Get current agent (for app startup)
   Future<Agent?> getCurrentAgent() async {
     if (_currentAgent != null) return _currentAgent;
 
-    final savedAgent = await authStorageService.getAgent();
-    if (savedAgent != null) {
-      _currentAgent = savedAgent;
-
-      // Restore token if available
-      final token = await authStorageService.getToken();
-      if (token != null) {
-        ApiClient.instance.setAuthToken(token);
+    // Try to restore from token
+    final token = await authStorageService.getToken();
+    if (token != null && token.isNotEmpty) {
+      ApiClient.instance.setAuthToken(token);
+      try {
+        return await _fetchCurrentAgent();
+      } catch (_) {
+        // Token is invalid, clear it
+        await authStorageService.clear();
+        ApiClient.instance.clearAuthToken();
       }
     }
 
-    return _currentAgent;
+    return null;
   }
 
   /// Extract error message from Dio exception
