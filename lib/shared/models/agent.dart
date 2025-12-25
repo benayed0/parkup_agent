@@ -4,7 +4,6 @@ import 'parking_zone.dart';
 /// Represents a parking agent user
 class Agent {
   final String id;
-  final String agentCode;
   final String name;
   final String username;
   final String? phone;
@@ -13,7 +12,6 @@ class Agent {
 
   const Agent({
     required this.id,
-    required this.agentCode,
     required this.name,
     required this.username,
     this.phone,
@@ -38,7 +36,6 @@ class Agent {
 
     return Agent(
       id: json['_id'] as String? ?? json['id'] as String,
-      agentCode: json['agentCode'] as String? ?? '',
       name: json['name'] as String,
       username: json['username'] as String,
       phone: json['phone'] as String?,
@@ -51,7 +48,6 @@ class Agent {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'agentCode': agentCode,
       'name': name,
       'username': username,
       'phone': phone,
@@ -63,7 +59,6 @@ class Agent {
   /// Create a copy with modified fields
   Agent copyWith({
     String? id,
-    String? agentCode,
     String? name,
     String? username,
     String? phone,
@@ -72,7 +67,6 @@ class Agent {
   }) {
     return Agent(
       id: id ?? this.id,
-      agentCode: agentCode ?? this.agentCode,
       name: name ?? this.name,
       username: username ?? this.username,
       phone: phone ?? this.phone,

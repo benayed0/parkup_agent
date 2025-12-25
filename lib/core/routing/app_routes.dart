@@ -12,4 +12,5 @@ class AppRoutes {
   // Feature routes
   static const String checkVehicle = '/check-vehicle';
   static const String history = '/history';
+  static const String pendingRemovals = '/pending-removals';
 }

@@ -30,6 +30,7 @@ enum TicketReason {
 enum TicketStatus {
   pending('pending', 'Pending'),
   paid('paid', 'Paid'),
+  removed('removed', 'Removed'),
   appealed('appealed', 'Appealed'),
   dismissed('dismissed', 'Dismissed'),
   overdue('overdue', 'Overdue');

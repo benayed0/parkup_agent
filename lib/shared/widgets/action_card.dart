@@ -10,6 +10,7 @@ class ActionCard extends StatelessWidget {
   final VoidCallback onTap;
   final Color? backgroundColor;
   final Color? iconColor;
+  final int? badgeCount;
 
   const ActionCard({
     super.key,
@@ -19,6 +20,7 @@ class ActionCard extends StatelessWidget {
     required this.onTap,
     this.backgroundColor,
     this.iconColor,
+    this.badgeCount,
   });
 
   @override
@@ -66,7 +68,27 @@ class ActionCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // Arrow indicator
+              // Badge and arrow indicator
+              if (badgeCount != null && badgeCount! > 0) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: iconColor ?? AppColors.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    badgeCount! > 99 ? '99+' : badgeCount.toString(),
+                    style: AppTextStyles.caption.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
               const Icon(
                 Icons.chevron_right,
                 color: AppColors.secondary,

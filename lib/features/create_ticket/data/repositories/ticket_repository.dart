@@ -21,10 +21,7 @@ class TicketRepository {
       // Get current agent ID
       final agent = authRepository.currentAgent;
       if (agent == null) {
-        throw const ApiException(
-          message: 'Not authenticated',
-          statusCode: 401,
-        );
+        throw const ApiException(message: 'Not authenticated', statusCode: 401);
       }
 
       final now = DateTime.now();
@@ -58,10 +55,7 @@ class TicketRepository {
       );
     } on DioException catch (e) {
       final message = _extractErrorMessage(e);
-      throw ApiException(
-        message: message,
-        statusCode: e.response?.statusCode,
-      );
+      throw ApiException(message: message, statusCode: e.response?.statusCode);
     }
   }
 
@@ -70,10 +64,7 @@ class TicketRepository {
     try {
       final agent = authRepository.currentAgent;
       if (agent == null) {
-        throw const ApiException(
-          message: 'Not authenticated',
-          statusCode: 401,
-        );
+        throw const ApiException(message: 'Not authenticated', statusCode: 401);
       }
 
       String url = ApiConfig.ticketsByAgent(agent.id);
@@ -84,7 +75,8 @@ class TicketRepository {
       final response = await _dio.get(url);
 
       final data = response.data as Map<String, dynamic>;
-      final tickets = (data['data'] as List?)
+      final tickets =
+          (data['data'] as List?)
               ?.map((t) => Ticket.fromJson(t as Map<String, dynamic>))
               .toList() ??
           [];
@@ -92,10 +84,7 @@ class TicketRepository {
       return tickets;
     } on DioException catch (e) {
       final message = _extractErrorMessage(e);
-      throw ApiException(
-        message: message,
-        statusCode: e.response?.statusCode,
-      );
+      throw ApiException(message: message, statusCode: e.response?.statusCode);
     }
   }
 
@@ -109,6 +98,29 @@ class TicketRepository {
           ticket.issuedAt.month == today.month &&
           ticket.issuedAt.day == today.day;
     }).toList();
+  }
+
+  /// Mark a ticket as removed (for car_sabot tickets)
+  Future<Ticket> markAsRemoved(String ticketId) async {
+    try {
+      final response = await _dio.patch(
+        '${ApiConfig.ticketById(ticketId)}/sabot_removed',
+      );
+
+      final data = response.data as Map<String, dynamic>;
+
+      if (data['success'] == true && data['data'] != null) {
+        return Ticket.fromJson(data['data'] as Map<String, dynamic>);
+      }
+
+      throw const ApiException(
+        message: 'Failed to update ticket',
+        statusCode: 500,
+      );
+    } on DioException catch (e) {
+      final message = _extractErrorMessage(e);
+      throw ApiException(message: message, statusCode: e.response?.statusCode);
+    }
   }
 
   /// Extract error message from Dio exception

@@ -180,6 +180,8 @@ class TicketDetailSheet extends StatelessWidget {
         return AppColors.warning;
       case TicketStatus.paid:
         return AppColors.success;
+      case TicketStatus.removed:
+        return AppColors.primary;
       case TicketStatus.appealed:
         return AppColors.info;
       case TicketStatus.dismissed:

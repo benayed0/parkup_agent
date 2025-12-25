@@ -1,12 +1,44 @@
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
+import '../../../../shared/models/models.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
+import '../../../history/data/repositories/history_repository.dart';
 
 /// Home page
 /// Central hub with main navigation actions
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _pendingRemovalsCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPendingRemovalsCount();
+  }
+
+  Future<void> _loadPendingRemovalsCount() async {
+    try {
+      final tickets = await historyRepository.getTickets();
+      final count = tickets
+          .where((t) =>
+              t.reason == TicketReason.carSabot &&
+              t.status == TicketStatus.paid)
+          .length;
+
+      if (mounted) {
+        setState(() => _pendingRemovalsCount = count);
+      }
+    } catch (_) {
+      // Silently fail - badge just won't show
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +94,25 @@ class HomePage extends StatelessWidget {
 
                     const SizedBox(height: 12),
 
+                    // Pending removals action
+                    ActionCard(
+                      icon: Icons.build_circle,
+                      title: 'Remove Sabots',
+                      subtitle: 'Paid sabots to remove',
+                      backgroundColor: AppColors.warning.withValues(alpha: 0.1),
+                      iconColor: AppColors.warning,
+                      badgeCount: _pendingRemovalsCount,
+                      onTap: () async {
+                        await Navigator.of(context).pushNamed(
+                          AppRoutes.pendingRemovals,
+                        );
+                        // Refresh count when returning
+                        _loadPendingRemovalsCount();
+                      },
+                    ),
+
+                    const SizedBox(height: 12),
+
                     // History action
                     ActionCard(
                       icon: Icons.history,
@@ -107,7 +158,7 @@ class HomePage extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      'Badge: ${agent?.agentCode ?? 'N/A'}',
+                      '@${agent?.username ?? 'N/A'}',
                       style: AppTextStyles.caption,
                     ),
                   ],

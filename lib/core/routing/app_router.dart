@@ -4,6 +4,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/check_vehicle/presentation/pages/check_vehicle_page.dart';
 import '../../features/history/presentation/pages/history_page.dart';
+import '../../features/pending_removals/presentation/pages/pending_removals_page.dart';
 
 /// Application router
 /// Handles all navigation within the app
@@ -24,6 +25,9 @@ class AppRouter {
 
       case AppRoutes.history:
         return _buildRoute(const HistoryPage(), settings);
+
+      case AppRoutes.pendingRemovals:
+        return _buildRoute(const PendingRemovalsPage(), settings);
 
       default:
         return _buildRoute(const LoginPage(), settings);

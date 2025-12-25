@@ -27,6 +27,7 @@ class ApiConfig {
 
   // Endpoints - Tickets
   static const String tickets = '/tickets';
+  static String ticketById(String id) => '/tickets/$id';
   static String ticketsByAgent(String agentId) => '/tickets/agent/$agentId';
   static String ticketsByPlate(String plate) => '/tickets/plate/$plate';
   static String checkUnpaidTickets(String plate) => '/tickets/check/$plate';
