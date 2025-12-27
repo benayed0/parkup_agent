@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 import '../../data/repositories/history_repository.dart';
 import '../widgets/ticket_list_item.dart';
-import '../widgets/ticket_detail_sheet.dart';
+import 'ticket_print_preview_page.dart';
 
 /// History page
 /// Displays list of issued tickets
@@ -55,12 +56,22 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 
-  void _showTicketDetails(Ticket ticket) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => TicketDetailSheet(ticket: ticket),
+  Future<void> _openInMaps(Ticket ticket) async {
+    final lat = ticket.position.latitude;
+    final lng = ticket.position.longitude;
+    final url = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$lat,$lng',
+    );
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  void _openPrintPreview(Ticket ticket) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TicketPrintPreviewPage(ticketId: ticket.id),
+      ),
     );
   }
 
@@ -168,7 +179,9 @@ class _HistoryPageState extends State<HistoryPage> {
             padding: const EdgeInsets.only(bottom: 8),
             child: TicketListItem(
               ticket: ticket,
-              onTap: () => _showTicketDetails(ticket),
+              onTap: () => _openPrintPreview(ticket),
+              onGoToLocation: () => _openInMaps(ticket),
+              onPrint: () => _openPrintPreview(ticket),
             ),
           );
         },

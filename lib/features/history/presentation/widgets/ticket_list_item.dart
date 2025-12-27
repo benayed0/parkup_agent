@@ -7,11 +7,15 @@ import '../../../../shared/models/models.dart';
 class TicketListItem extends StatelessWidget {
   final Ticket ticket;
   final VoidCallback? onTap;
+  final VoidCallback? onGoToLocation;
+  final VoidCallback? onPrint;
 
   const TicketListItem({
     super.key,
     required this.ticket,
     this.onTap,
+    this.onGoToLocation,
+    this.onPrint,
   });
 
   @override
@@ -117,16 +121,41 @@ class TicketListItem extends StatelessWidget {
                         ),
                       ],
                     ),
+
+                    const SizedBox(height: 12),
+
+                    // Action buttons
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: onGoToLocation,
+                            icon: const Icon(Icons.location_on, size: 18),
+                            label: const Text('Go to Location'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.primary,
+                              side: const BorderSide(color: AppColors.primary),
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: onPrint,
+                            icon: const Icon(Icons.print, size: 18),
+                            label: const Text('Print'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-
-              const SizedBox(width: 8),
-
-              // Chevron
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.secondary,
               ),
             ],
           ),
@@ -134,6 +163,10 @@ class TicketListItem extends StatelessWidget {
       ),
     );
   }
+
+  // Convenience method to get location coordinates
+  (double lat, double lng) get coordinates =>
+      (ticket.position.latitude, ticket.position.longitude);
 
   Color _getStatusColor() {
     switch (ticket.status) {

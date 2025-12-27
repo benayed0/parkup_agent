@@ -26,6 +26,12 @@ dependencies:
   # URL launching (for navigation)
   url_launcher: ^6.3.1
 
+  # Sharing
+  share_plus: ^10.1.4
+
+  # Path provider for file operations
+  path_provider: ^2.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

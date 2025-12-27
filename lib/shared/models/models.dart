@@ -5,3 +5,4 @@ export 'ticket.dart';
 export 'parking_session.dart';
 export 'parking_zone.dart';
 export 'vehicle_check_result.dart';
+export 'printable_ticket.dart';

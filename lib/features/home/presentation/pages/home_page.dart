@@ -46,7 +46,24 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ParkUp Agent'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.asset(
+                'assets/icons/parkup-logo.png',
+                height: 32,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text('ParkUp Agent'),
+          ],
+        ),
         automaticallyImplyLeading: false,
         actions: [
           // Logout button
