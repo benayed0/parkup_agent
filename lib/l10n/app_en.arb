@@ -1,0 +1,343 @@
+{
+  "@@locale": "en",
+  "appTitle": "ParkUp Agent",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "signInToContinue": "Sign in to continue",
+  "@signInToContinue": {
+    "description": "Login page subtitle"
+  },
+  "username": "Username",
+  "@username": {
+    "description": "Username field label"
+  },
+  "enterYourUsername": "Enter your username",
+  "@enterYourUsername": {
+    "description": "Username field hint"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "enterYourPassword": "Enter your password",
+  "@enterYourPassword": {
+    "description": "Password field hint"
+  },
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Sign in button text"
+  },
+  "contactAdminForPassword": "Contact your administrator if you forgot your password",
+  "@contactAdminForPassword": {
+    "description": "Help text for forgotten password"
+  },
+  "pleaseEnterUsername": "Please enter your username",
+  "@pleaseEnterUsername": {
+    "description": "Validation message for empty username"
+  },
+  "pleaseEnterPassword": "Please enter your password",
+  "@pleaseEnterPassword": {
+    "description": "Validation message for empty password"
+  },
+  "loginFailed": "Login failed. Please try again.",
+  "@loginFailed": {
+    "description": "Generic login error message"
+  },
+  "welcomeAgent": "Welcome, {name}",
+  "@welcomeAgent": {
+    "description": "Welcome message with agent name",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+  "whatWouldYouLikeToDo": "What would you like to do?",
+  "@whatWouldYouLikeToDo": {
+    "description": "Home page subtitle"
+  },
+  "checkVehicle": "Check Vehicle",
+  "@checkVehicle": {
+    "description": "Check vehicle action title"
+  },
+  "checkStatusCreateTickets": "Check status & create tickets",
+  "@checkStatusCreateTickets": {
+    "description": "Check vehicle action subtitle"
+  },
+  "removeSabots": "Remove Sabots",
+  "@removeSabots": {
+    "description": "Remove sabots action title"
+  },
+  "paidSabotsToRemove": "Paid sabots to remove",
+  "@paidSabotsToRemove": {
+    "description": "Remove sabots action subtitle"
+  },
+  "history": "History",
+  "@history": {
+    "description": "History action title"
+  },
+  "viewPastTickets": "View past tickets",
+  "@viewPastTickets": {
+    "description": "History action subtitle"
+  },
+  "active": "Active",
+  "@active": {
+    "description": "Active status label"
+  },
+  "inactive": "Inactive",
+  "@inactive": {
+    "description": "Inactive status label"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button tooltip"
+  },
+  "logoutConfirmation": "Are you sure you want to logout?",
+  "@logoutConfirmation": {
+    "description": "Logout confirmation dialog message"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "selectZone": "Select Zone",
+  "@selectZone": {
+    "description": "Zone dropdown hint"
+  },
+  "licensePlate": "License Plate",
+  "@licensePlate": {
+    "description": "License plate input label"
+  },
+  "checking": "Checking...",
+  "@checking": {
+    "description": "Loading indicator text when checking vehicle"
+  },
+  "check": "Check",
+  "@check": {
+    "description": "Check button text"
+  },
+  "recheck": "Recheck",
+  "@recheck": {
+    "description": "Recheck button text"
+  },
+  "newSearch": "New Search",
+  "@newSearch": {
+    "description": "New search button text"
+  },
+  "enterLicensePlateThenCheck": "Enter license plate, then tap Check",
+  "@enterLicensePlateThenCheck": {
+    "description": "Empty state hint for vehicle check"
+  },
+  "pleaseEnterValidPlate": "Please enter a valid license plate",
+  "@pleaseEnterValidPlate": {
+    "description": "Validation message for invalid license plate"
+  },
+  "pleaseSelectParkingZone": "Please select a parking zone",
+  "@pleaseSelectParkingZone": {
+    "description": "Validation message for missing zone selection"
+  },
+  "failedToCheckVehicle": "Failed to check vehicle. Please try again.",
+  "@failedToCheckVehicle": {
+    "description": "Error message for vehicle check failure"
+  },
+  "failedToCreateTicket": "Failed to create ticket. Please try again.",
+  "@failedToCreateTicket": {
+    "description": "Error message for ticket creation failure"
+  },
+  "ticketCreated": "Ticket #{number} created",
+  "@ticketCreated": {
+    "description": "Success message for ticket creation",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "TKT-001"
+      }
+    }
+  },
+  "gpsLocationUpdated": "GPS location updated",
+  "@gpsLocationUpdated": {
+    "description": "Success message for GPS update"
+  },
+  "couldNotGetGpsLocation": "Could not get GPS location",
+  "@couldNotGetGpsLocation": {
+    "description": "Warning message for GPS failure"
+  },
+  "usingZoneLocation": "Using zone location (GPS unavailable)",
+  "@usingZoneLocation": {
+    "description": "Warning message when using zone location as fallback"
+  },
+  "refreshGps": "Refresh GPS",
+  "@refreshGps": {
+    "description": "Refresh GPS button tooltip"
+  },
+  "carSabot": "Car Sabot",
+  "@carSabot": {
+    "description": "Car sabot ticket reason"
+  },
+  "pound": "Pound",
+  "@pound": {
+    "description": "Pound ticket reason"
+  },
+  "pendingRemovals": "Pending Removals",
+  "@pendingRemovals": {
+    "description": "Pending removals page title"
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh button tooltip"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Error state title"
+  },
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
+  },
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Try again button text"
+  },
+  "allClear": "All clear!",
+  "@allClear": {
+    "description": "Empty state title for pending removals"
+  },
+  "noSabotsPendingRemoval": "No sabots pending removal",
+  "@noSabotsPendingRemoval": {
+    "description": "Empty state message for pending removals"
+  },
+  "sabotsToRemove": "{count, plural, =1{1 sabot to remove} other{{count} sabots to remove}}",
+  "@sabotsToRemove": {
+    "description": "Count of sabots to remove",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmRemoval": "Confirm Removal",
+  "@confirmRemoval": {
+    "description": "Confirm removal dialog title"
+  },
+  "markSabotAsRemoved": "Mark sabot for {plate} as removed?",
+  "@markSabotAsRemoved": {
+    "description": "Confirm removal dialog message",
+    "placeholders": {
+      "plate": {
+        "type": "String",
+        "example": "123-TN-456"
+      }
+    }
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button text"
+  },
+  "sabotMarkedAsRemoved": "Sabot marked as removed",
+  "@sabotMarkedAsRemoved": {
+    "description": "Success message for sabot removal"
+  },
+  "paid": "PAID",
+  "@paid": {
+    "description": "Paid status label"
+  },
+  "paidTime": "Paid {time}",
+  "@paidTime": {
+    "description": "Paid time text",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2h ago"
+      }
+    }
+  },
+  "navigate": "Navigate",
+  "@navigate": {
+    "description": "Navigate button text"
+  },
+  "removed": "Removed",
+  "@removed": {
+    "description": "Removed button text"
+  },
+  "noTicketsYet": "No tickets yet",
+  "@noTicketsYet": {
+    "description": "Empty state title for history"
+  },
+  "ticketsWillAppearHere": "Tickets you create will appear here",
+  "@ticketsWillAppearHere": {
+    "description": "Empty state message for history"
+  },
+  "ticketCount": "{count, plural, =1{1 ticket} other{{count} tickets}}",
+  "@ticketCount": {
+    "description": "Count of tickets",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "failedToLoadTickets": "Failed to load tickets",
+  "@failedToLoadTickets": {
+    "description": "Error message for loading tickets failure"
+  },
+  "failedToLoadPendingRemovals": "Failed to load pending removals",
+  "@failedToLoadPendingRemovals": {
+    "description": "Error message for loading pending removals failure"
+  },
+  "minutesAgo": "{minutes}m ago",
+  "@minutesAgo": {
+    "description": "Time format for minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{hours}h ago",
+  "@hoursAgo": {
+    "description": "Time format for hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "yesterday": "yesterday",
+  "@yesterday": {
+    "description": "Yesterday label"
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "Pending status"
+  },
+  "cancelled": "Cancelled",
+  "@cancelled": {
+    "description": "Cancelled status"
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "Completed status"
+  },
+  "valid": "Valid",
+  "@valid": {
+    "description": "Valid parking status"
+  },
+  "expired": "Expired",
+  "@expired": {
+    "description": "Expired parking status"
+  },
+  "noParkingSession": "No Parking Session",
+  "@noParkingSession": {
+    "description": "No parking session found"
+  },
+  "hasActiveTicket": "Has Active Ticket",
+  "@hasActiveTicket": {
+    "description": "Vehicle has active ticket"
+  },
+  "agent": "Agent",
+  "@agent": {
+    "description": "Default agent name"
+  }
+}

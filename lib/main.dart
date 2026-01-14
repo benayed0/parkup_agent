@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'core/core.dart';
 import 'features/auth/data/repositories/auth_repository.dart';
 
@@ -29,6 +31,19 @@ class ParkUpAgentApp extends StatelessWidget {
     return MaterialApp(
       title: 'ParkUp Agent',
       debugShowCheckedModeBanner: false,
+
+      // Localization configuration
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('fr'), // French
+        Locale('ar'), // Arabic
+      ],
 
       // Apply custom theme
       theme: AppTheme.lightTheme,
