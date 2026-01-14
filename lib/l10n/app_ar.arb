@@ -29,7 +29,7 @@
 
   "checkVehicle": "شوف الكرهبة",
 
-  "checkStatusCreateTickets": "شوف الحالة واعمل كونطرافونسيون",
+  "checkStatusCreateTickets": "شوف الحالة واعمل خطية",
 
   "removeSabots": "فكّ السابو",
 
@@ -37,7 +37,7 @@
 
   "history": "التاريخ",
 
-  "viewPastTickets": "شوف الكونطرافونسيونات القديمة",
+  "viewPastTickets": "شوف الخطيةات القديمة",
 
   "active": "خدّام",
 
@@ -65,9 +65,9 @@
 
   "usingZoneLocation": "نستعمل بلاصة الزون (GPS ما يخدمش)",
 
-  "ticketCreated": "يا سلام! كونطرافونسيون #{number} تعملت",
+  "ticketCreated": "يا سلام! خطية #{number} تعملت",
 
-  "failedToCreateTicket": "ما نجمتش نعمل كونطرافونسيون. عاود حاول",
+  "failedToCreateTicket": "ما نجمتش نعمل خطية. عاود حاول",
 
   "checking": "مستنّي... نشوف",
 
@@ -91,11 +91,11 @@
 
   "tryAgain": "عاود حاول",
 
-  "noTicketsYet": "مازال ما عندك حتى كونطرافونسيون",
+  "noTicketsYet": "مازال ما عندك حتى خطية",
 
-  "ticketsWillAppearHere": "الكونطرافونسيونات اللي تعملها تظهر هوني",
+  "ticketsWillAppearHere": "الخطيةات اللي تعملها تظهر هوني",
 
-  "ticketCount": "{count, plural, =1{كونطرافونسيون وحدة} other{{count} كونطرافونسيونات}}",
+  "ticketCount": "{count, plural, =1{خطية وحدة} other{{count} خطيةات}}",
 
   "goToLocation": "امشي للبلاصة",
 
@@ -111,7 +111,7 @@
 
   "shareAsImage": "ابعث كتصويرة",
 
-  "parkingTicket": "كونطرافونسيون باركينغ",
+  "parkingTicket": "خطية باركينغ",
 
   "scanToPay": "سكاني باش تخلّص",
 
@@ -149,7 +149,7 @@
 
   "failedToLoadPendingRemovals": "ما نجمتش نجيب السابوات",
 
-  "failedToLoadTickets": "ما نجمتش نجيب الكونطرافونسيونات",
+  "failedToLoadTickets": "ما نجمتش نجيب الخطيةات",
 
   "refresh": "حدّث"
 }

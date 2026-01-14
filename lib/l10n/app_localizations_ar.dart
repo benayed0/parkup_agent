@@ -46,7 +46,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get checkVehicle => 'شوف الكرهبة';
 
   @override
-  String get checkStatusCreateTickets => 'شوف الحالة واعمل كونطرافونسيون';
+  String get checkStatusCreateTickets => 'شوف الحالة واعمل خطية';
 
   @override
   String get removeSabots => 'فكّ السابو';
@@ -58,7 +58,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get history => 'التاريخ';
 
   @override
-  String get viewPastTickets => 'شوف الكونطرافونسيونات القديمة';
+  String get viewPastTickets => 'شوف الخطيةات القديمة';
 
   @override
   String get active => 'خدّام';
@@ -100,10 +100,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get usingZoneLocation => 'نستعمل بلاصة الزون (GPS ما يخدمش)';
 
   @override
-  String ticketCreated(String number) => 'يا سلام! كونطرافونسيون #$number تعملت';
+  String ticketCreated(String number) => 'يا سلام! خطية #$number تعملت';
 
   @override
-  String get failedToCreateTicket => 'ما نجمتش نعمل كونطرافونسيون. عاود حاول';
+  String get failedToCreateTicket => 'ما نجمتش نعمل خطية. عاود حاول';
 
   @override
   String get checking => 'مستنّي... نشوف';
@@ -139,13 +139,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tryAgain => 'عاود حاول';
 
   @override
-  String get noTicketsYet => 'مازال ما عندك حتى كونطرافونسيون';
+  String get noTicketsYet => 'مازال ما عندك حتى خطية';
 
   @override
-  String get ticketsWillAppearHere => 'الكونطرافونسيونات اللي تعملها تظهر هوني';
+  String get ticketsWillAppearHere => 'الخطيةات اللي تعملها تظهر هوني';
 
   @override
-  String ticketCount(int count) => count == 1 ? 'كونطرافونسيون وحدة' : '$count كونطرافونسيونات';
+  String ticketCount(int count) => count == 1 ? 'خطية وحدة' : '$count خطيةات';
 
   @override
   String get goToLocation => 'امشي للبلاصة';
@@ -169,7 +169,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get shareAsImage => 'ابعث كتصويرة';
 
   @override
-  String get parkingTicket => 'كونطرافونسيون باركينغ';
+  String get parkingTicket => 'خطية باركينغ';
 
   @override
   String get scanToPay => 'سكاني باش تخلّص';
@@ -226,7 +226,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get failedToLoadPendingRemovals => 'ما نجمتش نجيب السابوات';
 
   @override
-  String get failedToLoadTickets => 'ما نجمتش نجيب الكونطرافونسيونات';
+  String get failedToLoadTickets => 'ما نجمتش نجيب الخطيةات';
 
   @override
   String get refresh => 'حدّث';
