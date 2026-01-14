@@ -7,227 +7,227 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appName => 'ParkUp Agent';
 
   @override
-  String get signInToContinue => 'سجل الدخول للمتابعة';
+  String get signInToContinue => 'ادخل باش تكمّل';
 
   @override
-  String get username => 'اسم المستخدم';
+  String get username => 'الإسم متاعك';
 
   @override
-  String get enterUsername => 'أدخل اسم المستخدم';
+  String get enterUsername => 'اكتب اسمك هوني';
 
   @override
-  String get password => 'كلمة المرور';
+  String get password => 'الكلمة السرية';
 
   @override
-  String get enterPassword => 'أدخل كلمة المرور';
+  String get enterPassword => 'اكتب الكلمة السرية';
 
   @override
-  String get pleaseEnterUsername => 'الرجاء إدخال اسم المستخدم';
+  String get pleaseEnterUsername => 'يا ولدي اكتب اسمك!';
 
   @override
-  String get pleaseEnterPassword => 'الرجاء إدخال كلمة المرور';
+  String get pleaseEnterPassword => 'وين الكلمة السرية؟';
 
   @override
-  String get signIn => 'تسجيل الدخول';
+  String get signIn => 'ادخل';
 
   @override
-  String get contactAdminForPassword => 'تواصل مع المسؤول إذا نسيت كلمة المرور';
+  String get contactAdminForPassword => 'نسيت الكلمة السرية؟ كلّم المسؤول';
 
   @override
-  String get loginFailed => 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.';
+  String get loginFailed => 'ما نجمتش تدخل. عاود حاول!';
 
   @override
-  String welcomeUser(String name) => 'مرحباً، $name';
+  String welcomeUser(String name) => 'عسلامة يا $name!';
 
   @override
-  String get whatWouldYouLikeToDo => 'ماذا تريد أن تفعل؟';
+  String get whatWouldYouLikeToDo => 'آش تحب تعمل توّا؟';
 
   @override
-  String get checkVehicle => 'فحص المركبة';
+  String get checkVehicle => 'شوف الكرهبة';
 
   @override
-  String get checkStatusCreateTickets => 'فحص الحالة وإنشاء المخالفات';
+  String get checkStatusCreateTickets => 'شوف الحالة واعمل كونطرافونسيون';
 
   @override
-  String get removeSabots => 'إزالة السابوهات';
+  String get removeSabots => 'فكّ السابو';
 
   @override
-  String get paidSabotsToRemove => 'سابوهات مدفوعة للإزالة';
+  String get paidSabotsToRemove => 'سابوات خالصين لازم يتفكّو';
 
   @override
-  String get history => 'السجل';
+  String get history => 'التاريخ';
 
   @override
-  String get viewPastTickets => 'عرض المخالفات السابقة';
+  String get viewPastTickets => 'شوف الكونطرافونسيونات القديمة';
 
   @override
-  String get active => 'نشط';
+  String get active => 'خدّام';
 
   @override
-  String get inactive => 'غير نشط';
+  String get inactive => 'واقف';
 
   @override
-  String get logout => 'تسجيل الخروج';
+  String get logout => 'اخرج';
 
   @override
-  String get logoutConfirmation => 'هل أنت متأكد من أنك تريد تسجيل الخروج؟';
+  String get logoutConfirmation => 'متأكد تحب تخرج؟';
 
   @override
-  String get cancel => 'إلغاء';
+  String get cancel => 'لا خلّي';
 
   @override
-  String get confirm => 'تأكيد';
+  String get confirm => 'إيه أكّد';
 
   @override
-  String get licensePlate => 'لوحة الترخيص';
+  String get licensePlate => 'الماتريكيل';
 
   @override
-  String get gpsLocationUpdated => 'تم تحديث موقع GPS';
+  String get gpsLocationUpdated => 'البلاصة تحدّثت';
 
   @override
-  String get couldNotGetGpsLocation => 'تعذر الحصول على موقع GPS';
+  String get couldNotGetGpsLocation => 'ما لقيتش البلاصة متاعك';
 
   @override
-  String get pleaseEnterValidPlate => 'الرجاء إدخال لوحة ترخيص صالحة';
+  String get pleaseEnterValidPlate => 'اكتب ماتريكيل صحيح!';
 
   @override
-  String get failedToCheckVehicle => 'فشل فحص المركبة. يرجى المحاولة مرة أخرى.';
+  String get failedToCheckVehicle => 'ما نجمتش نشوف الكرهبة. عاود حاول';
 
   @override
-  String get pleaseSelectParkingZone => 'الرجاء اختيار منطقة الوقوف';
+  String get pleaseSelectParkingZone => 'اختار الزون وين الكرهبة';
 
   @override
-  String get usingZoneLocation => 'استخدام موقع المنطقة (GPS غير متوفر)';
+  String get usingZoneLocation => 'نستعمل بلاصة الزون (GPS ما يخدمش)';
 
   @override
-  String ticketCreated(String number) => 'تم إنشاء المخالفة #$number';
+  String ticketCreated(String number) => 'يا سلام! كونطرافونسيون #$number تعملت';
 
   @override
-  String get failedToCreateTicket => 'فشل إنشاء المخالفة. يرجى المحاولة مرة أخرى.';
+  String get failedToCreateTicket => 'ما نجمتش نعمل كونطرافونسيون. عاود حاول';
 
   @override
-  String get checking => 'جاري الفحص...';
+  String get checking => 'مستنّي... نشوف';
 
   @override
-  String get check => 'فحص';
+  String get check => 'شوف';
 
   @override
-  String get recheck => 'إعادة الفحص';
+  String get recheck => 'عاود شوف';
 
   @override
   String get newSearch => 'بحث جديد';
 
   @override
-  String get enterPlateThenCheck => 'أدخل لوحة الترخيص، ثم اضغط فحص';
+  String get enterPlateThenCheck => 'اكتب الماتريكيل وبعد عيّط على شوف';
 
   @override
-  String get selectZone => 'اختر المنطقة';
+  String get selectZone => 'اختار الزون';
 
   @override
-  String get refreshGps => 'تحديث GPS';
+  String get refreshGps => 'حدّث البلاصة';
 
   @override
-  String expired(String date) => 'منتهي: $date';
+  String expired(String date) => 'فات وقتو: $date';
 
   @override
-  String get error => 'خطأ';
+  String get error => 'مشكلة!';
 
   @override
-  String get somethingWentWrong => 'حدث خطأ ما';
+  String get somethingWentWrong => 'صار شي ما يصلحش';
 
   @override
-  String get tryAgain => 'حاول مرة أخرى';
+  String get tryAgain => 'عاود حاول';
 
   @override
-  String get noTicketsYet => 'لا توجد مخالفات بعد';
+  String get noTicketsYet => 'مازال ما عندك حتى كونطرافونسيون';
 
   @override
-  String get ticketsWillAppearHere => 'المخالفات التي تنشئها ستظهر هنا';
+  String get ticketsWillAppearHere => 'الكونطرافونسيونات اللي تعملها تظهر هوني';
 
   @override
-  String ticketCount(int count) => count == 1 ? 'مخالفة واحدة' : '$count مخالفات';
+  String ticketCount(int count) => count == 1 ? 'كونطرافونسيون وحدة' : '$count كونطرافونسيونات';
 
   @override
-  String get goToLocation => 'الذهاب إلى الموقع';
+  String get goToLocation => 'امشي للبلاصة';
 
   @override
-  String get print => 'طباعة';
+  String get print => 'اطبع';
 
   @override
-  String get yesterday => 'أمس';
+  String get yesterday => 'البارح';
 
   @override
   String minutesAgo(int count) => 'قبل $count دقيقة';
 
   @override
-  String hoursAgo(int count) => 'قبل $count ساعة';
+  String hoursAgo(int count) => 'قبل $count ساعات';
 
   @override
-  String get printPreview => 'معاينة الطباعة';
+  String get printPreview => 'شوف قبل ما تطبع';
 
   @override
-  String get shareAsImage => 'مشاركة كصورة';
+  String get shareAsImage => 'ابعث كتصويرة';
 
   @override
-  String get parkingTicket => 'مخالفة وقوف';
+  String get parkingTicket => 'كونطرافونسيون باركينغ';
 
   @override
-  String get scanToPay => 'امسح للدفع';
+  String get scanToPay => 'سكاني باش تخلّص';
 
   @override
-  String get viewOnMap => 'عرض على الخريطة';
+  String get viewOnMap => 'شوف في الكارطة';
 
   @override
-  String get share => 'مشاركة';
+  String get share => 'ابعث';
 
   @override
-  String get bluetoothPrintingComingSoon => 'طباعة البلوتوث قريباً!';
+  String get bluetoothPrintingComingSoon => 'الطباعة بالبلوتوث جايّة قريب!';
 
   @override
-  String get failedToShare => 'فشلت المشاركة';
+  String get failedToShare => 'ما نجمتش نبعث';
 
   @override
-  String get failedToLoadPrintData => 'فشل تحميل بيانات الطباعة';
+  String get failedToLoadPrintData => 'ما نجمتش نحمّل بيانات الطباعة';
 
   @override
-  String get pendingRemovals => 'إزالات معلقة';
+  String get pendingRemovals => 'سابوات يستنّاو التفكيك';
 
   @override
-  String get confirmRemoval => 'تأكيد الإزالة';
+  String get confirmRemoval => 'أكّد التفكيك';
 
   @override
-  String markSabotAsRemoved(String plate) => 'تحديد السابو للوحة $plate كمُزال؟';
+  String markSabotAsRemoved(String plate) => 'تحب تقول السابو متاع $plate تفكّ؟';
 
   @override
-  String get sabotMarkedAsRemoved => 'تم تحديد السابو كمُزال';
+  String get sabotMarkedAsRemoved => 'تمام! السابو تفكّ';
 
   @override
-  String get allClear => 'كل شيء على ما يرام!';
+  String get allClear => 'كل شي باهي!';
 
   @override
-  String get noSabotsPendingRemoval => 'لا توجد سابوهات معلقة للإزالة';
+  String get noSabotsPendingRemoval => 'ما فمّاش سابوات يستنّاو';
 
   @override
-  String sabotCount(int count) => count == 1 ? 'سابو واحد للإزالة' : '$count سابوهات للإزالة';
+  String sabotCount(int count) => count == 1 ? 'سابو واحد للتفكيك' : '$count سابوات للتفكيك';
 
   @override
-  String get paid => 'مدفوع';
+  String get paid => 'مخلّص';
 
   @override
-  String paidTime(String time) => 'مدفوع $time';
+  String paidTime(String time) => 'خلّص $time';
 
   @override
-  String get navigate => 'التنقل';
+  String get navigate => 'روّح للبلاصة';
 
   @override
-  String get removed => 'تمت الإزالة';
+  String get removed => 'تفكّ';
 
   @override
-  String get failedToLoadPendingRemovals => 'فشل تحميل الإزالات المعلقة';
+  String get failedToLoadPendingRemovals => 'ما نجمتش نجيب السابوات';
 
   @override
-  String get failedToLoadTickets => 'فشل تحميل المخالفات';
+  String get failedToLoadTickets => 'ما نجمتش نجيب الكونطرافونسيونات';
 
   @override
-  String get refresh => 'تحديث';
+  String get refresh => 'حدّث';
 }

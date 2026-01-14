@@ -3,153 +3,153 @@
 
   "appName": "ParkUp Agent",
 
-  "signInToContinue": "سجل الدخول للمتابعة",
+  "signInToContinue": "ادخل باش تكمّل",
 
-  "username": "اسم المستخدم",
+  "username": "الإسم متاعك",
 
-  "enterUsername": "أدخل اسم المستخدم",
+  "enterUsername": "اكتب اسمك هوني",
 
-  "password": "كلمة المرور",
+  "password": "الكلمة السرية",
 
-  "enterPassword": "أدخل كلمة المرور",
+  "enterPassword": "اكتب الكلمة السرية",
 
-  "pleaseEnterUsername": "الرجاء إدخال اسم المستخدم",
+  "pleaseEnterUsername": "يا ولدي اكتب اسمك!",
 
-  "pleaseEnterPassword": "الرجاء إدخال كلمة المرور",
+  "pleaseEnterPassword": "وين الكلمة السرية؟",
 
-  "signIn": "تسجيل الدخول",
+  "signIn": "ادخل",
 
-  "contactAdminForPassword": "تواصل مع المسؤول إذا نسيت كلمة المرور",
+  "contactAdminForPassword": "نسيت الكلمة السرية؟ كلّم المسؤول",
 
-  "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+  "loginFailed": "ما نجمتش تدخل. عاود حاول!",
 
-  "welcomeUser": "مرحباً، {name}",
+  "welcomeUser": "عسلامة يا {name}!",
 
-  "whatWouldYouLikeToDo": "ماذا تريد أن تفعل؟",
+  "whatWouldYouLikeToDo": "آش تحب تعمل توّا؟",
 
-  "checkVehicle": "فحص المركبة",
+  "checkVehicle": "شوف الكرهبة",
 
-  "checkStatusCreateTickets": "فحص الحالة وإنشاء المخالفات",
+  "checkStatusCreateTickets": "شوف الحالة واعمل كونطرافونسيون",
 
-  "removeSabots": "إزالة السابوهات",
+  "removeSabots": "فكّ السابو",
 
-  "paidSabotsToRemove": "سابوهات مدفوعة للإزالة",
+  "paidSabotsToRemove": "سابوات خالصين لازم يتفكّو",
 
-  "history": "السجل",
+  "history": "التاريخ",
 
-  "viewPastTickets": "عرض المخالفات السابقة",
+  "viewPastTickets": "شوف الكونطرافونسيونات القديمة",
 
-  "active": "نشط",
+  "active": "خدّام",
 
-  "inactive": "غير نشط",
+  "inactive": "واقف",
 
-  "logout": "تسجيل الخروج",
+  "logout": "اخرج",
 
-  "logoutConfirmation": "هل أنت متأكد من أنك تريد تسجيل الخروج؟",
+  "logoutConfirmation": "متأكد تحب تخرج؟",
 
-  "cancel": "إلغاء",
+  "cancel": "لا خلّي",
 
-  "confirm": "تأكيد",
+  "confirm": "إيه أكّد",
 
-  "licensePlate": "لوحة الترخيص",
+  "licensePlate": "الماتريكيل",
 
-  "gpsLocationUpdated": "تم تحديث موقع GPS",
+  "gpsLocationUpdated": "البلاصة تحدّثت",
 
-  "couldNotGetGpsLocation": "تعذر الحصول على موقع GPS",
+  "couldNotGetGpsLocation": "ما لقيتش البلاصة متاعك",
 
-  "pleaseEnterValidPlate": "الرجاء إدخال لوحة ترخيص صالحة",
+  "pleaseEnterValidPlate": "اكتب ماتريكيل صحيح!",
 
-  "failedToCheckVehicle": "فشل فحص المركبة. يرجى المحاولة مرة أخرى.",
+  "failedToCheckVehicle": "ما نجمتش نشوف الكرهبة. عاود حاول",
 
-  "pleaseSelectParkingZone": "الرجاء اختيار منطقة الوقوف",
+  "pleaseSelectParkingZone": "اختار الزون وين الكرهبة",
 
-  "usingZoneLocation": "استخدام موقع المنطقة (GPS غير متوفر)",
+  "usingZoneLocation": "نستعمل بلاصة الزون (GPS ما يخدمش)",
 
-  "ticketCreated": "تم إنشاء المخالفة #{number}",
+  "ticketCreated": "يا سلام! كونطرافونسيون #{number} تعملت",
 
-  "failedToCreateTicket": "فشل إنشاء المخالفة. يرجى المحاولة مرة أخرى.",
+  "failedToCreateTicket": "ما نجمتش نعمل كونطرافونسيون. عاود حاول",
 
-  "checking": "جاري الفحص...",
+  "checking": "مستنّي... نشوف",
 
-  "check": "فحص",
+  "check": "شوف",
 
-  "recheck": "إعادة الفحص",
+  "recheck": "عاود شوف",
 
   "newSearch": "بحث جديد",
 
-  "enterPlateThenCheck": "أدخل لوحة الترخيص، ثم اضغط فحص",
+  "enterPlateThenCheck": "اكتب الماتريكيل وبعد عيّط على شوف",
 
-  "selectZone": "اختر المنطقة",
+  "selectZone": "اختار الزون",
 
-  "refreshGps": "تحديث GPS",
+  "refreshGps": "حدّث البلاصة",
 
-  "expired": "منتهي: {date}",
+  "expired": "فات وقتو: {date}",
 
-  "error": "خطأ",
+  "error": "مشكلة!",
 
-  "somethingWentWrong": "حدث خطأ ما",
+  "somethingWentWrong": "صار شي ما يصلحش",
 
-  "tryAgain": "حاول مرة أخرى",
+  "tryAgain": "عاود حاول",
 
-  "noTicketsYet": "لا توجد مخالفات بعد",
+  "noTicketsYet": "مازال ما عندك حتى كونطرافونسيون",
 
-  "ticketsWillAppearHere": "المخالفات التي تنشئها ستظهر هنا",
+  "ticketsWillAppearHere": "الكونطرافونسيونات اللي تعملها تظهر هوني",
 
-  "ticketCount": "{count, plural, =1{مخالفة واحدة} other{{count} مخالفات}}",
+  "ticketCount": "{count, plural, =1{كونطرافونسيون وحدة} other{{count} كونطرافونسيونات}}",
 
-  "goToLocation": "الذهاب إلى الموقع",
+  "goToLocation": "امشي للبلاصة",
 
-  "print": "طباعة",
+  "print": "اطبع",
 
-  "yesterday": "أمس",
+  "yesterday": "البارح",
 
   "minutesAgo": "قبل {count} دقيقة",
 
-  "hoursAgo": "قبل {count} ساعة",
+  "hoursAgo": "قبل {count} ساعات",
 
-  "printPreview": "معاينة الطباعة",
+  "printPreview": "شوف قبل ما تطبع",
 
-  "shareAsImage": "مشاركة كصورة",
+  "shareAsImage": "ابعث كتصويرة",
 
-  "parkingTicket": "مخالفة وقوف",
+  "parkingTicket": "كونطرافونسيون باركينغ",
 
-  "scanToPay": "امسح للدفع",
+  "scanToPay": "سكاني باش تخلّص",
 
-  "viewOnMap": "عرض على الخريطة",
+  "viewOnMap": "شوف في الكارطة",
 
-  "share": "مشاركة",
+  "share": "ابعث",
 
-  "bluetoothPrintingComingSoon": "طباعة البلوتوث قريباً!",
+  "bluetoothPrintingComingSoon": "الطباعة بالبلوتوث جايّة قريب!",
 
-  "failedToShare": "فشلت المشاركة",
+  "failedToShare": "ما نجمتش نبعث",
 
-  "failedToLoadPrintData": "فشل تحميل بيانات الطباعة",
+  "failedToLoadPrintData": "ما نجمتش نحمّل بيانات الطباعة",
 
-  "pendingRemovals": "إزالات معلقة",
+  "pendingRemovals": "سابوات يستنّاو التفكيك",
 
-  "confirmRemoval": "تأكيد الإزالة",
+  "confirmRemoval": "أكّد التفكيك",
 
-  "markSabotAsRemoved": "تحديد السابو للوحة {plate} كمُزال؟",
+  "markSabotAsRemoved": "تحب تقول السابو متاع {plate} تفكّ؟",
 
-  "sabotMarkedAsRemoved": "تم تحديد السابو كمُزال",
+  "sabotMarkedAsRemoved": "تمام! السابو تفكّ",
 
-  "allClear": "كل شيء على ما يرام!",
+  "allClear": "كل شي باهي!",
 
-  "noSabotsPendingRemoval": "لا توجد سابوهات معلقة للإزالة",
+  "noSabotsPendingRemoval": "ما فمّاش سابوات يستنّاو",
 
-  "sabotCount": "{count, plural, =1{سابو واحد للإزالة} other{{count} سابوهات للإزالة}}",
+  "sabotCount": "{count, plural, =1{سابو واحد للتفكيك} other{{count} سابوات للتفكيك}}",
 
-  "paid": "مدفوع",
+  "paid": "مخلّص",
 
-  "paidTime": "مدفوع {time}",
+  "paidTime": "خلّص {time}",
 
-  "navigate": "التنقل",
+  "navigate": "روّح للبلاصة",
 
-  "removed": "تمت الإزالة",
+  "removed": "تفكّ",
 
-  "failedToLoadPendingRemovals": "فشل تحميل الإزالات المعلقة",
+  "failedToLoadPendingRemovals": "ما نجمتش نجيب السابوات",
 
-  "failedToLoadTickets": "فشل تحميل المخالفات",
+  "failedToLoadTickets": "ما نجمتش نجيب الكونطرافونسيونات",
 
-  "refresh": "تحديث"
+  "refresh": "حدّث"
 }
