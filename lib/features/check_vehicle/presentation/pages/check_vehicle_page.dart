@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
@@ -78,19 +79,19 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
       print('[GPS] Setting position: lat=${pos.latitude}, lng=${pos.longitude}');
       setState(() => _position = pos);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('GPS location updated'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.gpsLocationUpdated),
           backgroundColor: AppColors.success,
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
         ),
       );
     } else if (mounted) {
       print('[GPS] Could not get position. mounted=$mounted, pos=$pos');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Could not get GPS location'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.couldNotGetGpsLocation),
           backgroundColor: AppColors.warning,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -154,8 +155,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   Future<void> _handleManualCheck() async {
     if (!_isPlateValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid license plate'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseEnterValidPlate),
           backgroundColor: AppColors.warning,
         ),
       );
@@ -205,8 +206,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
         _lastCheckedPlate = _currentPlate;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to check vehicle. Please try again.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.failedToCheckVehicle),
           backgroundColor: AppColors.error,
         ),
       );
@@ -214,11 +215,13 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   }
 
   Future<void> _handleCreateTicket(TicketReason reason) async {
+    final l10n = AppLocalizations.of(context)!;
+
     // Check if zone is selected
     if (_selectedZone == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a parking zone'),
+        SnackBar(
+          content: Text(l10n.pleaseSelectParkingZone),
           backgroundColor: AppColors.error,
         ),
       );
@@ -242,10 +245,10 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
       ticketPosition = _selectedZone!.location;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Using zone location (GPS unavailable)'),
+          SnackBar(
+            content: Text(l10n.usingZoneLocation),
             backgroundColor: AppColors.warning,
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -280,7 +283,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
             children: [
               const Icon(Icons.check_circle, color: Colors.white),
               const SizedBox(width: 8),
-              Text('Ticket #${ticket.ticketNumber} created'),
+              Text(l10n.ticketCreated(ticket.ticketNumber)),
             ],
           ),
           backgroundColor: AppColors.success,
@@ -302,8 +305,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
       if (!mounted) return;
       HapticFeedback.heavyImpact();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to create ticket. Please try again.'),
+        SnackBar(
+          content: Text(l10n.failedToCreateTicket),
           backgroundColor: AppColors.error,
         ),
       );
@@ -325,9 +328,11 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Check Vehicle'),
+        title: Text(l10n.checkVehicle),
         actions: [
           // GPS indicator - tappable to refresh
           IconButton(
@@ -336,7 +341,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
               _position != null ? Icons.gps_fixed : Icons.gps_not_fixed,
               color: _position != null ? AppColors.success : AppColors.secondary,
             ),
-            tooltip: 'Refresh GPS',
+            tooltip: l10n.refreshGps,
           ),
         ],
       ),
@@ -360,7 +365,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                       value: _selectedZone,
                       isExpanded: true,
                       icon: const Icon(Icons.arrow_drop_down),
-                      hint: const Text('Select Zone'),
+                      hint: Text(l10n.selectZone),
                       items: _zones.map((zone) {
                         return DropdownMenuItem<ParkingZone>(
                           value: zone,
@@ -394,28 +399,28 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                 key: ValueKey(_inputKey),
                 initialValue: _currentPlate.isEmpty ? null : _currentPlate,
                 onChanged: _onPlateChanged,
-                label: 'License Plate',
+                label: l10n.licensePlate,
               ),
 
               const SizedBox(height: 12),
 
               // Loading indicator or Check button
               if (_isLoading)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Center(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 32,
                           height: 32,
                           child: CircularProgressIndicator(strokeWidth: 3),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Text(
-                          'Checking...',
-                          style: TextStyle(
+                          l10n.checking,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
@@ -439,9 +444,9 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                       ),
                     ),
                     icon: const Icon(Icons.search, size: 24),
-                    label: const Text(
-                      'Check',
-                      style: TextStyle(
+                    label: Text(
+                      l10n.check,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -505,9 +510,9 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                             ),
                           ),
                           icon: const Icon(Icons.refresh, size: 22),
-                          label: const Text(
-                            'Recheck',
-                            style: TextStyle(
+                          label: Text(
+                            l10n.recheck,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -529,9 +534,9 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                             ),
                           ),
                           icon: const Icon(Icons.search, size: 22),
-                          label: const Text(
-                            'New Search',
-                            style: TextStyle(
+                          label: Text(
+                            l10n.newSearch,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -553,7 +558,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Enter license plate, then tap Check',
+                  l10n.enterPlateThenCheck,
                   style: AppTextStyles.body.copyWith(
                     color: AppColors.textTertiary,
                   ),

@@ -1,0 +1,155 @@
+{
+  "@@locale": "ar",
+
+  "appName": "ParkUp Agent",
+
+  "signInToContinue": "سجل الدخول للمتابعة",
+
+  "username": "اسم المستخدم",
+
+  "enterUsername": "أدخل اسم المستخدم",
+
+  "password": "كلمة المرور",
+
+  "enterPassword": "أدخل كلمة المرور",
+
+  "pleaseEnterUsername": "الرجاء إدخال اسم المستخدم",
+
+  "pleaseEnterPassword": "الرجاء إدخال كلمة المرور",
+
+  "signIn": "تسجيل الدخول",
+
+  "contactAdminForPassword": "تواصل مع المسؤول إذا نسيت كلمة المرور",
+
+  "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+
+  "welcomeUser": "مرحباً، {name}",
+
+  "whatWouldYouLikeToDo": "ماذا تريد أن تفعل؟",
+
+  "checkVehicle": "فحص المركبة",
+
+  "checkStatusCreateTickets": "فحص الحالة وإنشاء المخالفات",
+
+  "removeSabots": "إزالة السابوهات",
+
+  "paidSabotsToRemove": "سابوهات مدفوعة للإزالة",
+
+  "history": "السجل",
+
+  "viewPastTickets": "عرض المخالفات السابقة",
+
+  "active": "نشط",
+
+  "inactive": "غير نشط",
+
+  "logout": "تسجيل الخروج",
+
+  "logoutConfirmation": "هل أنت متأكد من أنك تريد تسجيل الخروج؟",
+
+  "cancel": "إلغاء",
+
+  "confirm": "تأكيد",
+
+  "licensePlate": "لوحة الترخيص",
+
+  "gpsLocationUpdated": "تم تحديث موقع GPS",
+
+  "couldNotGetGpsLocation": "تعذر الحصول على موقع GPS",
+
+  "pleaseEnterValidPlate": "الرجاء إدخال لوحة ترخيص صالحة",
+
+  "failedToCheckVehicle": "فشل فحص المركبة. يرجى المحاولة مرة أخرى.",
+
+  "pleaseSelectParkingZone": "الرجاء اختيار منطقة الوقوف",
+
+  "usingZoneLocation": "استخدام موقع المنطقة (GPS غير متوفر)",
+
+  "ticketCreated": "تم إنشاء المخالفة #{number}",
+
+  "failedToCreateTicket": "فشل إنشاء المخالفة. يرجى المحاولة مرة أخرى.",
+
+  "checking": "جاري الفحص...",
+
+  "check": "فحص",
+
+  "recheck": "إعادة الفحص",
+
+  "newSearch": "بحث جديد",
+
+  "enterPlateThenCheck": "أدخل لوحة الترخيص، ثم اضغط فحص",
+
+  "selectZone": "اختر المنطقة",
+
+  "refreshGps": "تحديث GPS",
+
+  "expired": "منتهي: {date}",
+
+  "error": "خطأ",
+
+  "somethingWentWrong": "حدث خطأ ما",
+
+  "tryAgain": "حاول مرة أخرى",
+
+  "noTicketsYet": "لا توجد مخالفات بعد",
+
+  "ticketsWillAppearHere": "المخالفات التي تنشئها ستظهر هنا",
+
+  "ticketCount": "{count, plural, =1{مخالفة واحدة} other{{count} مخالفات}}",
+
+  "goToLocation": "الذهاب إلى الموقع",
+
+  "print": "طباعة",
+
+  "yesterday": "أمس",
+
+  "minutesAgo": "قبل {count} دقيقة",
+
+  "hoursAgo": "قبل {count} ساعة",
+
+  "printPreview": "معاينة الطباعة",
+
+  "shareAsImage": "مشاركة كصورة",
+
+  "parkingTicket": "مخالفة وقوف",
+
+  "scanToPay": "امسح للدفع",
+
+  "viewOnMap": "عرض على الخريطة",
+
+  "share": "مشاركة",
+
+  "bluetoothPrintingComingSoon": "طباعة البلوتوث قريباً!",
+
+  "failedToShare": "فشلت المشاركة",
+
+  "failedToLoadPrintData": "فشل تحميل بيانات الطباعة",
+
+  "pendingRemovals": "إزالات معلقة",
+
+  "confirmRemoval": "تأكيد الإزالة",
+
+  "markSabotAsRemoved": "تحديد السابو للوحة {plate} كمُزال؟",
+
+  "sabotMarkedAsRemoved": "تم تحديد السابو كمُزال",
+
+  "allClear": "كل شيء على ما يرام!",
+
+  "noSabotsPendingRemoval": "لا توجد سابوهات معلقة للإزالة",
+
+  "sabotCount": "{count, plural, =1{سابو واحد للإزالة} other{{count} سابوهات للإزالة}}",
+
+  "paid": "مدفوع",
+
+  "paidTime": "مدفوع {time}",
+
+  "navigate": "التنقل",
+
+  "removed": "تمت الإزالة",
+
+  "failedToLoadPendingRemovals": "فشل تحميل الإزالات المعلقة",
+
+  "failedToLoadTickets": "فشل تحميل المخالفات",
+
+  "refresh": "تحديث"
+}

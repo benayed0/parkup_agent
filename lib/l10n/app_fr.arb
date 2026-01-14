@@ -1,0 +1,155 @@
+{
+  "@@locale": "fr",
+
+  "appName": "ParkUp Agent",
+
+  "signInToContinue": "Connectez-vous pour continuer",
+
+  "username": "Nom d'utilisateur",
+
+  "enterUsername": "Entrez votre nom d'utilisateur",
+
+  "password": "Mot de passe",
+
+  "enterPassword": "Entrez votre mot de passe",
+
+  "pleaseEnterUsername": "Veuillez entrer votre nom d'utilisateur",
+
+  "pleaseEnterPassword": "Veuillez entrer votre mot de passe",
+
+  "signIn": "Se connecter",
+
+  "contactAdminForPassword": "Contactez votre administrateur si vous avez oublie votre mot de passe",
+
+  "loginFailed": "Echec de la connexion. Veuillez reessayer.",
+
+  "welcomeUser": "Bienvenue, {name}",
+
+  "whatWouldYouLikeToDo": "Que voulez-vous faire ?",
+
+  "checkVehicle": "Verifier vehicule",
+
+  "checkStatusCreateTickets": "Verifier le statut et creer des contraventions",
+
+  "removeSabots": "Retirer les sabots",
+
+  "paidSabotsToRemove": "Sabots payes a retirer",
+
+  "history": "Historique",
+
+  "viewPastTickets": "Voir les contraventions passees",
+
+  "active": "Actif",
+
+  "inactive": "Inactif",
+
+  "logout": "Deconnexion",
+
+  "logoutConfirmation": "Etes-vous sur de vouloir vous deconnecter ?",
+
+  "cancel": "Annuler",
+
+  "confirm": "Confirmer",
+
+  "licensePlate": "Plaque d'immatriculation",
+
+  "gpsLocationUpdated": "Position GPS mise a jour",
+
+  "couldNotGetGpsLocation": "Impossible d'obtenir la position GPS",
+
+  "pleaseEnterValidPlate": "Veuillez entrer une plaque d'immatriculation valide",
+
+  "failedToCheckVehicle": "Echec de la verification du vehicule. Veuillez reessayer.",
+
+  "pleaseSelectParkingZone": "Veuillez selectionner une zone de stationnement",
+
+  "usingZoneLocation": "Utilisation de la position de la zone (GPS indisponible)",
+
+  "ticketCreated": "Contravention #{number} creee",
+
+  "failedToCreateTicket": "Echec de la creation de la contravention. Veuillez reessayer.",
+
+  "checking": "Verification...",
+
+  "check": "Verifier",
+
+  "recheck": "Reverifier",
+
+  "newSearch": "Nouvelle recherche",
+
+  "enterPlateThenCheck": "Entrez la plaque, puis appuyez sur Verifier",
+
+  "selectZone": "Selectionner la zone",
+
+  "refreshGps": "Actualiser le GPS",
+
+  "expired": "Expire : {date}",
+
+  "error": "Erreur",
+
+  "somethingWentWrong": "Une erreur s'est produite",
+
+  "tryAgain": "Reessayer",
+
+  "noTicketsYet": "Aucune contravention",
+
+  "ticketsWillAppearHere": "Les contraventions que vous creez apparaitront ici",
+
+  "ticketCount": "{count, plural, =1{1 contravention} other{{count} contraventions}}",
+
+  "goToLocation": "Aller a l'emplacement",
+
+  "print": "Imprimer",
+
+  "yesterday": "Hier",
+
+  "minutesAgo": "il y a {count} min",
+
+  "hoursAgo": "il y a {count}h",
+
+  "printPreview": "Apercu avant impression",
+
+  "shareAsImage": "Partager comme image",
+
+  "parkingTicket": "CONTRAVENTION DE STATIONNEMENT",
+
+  "scanToPay": "Scanner pour payer",
+
+  "viewOnMap": "Voir sur la carte",
+
+  "share": "Partager",
+
+  "bluetoothPrintingComingSoon": "Impression Bluetooth bientot disponible !",
+
+  "failedToShare": "Echec du partage",
+
+  "failedToLoadPrintData": "Echec du chargement des donnees d'impression",
+
+  "pendingRemovals": "Retraits en attente",
+
+  "confirmRemoval": "Confirmer le retrait",
+
+  "markSabotAsRemoved": "Marquer le sabot pour {plate} comme retire ?",
+
+  "sabotMarkedAsRemoved": "Sabot marque comme retire",
+
+  "allClear": "Tout est en ordre !",
+
+  "noSabotsPendingRemoval": "Aucun sabot en attente de retrait",
+
+  "sabotCount": "{count, plural, =1{1 sabot a retirer} other{{count} sabots a retirer}}",
+
+  "paid": "PAYE",
+
+  "paidTime": "Paye {time}",
+
+  "navigate": "Naviguer",
+
+  "removed": "Retire",
+
+  "failedToLoadPendingRemovals": "Echec du chargement des retraits en attente",
+
+  "failedToLoadTickets": "Echec du chargement des contraventions",
+
+  "refresh": "Actualiser"
+}

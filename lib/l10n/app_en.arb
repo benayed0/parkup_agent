@@ -1,0 +1,433 @@
+{
+  "@@locale": "en",
+
+  "appName": "ParkUp Agent",
+  "@appName": {
+    "description": "The name of the application"
+  },
+
+  "signInToContinue": "Sign in to continue",
+  "@signInToContinue": {
+    "description": "Subtitle on the login page"
+  },
+
+  "username": "Username",
+  "@username": {
+    "description": "Label for username field"
+  },
+
+  "enterUsername": "Enter your username",
+  "@enterUsername": {
+    "description": "Hint text for username field"
+  },
+
+  "password": "Password",
+  "@password": {
+    "description": "Label for password field"
+  },
+
+  "enterPassword": "Enter your password",
+  "@enterPassword": {
+    "description": "Hint text for password field"
+  },
+
+  "pleaseEnterUsername": "Please enter your username",
+  "@pleaseEnterUsername": {
+    "description": "Validation error for empty username"
+  },
+
+  "pleaseEnterPassword": "Please enter your password",
+  "@pleaseEnterPassword": {
+    "description": "Validation error for empty password"
+  },
+
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Sign in button text"
+  },
+
+  "contactAdminForPassword": "Contact your administrator if you forgot your password",
+  "@contactAdminForPassword": {
+    "description": "Help text on login page"
+  },
+
+  "loginFailed": "Login failed. Please try again.",
+  "@loginFailed": {
+    "description": "Generic login error message"
+  },
+
+  "welcomeUser": "Welcome, {name}",
+  "@welcomeUser": {
+    "description": "Welcome message with user name",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+
+  "whatWouldYouLikeToDo": "What would you like to do?",
+  "@whatWouldYouLikeToDo": {
+    "description": "Subtitle on home page"
+  },
+
+  "checkVehicle": "Check Vehicle",
+  "@checkVehicle": {
+    "description": "Check vehicle action title"
+  },
+
+  "checkStatusCreateTickets": "Check status & create tickets",
+  "@checkStatusCreateTickets": {
+    "description": "Check vehicle action subtitle"
+  },
+
+  "removeSabots": "Remove Sabots",
+  "@removeSabots": {
+    "description": "Remove sabots action title"
+  },
+
+  "paidSabotsToRemove": "Paid sabots to remove",
+  "@paidSabotsToRemove": {
+    "description": "Remove sabots action subtitle"
+  },
+
+  "history": "History",
+  "@history": {
+    "description": "History action title"
+  },
+
+  "viewPastTickets": "View past tickets",
+  "@viewPastTickets": {
+    "description": "History action subtitle"
+  },
+
+  "active": "Active",
+  "@active": {
+    "description": "Active status label"
+  },
+
+  "inactive": "Inactive",
+  "@inactive": {
+    "description": "Inactive status label"
+  },
+
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button/title"
+  },
+
+  "logoutConfirmation": "Are you sure you want to logout?",
+  "@logoutConfirmation": {
+    "description": "Logout confirmation message"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button text"
+  },
+
+  "licensePlate": "License Plate",
+  "@licensePlate": {
+    "description": "License plate label"
+  },
+
+  "gpsLocationUpdated": "GPS location updated",
+  "@gpsLocationUpdated": {
+    "description": "GPS update success message"
+  },
+
+  "couldNotGetGpsLocation": "Could not get GPS location",
+  "@couldNotGetGpsLocation": {
+    "description": "GPS error message"
+  },
+
+  "pleaseEnterValidPlate": "Please enter a valid license plate",
+  "@pleaseEnterValidPlate": {
+    "description": "Invalid plate error message"
+  },
+
+  "failedToCheckVehicle": "Failed to check vehicle. Please try again.",
+  "@failedToCheckVehicle": {
+    "description": "Vehicle check error message"
+  },
+
+  "pleaseSelectParkingZone": "Please select a parking zone",
+  "@pleaseSelectParkingZone": {
+    "description": "Zone selection error"
+  },
+
+  "usingZoneLocation": "Using zone location (GPS unavailable)",
+  "@usingZoneLocation": {
+    "description": "Fallback to zone location message"
+  },
+
+  "ticketCreated": "Ticket #{number} created",
+  "@ticketCreated": {
+    "description": "Ticket creation success message",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "12345"
+      }
+    }
+  },
+
+  "failedToCreateTicket": "Failed to create ticket. Please try again.",
+  "@failedToCreateTicket": {
+    "description": "Ticket creation error message"
+  },
+
+  "checking": "Checking...",
+  "@checking": {
+    "description": "Loading state while checking vehicle"
+  },
+
+  "check": "Check",
+  "@check": {
+    "description": "Check button text"
+  },
+
+  "recheck": "Recheck",
+  "@recheck": {
+    "description": "Recheck button text"
+  },
+
+  "newSearch": "New Search",
+  "@newSearch": {
+    "description": "New search button text"
+  },
+
+  "enterPlateThenCheck": "Enter license plate, then tap Check",
+  "@enterPlateThenCheck": {
+    "description": "Empty state hint"
+  },
+
+  "selectZone": "Select Zone",
+  "@selectZone": {
+    "description": "Zone selector hint"
+  },
+
+  "refreshGps": "Refresh GPS",
+  "@refreshGps": {
+    "description": "GPS refresh tooltip"
+  },
+
+  "expired": "Expired: {date}",
+  "@expired": {
+    "description": "Expired session text",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "01/01 12:00"
+      }
+    }
+  },
+
+  "error": "Error",
+  "@error": {
+    "description": "Error title"
+  },
+
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
+  },
+
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Retry button text"
+  },
+
+  "noTicketsYet": "No tickets yet",
+  "@noTicketsYet": {
+    "description": "Empty state title for history"
+  },
+
+  "ticketsWillAppearHere": "Tickets you create will appear here",
+  "@ticketsWillAppearHere": {
+    "description": "Empty state subtitle for history"
+  },
+
+  "ticketCount": "{count, plural, =1{1 ticket} other{{count} tickets}}",
+  "@ticketCount": {
+    "description": "Ticket count text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "goToLocation": "Go to Location",
+  "@goToLocation": {
+    "description": "Navigate to location button"
+  },
+
+  "print": "Print",
+  "@print": {
+    "description": "Print button text"
+  },
+
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday time label"
+  },
+
+  "minutesAgo": "{count}m ago",
+  "@minutesAgo": {
+    "description": "Minutes ago text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "hoursAgo": "{count}h ago",
+  "@hoursAgo": {
+    "description": "Hours ago text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "printPreview": "Print Preview",
+  "@printPreview": {
+    "description": "Print preview page title"
+  },
+
+  "shareAsImage": "Share as Image",
+  "@shareAsImage": {
+    "description": "Share as image tooltip"
+  },
+
+  "parkingTicket": "PARKING TICKET",
+  "@parkingTicket": {
+    "description": "Ticket header title"
+  },
+
+  "scanToPay": "Scan to Pay",
+  "@scanToPay": {
+    "description": "QR code label"
+  },
+
+  "viewOnMap": "View on Map",
+  "@viewOnMap": {
+    "description": "View on map link text"
+  },
+
+  "share": "Share",
+  "@share": {
+    "description": "Share button text"
+  },
+
+  "bluetoothPrintingComingSoon": "Bluetooth printing coming soon!",
+  "@bluetoothPrintingComingSoon": {
+    "description": "Bluetooth printing placeholder message"
+  },
+
+  "failedToShare": "Failed to share",
+  "@failedToShare": {
+    "description": "Share error message"
+  },
+
+  "failedToLoadPrintData": "Failed to load print data",
+  "@failedToLoadPrintData": {
+    "description": "Print data load error"
+  },
+
+  "pendingRemovals": "Pending Removals",
+  "@pendingRemovals": {
+    "description": "Pending removals page title"
+  },
+
+  "confirmRemoval": "Confirm Removal",
+  "@confirmRemoval": {
+    "description": "Removal confirmation dialog title"
+  },
+
+  "markSabotAsRemoved": "Mark sabot for {plate} as removed?",
+  "@markSabotAsRemoved": {
+    "description": "Removal confirmation message",
+    "placeholders": {
+      "plate": {
+        "type": "String",
+        "example": "123 TU 4567"
+      }
+    }
+  },
+
+  "sabotMarkedAsRemoved": "Sabot marked as removed",
+  "@sabotMarkedAsRemoved": {
+    "description": "Removal success message"
+  },
+
+  "allClear": "All clear!",
+  "@allClear": {
+    "description": "Empty state title for pending removals"
+  },
+
+  "noSabotsPendingRemoval": "No sabots pending removal",
+  "@noSabotsPendingRemoval": {
+    "description": "Empty state subtitle for pending removals"
+  },
+
+  "sabotCount": "{count, plural, =1{1 sabot to remove} other{{count} sabots to remove}}",
+  "@sabotCount": {
+    "description": "Sabot count text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "paid": "PAID",
+  "@paid": {
+    "description": "Paid status label"
+  },
+
+  "paidTime": "Paid {time}",
+  "@paidTime": {
+    "description": "Paid time text",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2h ago"
+      }
+    }
+  },
+
+  "navigate": "Navigate",
+  "@navigate": {
+    "description": "Navigate button text"
+  },
+
+  "removed": "Removed",
+  "@removed": {
+    "description": "Removed button text"
+  },
+
+  "failedToLoadPendingRemovals": "Failed to load pending removals",
+  "@failedToLoadPendingRemovals": {
+    "description": "Pending removals load error"
+  },
+
+  "failedToLoadTickets": "Failed to load tickets",
+  "@failedToLoadTickets": {
+    "description": "Tickets load error"
+  },
+
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh tooltip"
+  }
+}

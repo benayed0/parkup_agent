@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
@@ -62,7 +63,7 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'Failed to load pending removals';
+        _errorMessage = AppLocalizations.of(context)!.failedToLoadPendingRemovals;
         _isLoading = false;
       });
     }
@@ -80,22 +81,24 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
   }
 
   Future<void> _markAsRemoved(Ticket ticket) async {
+    final l10n = AppLocalizations.of(context)!;
+
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Removal'),
+        title: Text(l10n.confirmRemoval),
         content: Text(
-          'Mark sabot for ${ticket.licensePlate} as removed?',
+          l10n.markSabotAsRemoved(ticket.licensePlate),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Confirm'),
+            child: Text(l10n.confirm),
           ),
         ],
       ),
@@ -114,8 +117,8 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Sabot marked as removed'),
+        SnackBar(
+          content: Text(l10n.sabotMarkedAsRemoved),
           backgroundColor: AppColors.success,
         ),
       );
@@ -132,13 +135,15 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pending Removals'),
+        title: Text(l10n.pendingRemovals),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
+            tooltip: l10n.refresh,
             onPressed: _loadPendingRemovals,
           ),
         ],
@@ -146,14 +151,14 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
-              ? _buildErrorState()
+              ? _buildErrorState(l10n)
               : _tickets.isEmpty
-                  ? _buildEmptyState()
-                  : _buildList(),
+                  ? _buildEmptyState(l10n)
+                  : _buildList(l10n),
     );
   }
 
-  Widget _buildErrorState() {
+  Widget _buildErrorState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -166,10 +171,10 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
               color: AppColors.error.withValues(alpha: 0.7),
             ),
             const SizedBox(height: 16),
-            Text('Error', style: AppTextStyles.h3),
+            Text(l10n.error, style: AppTextStyles.h3),
             const SizedBox(height: 8),
             Text(
-              _errorMessage ?? 'Something went wrong',
+              _errorMessage ?? l10n.somethingWentWrong,
               style: AppTextStyles.bodySmall,
               textAlign: TextAlign.center,
             ),
@@ -177,7 +182,7 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
             OutlinedButton.icon(
               onPressed: _loadPendingRemovals,
               icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
+              label: Text(l10n.tryAgain),
             ),
           ],
         ),
@@ -185,7 +190,7 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -198,10 +203,10 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
               color: AppColors.success.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            Text('All clear!', style: AppTextStyles.h3),
+            Text(l10n.allClear, style: AppTextStyles.h3),
             const SizedBox(height: 8),
             Text(
-              'No sabots pending removal',
+              l10n.noSabotsPendingRemoval,
               style: AppTextStyles.bodySmall,
               textAlign: TextAlign.center,
             ),
@@ -211,7 +216,7 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(AppLocalizations l10n) {
     return RefreshIndicator(
       onRefresh: _loadPendingRemovals,
       child: ListView.builder(
@@ -222,7 +227,7 @@ class _PendingRemovalsPageState extends State<PendingRemovalsPage> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                '${_tickets.length} sabot${_tickets.length == 1 ? '' : 's'} to remove',
+                l10n.sabotCount(_tickets.length),
                 style: AppTextStyles.bodySmall,
               ),
             );
@@ -256,6 +261,8 @@ class _RemovalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -281,7 +288,7 @@ class _RemovalCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    'PAID',
+                    l10n.paid,
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.success,
                       fontWeight: FontWeight.w600,
@@ -328,7 +335,7 @@ class _RemovalCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  'Paid ${_formatPaidTime(ticket.paidAt ?? ticket.issuedAt)}',
+                  l10n.paidTime(_formatPaidTime(ticket.paidAt ?? ticket.issuedAt, l10n)),
                   style: AppTextStyles.caption,
                 ),
                 const Spacer(),
@@ -349,7 +356,7 @@ class _RemovalCard extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: onNavigate,
                     icon: const Icon(Icons.navigation, size: 18),
-                    label: const Text('Navigate'),
+                    label: Text(l10n.navigate),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -358,7 +365,7 @@ class _RemovalCard extends StatelessWidget {
                   child: FilledButton.icon(
                     onPressed: onMarkRemoved,
                     icon: const Icon(Icons.check_circle, size: 18),
-                    label: const Text('Removed'),
+                    label: Text(l10n.removed),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.success,
                     ),
@@ -372,16 +379,16 @@ class _RemovalCard extends StatelessWidget {
     );
   }
 
-  String _formatPaidTime(DateTime dateTime) {
+  String _formatPaidTime(DateTime dateTime, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
+      return l10n.minutesAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
+      return l10n.hoursAgo(difference.inHours);
     } else if (difference.inDays == 1) {
-      return 'yesterday';
+      return l10n.yesterday;
     } else {
       final day = dateTime.day.toString().padLeft(2, '0');
       final month = dateTime.month.toString().padLeft(2, '0');

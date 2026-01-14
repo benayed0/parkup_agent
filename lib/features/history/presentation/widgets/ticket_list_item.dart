@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 
@@ -61,7 +62,7 @@ class TicketListItem extends StatelessWidget {
                           mini: true,
                         ),
                         Text(
-                          _formatDateTime(ticket.issuedAt),
+                          _formatDateTime(ticket.issuedAt, context),
                           style: AppTextStyles.caption,
                         ),
                       ],
@@ -131,7 +132,7 @@ class TicketListItem extends StatelessWidget {
                           child: OutlinedButton.icon(
                             onPressed: onGoToLocation,
                             icon: const Icon(Icons.location_on, size: 18),
-                            label: const Text('Go to Location'),
+                            label: Text(AppLocalizations.of(context)!.goToLocation),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.primary,
                               side: const BorderSide(color: AppColors.primary),
@@ -144,7 +145,7 @@ class TicketListItem extends StatelessWidget {
                           child: ElevatedButton.icon(
                             onPressed: onPrint,
                             icon: const Icon(Icons.print, size: 18),
-                            label: const Text('Print'),
+                            label: Text(AppLocalizations.of(context)!.print),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
@@ -185,16 +186,17 @@ class TicketListItem extends StatelessWidget {
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
+  String _formatDateTime(DateTime dateTime, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
+      return l10n.minutesAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
+      return l10n.hoursAgo(difference.inHours);
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return l10n.yesterday;
     } else {
       final day = dateTime.day.toString().padLeft(2, '0');
       final month = dateTime.month.toString().padLeft(2, '0');

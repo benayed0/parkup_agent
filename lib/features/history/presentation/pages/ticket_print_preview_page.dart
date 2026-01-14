@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
@@ -61,7 +62,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'Failed to load print data';
+          _errorMessage = AppLocalizations.of(context)!.failedToLoadPrintData;
           _isLoading = false;
         });
       }
@@ -92,7 +93,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to share: $e')),
+          SnackBar(content: Text('${AppLocalizations.of(context)!.failedToShare}: $e')),
         );
       }
     }
@@ -121,24 +122,26 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Print Preview'),
+        title: Text(l10n.printPreview),
         actions: [
           if (_printData != null)
             IconButton(
               icon: const Icon(Icons.share),
               onPressed: _shareAsImage,
-              tooltip: 'Share as Image',
+              tooltip: l10n.shareAsImage,
             ),
         ],
       ),
-      body: _buildBody(),
-      bottomNavigationBar: _printData != null ? _buildBottomBar() : null,
+      body: _buildBody(l10n),
+      bottomNavigationBar: _printData != null ? _buildBottomBar(l10n) : null,
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(AppLocalizations l10n) {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -156,7 +159,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                 color: AppColors.error.withValues(alpha: 0.7),
               ),
               const SizedBox(height: 16),
-              Text('Error', style: AppTextStyles.h3),
+              Text(l10n.error, style: AppTextStyles.h3),
               const SizedBox(height: 8),
               Text(
                 _errorMessage!,
@@ -167,7 +170,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
               OutlinedButton.icon(
                 onPressed: _loadPrintData,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Try Again'),
+                label: Text(l10n.tryAgain),
               ),
             ],
           ),
@@ -216,7 +219,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'PARKING TICKET',
+                      l10n.parkingTicket,
                       style: AppTextStyles.h2.copyWith(
                         color: Colors.white,
                         letterSpacing: 2,
@@ -232,7 +235,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                 child: Column(
                   children: [
                     // Lines
-                    ..._printData!.lines.map((line) => _buildLine(line)),
+                    ..._printData!.lines.map((line) => _buildLine(line, l10n)),
 
                     const SizedBox(height: 24),
                     const Divider(),
@@ -240,7 +243,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
 
                     // QR Code
                     Text(
-                      'Scan to Pay',
+                      l10n.scanToPay,
                       style: AppTextStyles.label.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -262,7 +265,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     );
   }
 
-  Widget _buildLine(PrintableTicketLine line) {
+  Widget _buildLine(PrintableTicketLine line, AppLocalizations l10n) {
     switch (line.type) {
       case PrintLineType.header:
         return Padding(
@@ -368,7 +371,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'View on Map',
+                      l10n.viewOnMap,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.secondary,
                         fontWeight: FontWeight.w500,
@@ -464,7 +467,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     }
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -484,7 +487,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
               child: OutlinedButton.icon(
                 onPressed: _shareAsImage,
                 icon: const Icon(Icons.share),
-                label: const Text('Share'),
+                label: Text(l10n.share),
               ),
             ),
             const SizedBox(width: 12),
@@ -492,13 +495,13 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
               child: ElevatedButton.icon(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Bluetooth printing coming soon!'),
+                    SnackBar(
+                      content: Text(l10n.bluetoothPrintingComingSoon),
                     ),
                   );
                 },
                 icon: const Icon(Icons.print),
-                label: const Text('Print'),
+                label: Text(l10n.print),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
