@@ -68,6 +68,12 @@ class _HomePageState extends State<HomePage> {
         ),
         automaticallyImplyLeading: false,
         actions: [
+          // Language selector button
+          IconButton(
+            icon: const Icon(Icons.language),
+            tooltip: 'Language',
+            onPressed: () => _showLanguageDialog(context),
+          ),
           // Logout button
           IconButton(
             icon: const Icon(Icons.logout),
@@ -185,6 +191,37 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: LocaleService.supportedLocales.map((locale) {
+            final isSelected =
+                localeService.currentLocale?.languageCode == locale.languageCode;
+            return ListTile(
+              leading: Text(
+                LocaleService.getLocaleFlag(locale),
+                style: const TextStyle(fontSize: 24),
+              ),
+              title: Text(LocaleService.getLocaleName(locale)),
+              trailing: isSelected
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              selected: isSelected,
+              onTap: () {
+                localeService.setLocale(locale);
+                Navigator.of(dialogContext).pop();
+              },
+            );
+          }).toList(),
         ),
       ),
     );

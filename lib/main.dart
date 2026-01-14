@@ -10,6 +10,9 @@ void main() async {
   // Initialize auth repository and check for saved session
   await authRepository.init();
 
+  // Initialize locale service to load saved language preference
+  await localeService.init();
+
   // Pre-initialize location service for instant GPS availability
   // Runs in background - doesn't block app startup
   locationService.init();
@@ -19,8 +22,30 @@ void main() async {
 
 /// Main application widget
 /// Entry point for the ParkUp Agent application
-class ParkUpAgentApp extends StatelessWidget {
+class ParkUpAgentApp extends StatefulWidget {
   const ParkUpAgentApp({super.key});
+
+  @override
+  State<ParkUpAgentApp> createState() => _ParkUpAgentAppState();
+}
+
+class _ParkUpAgentAppState extends State<ParkUpAgentApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Listen for locale changes
+    localeService.addListener(_onLocaleChanged);
+  }
+
+  @override
+  void dispose() {
+    localeService.removeListener(_onLocaleChanged);
+    super.dispose();
+  }
+
+  void _onLocaleChanged() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +64,8 @@ class ParkUpAgentApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'), // English
-        Locale('fr'), // French
-        Locale('ar'), // Arabic
-      ],
+      supportedLocales: LocaleService.supportedLocales,
+      locale: localeService.currentLocale,
 
       // Apply custom theme
       theme: AppTheme.lightTheme,
