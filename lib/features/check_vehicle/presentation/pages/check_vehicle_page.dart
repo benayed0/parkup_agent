@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
