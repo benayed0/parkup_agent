@@ -138,6 +138,20 @@ class _HomePageState extends State<HomePage> {
 
                     const SizedBox(height: 12),
 
+                    // Active sessions map action
+                    ActionCard(
+                      icon: Icons.map,
+                      title: 'Sessions Map',
+                      subtitle: 'View active sessions on map',
+                      backgroundColor: AppColors.success.withValues(alpha: 0.1),
+                      iconColor: AppColors.success,
+                      onTap: () => Navigator.of(context).pushNamed(
+                        AppRoutes.activeSessionsMap,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
                     // History action
                     ActionCard(
                       icon: Icons.history,

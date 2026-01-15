@@ -13,4 +13,5 @@ class AppRoutes {
   static const String checkVehicle = '/check-vehicle';
   static const String history = '/history';
   static const String pendingRemovals = '/pending-removals';
+  static const String activeSessionsMap = '/active-sessions-map';
 }

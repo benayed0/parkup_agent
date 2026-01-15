@@ -1,7 +1,12 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
+// ignore_for_file: type=lint
+
+/// The translations for Arabic (`ar`).
 class AppLocalizationsAr extends AppLocalizations {
-  AppLocalizationsAr([super.locale = 'ar']);
+  AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
   String get appName => 'ParkUp Agent';
@@ -37,7 +42,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loginFailed => 'ما نجمتش تدخل. عاود حاول!';
 
   @override
-  String welcomeUser(String name) => 'عسلامة يا $name!';
+  String welcomeUser(String name) {
+    return 'عسلامة يا $name!';
+  }
 
   @override
   String get whatWouldYouLikeToDo => 'آش تحب تعمل توّا؟';
@@ -100,7 +107,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get usingZoneLocation => 'نستعمل بلاصة الزون (GPS ما يخدمش)';
 
   @override
-  String ticketCreated(String number) => 'يا سلام! خطية #$number تعملت';
+  String ticketCreated(String number) {
+    return 'يا سلام! خطية #$number تعملت';
+  }
 
   @override
   String get failedToCreateTicket => 'ما نجمتش نعمل خطية. عاود حاول';
@@ -127,7 +136,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get refreshGps => 'حدّث البلاصة';
 
   @override
-  String expired(String date) => 'فات وقتو: $date';
+  String expired(String date) {
+    return 'فات وقتو: $date';
+  }
 
   @override
   String get error => 'مشكلة!';
@@ -145,7 +156,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ticketsWillAppearHere => 'الخطيةات اللي تعملها تظهر هوني';
 
   @override
-  String ticketCount(int count) => count == 1 ? 'خطية وحدة' : '$count خطيةات';
+  String ticketCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count خطيةات',
+      one: 'خطية وحدة',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goToLocation => 'امشي للبلاصة';
@@ -157,10 +176,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get yesterday => 'البارح';
 
   @override
-  String minutesAgo(int count) => 'قبل $count دقيقة';
+  String minutesAgo(int count) {
+    return 'قبل $count دقيقة';
+  }
 
   @override
-  String hoursAgo(int count) => 'قبل $count ساعات';
+  String hoursAgo(int count) {
+    return 'قبل $count ساعات';
+  }
 
   @override
   String get printPreview => 'شوف قبل ما تطبع';
@@ -196,7 +219,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirmRemoval => 'أكّد التفكيك';
 
   @override
-  String markSabotAsRemoved(String plate) => 'تحب تقول السابو متاع $plate تفكّ؟';
+  String markSabotAsRemoved(String plate) {
+    return 'تحب تقول السابو متاع $plate تفكّ؟';
+  }
 
   @override
   String get sabotMarkedAsRemoved => 'تمام! السابو تفكّ';
@@ -208,13 +233,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noSabotsPendingRemoval => 'ما فمّاش سابوات يستنّاو';
 
   @override
-  String sabotCount(int count) => count == 1 ? 'سابو واحد للتفكيك' : '$count سابوات للتفكيك';
+  String sabotCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سابوات للتفكيك',
+      one: 'سابو واحد للتفكيك',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get paid => 'مخلّص';
 
   @override
-  String paidTime(String time) => 'خلّص $time';
+  String paidTime(String time) {
+    return 'خلّص $time';
+  }
 
   @override
   String get navigate => 'روّح للبلاصة';

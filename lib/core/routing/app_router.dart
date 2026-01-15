@@ -5,6 +5,7 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/check_vehicle/presentation/pages/check_vehicle_page.dart';
 import '../../features/history/presentation/pages/history_page.dart';
 import '../../features/pending_removals/presentation/pages/pending_removals_page.dart';
+import '../../features/active_sessions_map/presentation/pages/active_sessions_map_page.dart';
 
 /// Application router
 /// Handles all navigation within the app
@@ -28,6 +29,9 @@ class AppRouter {
 
       case AppRoutes.pendingRemovals:
         return _buildRoute(const PendingRemovalsPage(), settings);
+
+      case AppRoutes.activeSessionsMap:
+        return _buildRoute(const ActiveSessionsMapPage(), settings);
 
       default:
         return _buildRoute(const LoginPage(), settings);

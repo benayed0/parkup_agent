@@ -1,7 +1,12 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
 class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([super.locale = 'en']);
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
   String get appName => 'ParkUp Agent';
@@ -31,13 +36,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signIn => 'Sign In';
 
   @override
-  String get contactAdminForPassword => 'Contact your administrator if you forgot your password';
+  String get contactAdminForPassword =>
+      'Contact your administrator if you forgot your password';
 
   @override
   String get loginFailed => 'Login failed. Please try again.';
 
   @override
-  String welcomeUser(String name) => 'Welcome, $name';
+  String welcomeUser(String name) {
+    return 'Welcome, $name';
+  }
 
   @override
   String get whatWouldYouLikeToDo => 'What would you like to do?';
@@ -91,7 +99,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterValidPlate => 'Please enter a valid license plate';
 
   @override
-  String get failedToCheckVehicle => 'Failed to check vehicle. Please try again.';
+  String get failedToCheckVehicle =>
+      'Failed to check vehicle. Please try again.';
 
   @override
   String get pleaseSelectParkingZone => 'Please select a parking zone';
@@ -100,10 +109,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get usingZoneLocation => 'Using zone location (GPS unavailable)';
 
   @override
-  String ticketCreated(String number) => 'Ticket #$number created';
+  String ticketCreated(String number) {
+    return 'Ticket #$number created';
+  }
 
   @override
-  String get failedToCreateTicket => 'Failed to create ticket. Please try again.';
+  String get failedToCreateTicket =>
+      'Failed to create ticket. Please try again.';
 
   @override
   String get checking => 'Checking...';
@@ -127,7 +139,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refreshGps => 'Refresh GPS';
 
   @override
-  String expired(String date) => 'Expired: $date';
+  String expired(String date) {
+    return 'Expired: $date';
+  }
 
   @override
   String get error => 'Error';
@@ -145,7 +159,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ticketsWillAppearHere => 'Tickets you create will appear here';
 
   @override
-  String ticketCount(int count) => count == 1 ? '1 ticket' : '$count tickets';
+  String ticketCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tickets',
+      one: '1 ticket',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get goToLocation => 'Go to Location';
@@ -157,10 +179,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yesterday => 'Yesterday';
 
   @override
-  String minutesAgo(int count) => '${count}m ago';
+  String minutesAgo(int count) {
+    return '${count}m ago';
+  }
 
   @override
-  String hoursAgo(int count) => '${count}h ago';
+  String hoursAgo(int count) {
+    return '${count}h ago';
+  }
 
   @override
   String get printPreview => 'Print Preview';
@@ -196,7 +222,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmRemoval => 'Confirm Removal';
 
   @override
-  String markSabotAsRemoved(String plate) => 'Mark sabot for $plate as removed?';
+  String markSabotAsRemoved(String plate) {
+    return 'Mark sabot for $plate as removed?';
+  }
 
   @override
   String get sabotMarkedAsRemoved => 'Sabot marked as removed';
@@ -208,13 +236,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSabotsPendingRemoval => 'No sabots pending removal';
 
   @override
-  String sabotCount(int count) => count == 1 ? '1 sabot to remove' : '$count sabots to remove';
+  String sabotCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sabots to remove',
+      one: '1 sabot to remove',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get paid => 'PAID';
 
   @override
-  String paidTime(String time) => 'Paid $time';
+  String paidTime(String time) {
+    return 'Paid $time';
+  }
 
   @override
   String get navigate => 'Navigate';

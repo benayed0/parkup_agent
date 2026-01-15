@@ -9,8 +9,62 @@ import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_fr.dart';
 
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -18,100 +72,493 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
+  /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
     Locale('en'),
-    Locale('fr')
+    Locale('fr'),
   ];
 
+  /// The name of the application
+  ///
+  /// In en, this message translates to:
+  /// **'ParkUp Agent'**
   String get appName;
+
+  /// Subtitle on the login page
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue'**
   String get signInToContinue;
+
+  /// Label for username field
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
   String get username;
+
+  /// Hint text for username field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your username'**
   String get enterUsername;
+
+  /// Label for password field
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
   String get password;
+
+  /// Hint text for password field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
   String get enterPassword;
+
+  /// Validation error for empty username
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your username'**
   String get pleaseEnterUsername;
+
+  /// Validation error for empty password
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
   String get pleaseEnterPassword;
+
+  /// Sign in button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
   String get signIn;
+
+  /// Help text on login page
+  ///
+  /// In en, this message translates to:
+  /// **'Contact your administrator if you forgot your password'**
   String get contactAdminForPassword;
+
+  /// Generic login error message
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed. Please try again.'**
   String get loginFailed;
+
+  /// Welcome message with user name
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, {name}'**
   String welcomeUser(String name);
+
+  /// Subtitle on home page
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do?'**
   String get whatWouldYouLikeToDo;
+
+  /// Check vehicle action title
+  ///
+  /// In en, this message translates to:
+  /// **'Check Vehicle'**
   String get checkVehicle;
+
+  /// Check vehicle action subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Check status & create tickets'**
   String get checkStatusCreateTickets;
+
+  /// Remove sabots action title
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Sabots'**
   String get removeSabots;
+
+  /// Remove sabots action subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Paid sabots to remove'**
   String get paidSabotsToRemove;
+
+  /// History action title
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
   String get history;
+
+  /// History action subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'View past tickets'**
   String get viewPastTickets;
+
+  /// Active status label
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
   String get active;
+
+  /// Inactive status label
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
   String get inactive;
+
+  /// Logout button/title
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
   String get logout;
+
+  /// Logout confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
   String get logoutConfirmation;
+
+  /// Cancel button text
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
   String get cancel;
+
+  /// Confirm button text
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
   String get confirm;
+
+  /// License plate label
+  ///
+  /// In en, this message translates to:
+  /// **'License Plate'**
   String get licensePlate;
+
+  /// GPS update success message
+  ///
+  /// In en, this message translates to:
+  /// **'GPS location updated'**
   String get gpsLocationUpdated;
+
+  /// GPS error message
+  ///
+  /// In en, this message translates to:
+  /// **'Could not get GPS location'**
   String get couldNotGetGpsLocation;
+
+  /// Invalid plate error message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid license plate'**
   String get pleaseEnterValidPlate;
+
+  /// Vehicle check error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to check vehicle. Please try again.'**
   String get failedToCheckVehicle;
+
+  /// Zone selection error
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a parking zone'**
   String get pleaseSelectParkingZone;
+
+  /// Fallback to zone location message
+  ///
+  /// In en, this message translates to:
+  /// **'Using zone location (GPS unavailable)'**
   String get usingZoneLocation;
+
+  /// Ticket creation success message
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket #{number} created'**
   String ticketCreated(String number);
+
+  /// Ticket creation error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create ticket. Please try again.'**
   String get failedToCreateTicket;
+
+  /// Loading state while checking vehicle
+  ///
+  /// In en, this message translates to:
+  /// **'Checking...'**
   String get checking;
+
+  /// Check button text
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
   String get check;
+
+  /// Recheck button text
+  ///
+  /// In en, this message translates to:
+  /// **'Recheck'**
   String get recheck;
+
+  /// New search button text
+  ///
+  /// In en, this message translates to:
+  /// **'New Search'**
   String get newSearch;
+
+  /// Empty state hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter license plate, then tap Check'**
   String get enterPlateThenCheck;
+
+  /// Zone selector hint
+  ///
+  /// In en, this message translates to:
+  /// **'Select Zone'**
   String get selectZone;
+
+  /// GPS refresh tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh GPS'**
   String get refreshGps;
+
+  /// Expired session text
+  ///
+  /// In en, this message translates to:
+  /// **'Expired: {date}'**
   String expired(String date);
+
+  /// Error title
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
   String get error;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
   String get somethingWentWrong;
+
+  /// Retry button text
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
   String get tryAgain;
+
+  /// Empty state title for history
+  ///
+  /// In en, this message translates to:
+  /// **'No tickets yet'**
   String get noTicketsYet;
+
+  /// Empty state subtitle for history
+  ///
+  /// In en, this message translates to:
+  /// **'Tickets you create will appear here'**
   String get ticketsWillAppearHere;
+
+  /// Ticket count text
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 ticket} other{{count} tickets}}'**
   String ticketCount(int count);
+
+  /// Navigate to location button
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Location'**
   String get goToLocation;
+
+  /// Print button text
+  ///
+  /// In en, this message translates to:
+  /// **'Print'**
   String get print;
+
+  /// Yesterday time label
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
   String get yesterday;
+
+  /// Minutes ago text
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
   String minutesAgo(int count);
+
+  /// Hours ago text
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
   String hoursAgo(int count);
+
+  /// Print preview page title
+  ///
+  /// In en, this message translates to:
+  /// **'Print Preview'**
   String get printPreview;
+
+  /// Share as image tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Share as Image'**
   String get shareAsImage;
+
+  /// Ticket header title
+  ///
+  /// In en, this message translates to:
+  /// **'PARKING TICKET'**
   String get parkingTicket;
+
+  /// QR code label
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to Pay'**
   String get scanToPay;
+
+  /// View on map link text
+  ///
+  /// In en, this message translates to:
+  /// **'View on Map'**
   String get viewOnMap;
+
+  /// Share button text
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
   String get share;
+
+  /// Bluetooth printing placeholder message
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth printing coming soon!'**
   String get bluetoothPrintingComingSoon;
+
+  /// Share error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to share'**
   String get failedToShare;
+
+  /// Print data load error
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load print data'**
   String get failedToLoadPrintData;
+
+  /// Pending removals page title
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Removals'**
   String get pendingRemovals;
+
+  /// Removal confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Removal'**
   String get confirmRemoval;
+
+  /// Removal confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Mark sabot for {plate} as removed?'**
   String markSabotAsRemoved(String plate);
+
+  /// Removal success message
+  ///
+  /// In en, this message translates to:
+  /// **'Sabot marked as removed'**
   String get sabotMarkedAsRemoved;
+
+  /// Empty state title for pending removals
+  ///
+  /// In en, this message translates to:
+  /// **'All clear!'**
   String get allClear;
+
+  /// Empty state subtitle for pending removals
+  ///
+  /// In en, this message translates to:
+  /// **'No sabots pending removal'**
   String get noSabotsPendingRemoval;
+
+  /// Sabot count text
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 sabot to remove} other{{count} sabots to remove}}'**
   String sabotCount(int count);
+
+  /// Paid status label
+  ///
+  /// In en, this message translates to:
+  /// **'PAID'**
   String get paid;
+
+  /// Paid time text
+  ///
+  /// In en, this message translates to:
+  /// **'Paid {time}'**
   String paidTime(String time);
+
+  /// Navigate button text
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
   String get navigate;
+
+  /// Removed button text
+  ///
+  /// In en, this message translates to:
+  /// **'Removed'**
   String get removed;
+
+  /// Pending removals load error
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load pending removals'**
   String get failedToLoadPendingRemovals;
+
+  /// Tickets load error
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load tickets'**
   String get failedToLoadTickets;
+
+  /// Refresh tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
   String get refresh;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -120,13 +567,15 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ar', 'en', 'fr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['ar', 'en', 'fr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'ar':
       return AppLocalizationsAr();
@@ -140,6 +589,6 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }
