@@ -151,5 +151,63 @@
 
   "failedToLoadTickets": "Echec du chargement des contraventions",
 
-  "refresh": "Actualiser"
+  "refresh": "Actualiser",
+
+  "language": "Langue",
+
+  "sessionsMap": "Carte des sessions",
+
+  "viewActiveSessionsOnMap": "Voir les sessions actives sur la carte",
+
+  "activeSessions": "Sessions actives",
+
+  "newSession": "Nouvelle session: {licensePlate}",
+
+  "sessionEvent": "Session {reason}: {sessionId}...",
+
+  "noAssignedZones": "Aucune zone assignee",
+
+  "criticalExpiring": "CRITIQUE: {licensePlate} expire dans {minutes} min!",
+
+  "sessionExpiring": "{licensePlate} expire dans {minutes} min",
+
+  "view": "Voir",
+
+  "retry": "Reessayer",
+
+  "activeCount": "{count} actives",
+
+  "valid": "Valide",
+
+  "lessThan10Min": "< 10 min",
+
+  "expiredStatus": "Expire",
+
+  "minutesRemaining": "{minutes} min restantes",
+
+  "endsAt": "Se termine a {time}",
+
+  "duration": "Duree",
+
+  "amount": "Montant",
+
+  "serieNormale": "Serie Normale",
+
+  "gouvernement": "Gouvernement",
+
+  "libye": "Libye",
+
+  "algerie": "Algerie",
+
+  "unionEuropeenne": "Union Europeenne",
+
+  "autre": "Autre",
+
+  "diplomatiqueConsulaire": "Diplomatique & Consulaire",
+
+  "corpsDiplomatique": "Corps Diplomatique",
+
+  "corpsConsulaire": "Corps Consulaire",
+
+  "plaquesDiplomatiques": "Plaques Diplomatiques"
 }

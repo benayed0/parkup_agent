@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 
@@ -57,7 +58,7 @@ class CheckResultCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      'Expired: ${_formatDateTime(result.activeSession!.endTime)}',
+                      AppLocalizations.of(context)!.expired(_formatDateTime(result.activeSession!.endTime)),
                       style: TextStyle(
                         fontSize: 13,
                         color: AppColors.textSecondary,

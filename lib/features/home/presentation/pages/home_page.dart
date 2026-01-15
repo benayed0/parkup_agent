@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           // Language selector button
           IconButton(
             icon: const Icon(Icons.language),
-            tooltip: 'Language',
+            tooltip: l10n.language,
             onPressed: () => _showLanguageDialog(context),
           ),
           // Logout button
@@ -141,8 +141,8 @@ class _HomePageState extends State<HomePage> {
                     // Active sessions map action
                     ActionCard(
                       icon: Icons.map,
-                      title: 'Sessions Map',
-                      subtitle: 'View active sessions on map',
+                      title: l10n.sessionsMap,
+                      subtitle: l10n.viewActiveSessionsOnMap,
                       backgroundColor: AppColors.success.withValues(alpha: 0.1),
                       iconColor: AppColors.success,
                       onTap: () => Navigator.of(context).pushNamed(
@@ -211,10 +211,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showLanguageDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Language'),
+        title: Text(l10n.language),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: LocaleService.supportedLocales.map((locale) {

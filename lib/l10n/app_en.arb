@@ -429,5 +429,204 @@
   "refresh": "Refresh",
   "@refresh": {
     "description": "Refresh tooltip"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Language selector tooltip and dialog title"
+  },
+
+  "sessionsMap": "Sessions Map",
+  "@sessionsMap": {
+    "description": "Sessions map action title"
+  },
+
+  "viewActiveSessionsOnMap": "View active sessions on map",
+  "@viewActiveSessionsOnMap": {
+    "description": "Sessions map action subtitle"
+  },
+
+  "activeSessions": "Active Sessions",
+  "@activeSessions": {
+    "description": "Active sessions page title"
+  },
+
+  "newSession": "New session: {licensePlate}",
+  "@newSession": {
+    "description": "New session notification message",
+    "placeholders": {
+      "licensePlate": {
+        "type": "String",
+        "example": "123 TU 4567"
+      }
+    }
+  },
+
+  "sessionEvent": "Session {reason}: {sessionId}...",
+  "@sessionEvent": {
+    "description": "Session event notification message",
+    "placeholders": {
+      "reason": {
+        "type": "String",
+        "example": "ended"
+      },
+      "sessionId": {
+        "type": "String",
+        "example": "abc12345"
+      }
+    }
+  },
+
+  "noAssignedZones": "No assigned zones",
+  "@noAssignedZones": {
+    "description": "Error message when agent has no assigned zones"
+  },
+
+  "criticalExpiring": "CRITICAL: {licensePlate} expires in {minutes} min!",
+  "@criticalExpiring": {
+    "description": "Critical expiring session notification",
+    "placeholders": {
+      "licensePlate": {
+        "type": "String",
+        "example": "123 TU 4567"
+      },
+      "minutes": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+
+  "sessionExpiring": "{licensePlate} expires in {minutes} min",
+  "@sessionExpiring": {
+    "description": "Session expiring notification",
+    "placeholders": {
+      "licensePlate": {
+        "type": "String",
+        "example": "123 TU 4567"
+      },
+      "minutes": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+
+  "view": "View",
+  "@view": {
+    "description": "View action button text"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  },
+
+  "activeCount": "{count} active",
+  "@activeCount": {
+    "description": "Number of active sessions",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+
+  "valid": "Valid",
+  "@valid": {
+    "description": "Valid session status label"
+  },
+
+  "lessThan10Min": "< 10 min",
+  "@lessThan10Min": {
+    "description": "Less than 10 minutes remaining label"
+  },
+
+  "expiredStatus": "Expired",
+  "@expiredStatus": {
+    "description": "Expired status label without date"
+  },
+
+  "minutesRemaining": "{minutes} min remaining",
+  "@minutesRemaining": {
+    "description": "Minutes remaining for session",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "15"
+      }
+    }
+  },
+
+  "endsAt": "Ends at {time}",
+  "@endsAt": {
+    "description": "Session end time",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "14:30"
+      }
+    }
+  },
+
+  "duration": "Duration",
+  "@duration": {
+    "description": "Duration label"
+  },
+
+  "amount": "Amount",
+  "@amount": {
+    "description": "Amount/price label"
+  },
+
+  "serieNormale": "Standard Series",
+  "@serieNormale": {
+    "description": "Standard license plate series"
+  },
+
+  "gouvernement": "Government",
+  "@gouvernement": {
+    "description": "Government license plates"
+  },
+
+  "libye": "Libya",
+  "@libye": {
+    "description": "Libyan license plates"
+  },
+
+  "algerie": "Algeria",
+  "@algerie": {
+    "description": "Algerian license plates"
+  },
+
+  "unionEuropeenne": "European Union",
+  "@unionEuropeenne": {
+    "description": "European Union license plates"
+  },
+
+  "autre": "Other",
+  "@autre": {
+    "description": "Other license plate types"
+  },
+
+  "diplomatiqueConsulaire": "Diplomatic & Consular",
+  "@diplomatiqueConsulaire": {
+    "description": "Diplomatic and consular plates section"
+  },
+
+  "corpsDiplomatique": "Diplomatic Corps",
+  "@corpsDiplomatique": {
+    "description": "Diplomatic corps plates"
+  },
+
+  "corpsConsulaire": "Consular Corps",
+  "@corpsConsulaire": {
+    "description": "Consular corps plates"
+  },
+
+  "plaquesDiplomatiques": "Diplomatic Plates",
+  "@plaquesDiplomatiques": {
+    "description": "Diplomatic plates bottom sheet title"
   }
 }
