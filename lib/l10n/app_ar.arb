@@ -155,15 +155,15 @@
 
   "language": "اللغة",
 
-  "sessionsMap": "خريطة الجلسات",
+  "sessionsMap": "خريطة التيكيات",
 
-  "viewActiveSessionsOnMap": "شوف الجلسات الخدّامة على الخريطة",
+  "viewActiveSessionsOnMap": "شوف التيكيات الخدّامة على الخريطة",
 
-  "activeSessions": "الجلسات الخدّامة",
+  "activeSessions": "التيكيات الخدّامة",
 
-  "newSession": "جلسة جديدة: {licensePlate}",
+  "newSession": "تيكي جديد: {licensePlate}",
 
-  "sessionEvent": "جلسة {reason}: {sessionId}...",
+  "sessionEvent": "تيكي {reason}: {sessionId}...",
 
   "noAssignedZones": "ما عندكش زونات",
 
