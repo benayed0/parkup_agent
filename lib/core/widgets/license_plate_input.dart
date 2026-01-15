@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 
@@ -1033,22 +1034,23 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildCategorySection('Série Normale', PlateCategory.regular),
+        _buildCategorySection(l10n.serieNormale, PlateCategory.regular),
         const SizedBox(height: 12),
-        _buildCategorySection('Gouvernement', PlateCategory.government),
+        _buildCategorySection(l10n.gouvernement, PlateCategory.government),
         const SizedBox(height: 12),
-        _buildCategorySection('Libye', PlateCategory.libya),
+        _buildCategorySection(l10n.libye, PlateCategory.libya),
         const SizedBox(height: 12),
-        _buildCategorySection('Algérie', PlateCategory.algeria),
+        _buildCategorySection(l10n.algerie, PlateCategory.algeria),
         const SizedBox(height: 12),
-        _buildCategorySection('Union Européenne', PlateCategory.eu),
+        _buildCategorySection(l10n.unionEuropeenne, PlateCategory.eu),
         const SizedBox(height: 12),
-        _buildCategorySection('Autre', PlateCategory.other),
+        _buildCategorySection(l10n.autre, PlateCategory.other),
         const SizedBox(height: 12),
-        _buildDiplomaticSection(),
+        _buildDiplomaticSection(context),
       ],
     );
   }
@@ -1087,7 +1089,8 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
   }
 
   /// Build expandable diplomatic section with subcategories
-  Widget _buildDiplomaticSection() {
+  Widget _buildDiplomaticSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDiplomaticSelected =
         widget.selectedType.category == PlateCategory.diplomatic ||
         widget.selectedType.category == PlateCategory.consular;
@@ -1114,7 +1117,7 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  'Diplomatique & Consulaire',
+                  l10n.diplomatiqueConsulaire,
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
@@ -1159,7 +1162,7 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Diplomatic subcategory
-                _buildSubcategory('Corps Diplomatique', [
+                _buildSubcategory(l10n.corpsDiplomatique, [
                   PlateType.cmd,
                   PlateType.cd,
                   PlateType.md,
@@ -1167,7 +1170,7 @@ class _PlateTypeSelectorState extends State<PlateTypeSelector> {
                 ]),
                 const SizedBox(height: 12),
                 // Consular subcategory
-                _buildSubcategory('Corps Consulaire', [
+                _buildSubcategory(l10n.corpsConsulaire, [
                   PlateType.cc,
                   PlateType.mc,
                 ]),
@@ -1460,6 +1463,7 @@ class _DiplomaticBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1480,7 +1484,7 @@ class _DiplomaticBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Plaques Diplomatiques',
+              l10n.plaquesDiplomatiques,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -1489,7 +1493,7 @@ class _DiplomaticBottomSheet extends StatelessWidget {
 
             // Corps Diplomatique section
             Text(
-              'Corps Diplomatique',
+              l10n.corpsDiplomatique,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
@@ -1511,7 +1515,7 @@ class _DiplomaticBottomSheet extends StatelessWidget {
 
             // Corps Consulaire section
             Text(
-              'Corps Consulaire',
+              l10n.corpsConsulaire,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,

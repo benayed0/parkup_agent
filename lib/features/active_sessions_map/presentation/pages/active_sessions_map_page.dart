@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/services/socket_service.dart';
@@ -104,13 +105,14 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     // New session created
     _createdSub = socketService.onSessionCreated.listen((session) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
           // Add only if not already in list
           if (!_sessions.any((s) => s.id == session.id)) {
             _sessions = [..._sessions, session];
           }
         });
-        _showNotification('New session: ${session.licensePlate}', Icons.add_circle);
+        _showNotification(l10n.newSession(session.licensePlate), Icons.add_circle);
       }
     });
 
@@ -141,6 +143,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     // Session ended
     _endedSub = socketService.onSessionEnded.listen((event) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
           _sessions = _sessions.where((s) => s.id != event.sessionId).toList();
           if (_selectedSession?.id == event.sessionId) {
@@ -148,7 +151,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
           }
         });
         _showNotification(
-          'Session ${event.reason}: ${event.sessionId.substring(0, 8)}...',
+          l10n.sessionEvent(event.reason, event.sessionId.substring(0, 8)),
           Icons.remove_circle,
         );
       }
@@ -160,9 +163,10 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
       final agent = authRepository.currentAgent;
       final zones = agent?.assignedZones ?? [];
       if (zones.isEmpty) {
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
           _isLoading = false;
-          _error = 'No assigned zones';
+          _error = l10n.noAssignedZones;
         });
         return;
       }
@@ -240,17 +244,18 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
 
   void _showExpiringNotification(ExpiringSessionEvent event) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           event.isCritical
-              ? 'CRITICAL: ${event.session.licensePlate} expires in ${event.minutesRemaining} min!'
-              : '${event.session.licensePlate} expires in ${event.minutesRemaining} min',
+              ? l10n.criticalExpiring(event.session.licensePlate, event.minutesRemaining)
+              : l10n.sessionExpiring(event.session.licensePlate, event.minutesRemaining),
         ),
         backgroundColor: event.isCritical ? AppColors.error : AppColors.warning,
         duration: Duration(seconds: event.isCritical ? 10 : 5),
         action: SnackBarAction(
-          label: 'View',
+          label: l10n.view,
           textColor: Colors.white,
           onPressed: () {
             _onMarkerTapped(event.session);
@@ -291,10 +296,11 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   Widget build(BuildContext context) {
     final agent = authRepository.currentAgent;
     final zones = agent?.assignedZones ?? [];
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Active Sessions'),
+        title: Text(l10n.activeSessions),
         actions: [
           // Connection status indicator
           Padding(
@@ -309,7 +315,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
           if (zones.length > 1)
             PopupMenuButton<ParkingZone>(
               icon: const Icon(Icons.location_on),
-              tooltip: 'Select Zone',
+              tooltip: l10n.selectZone,
               onSelected: _onZoneChanged,
               itemBuilder: (context) => zones.map((zone) {
                 final isSelected = zone.id == _selectedZone?.id;
@@ -331,7 +337,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadSessions,
-            tooltip: 'Refresh',
+            tooltip: l10n.refresh,
           ),
         ],
       ),
@@ -340,6 +346,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   Widget _buildBody() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -355,7 +363,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadSessions,
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -407,7 +415,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                 Icon(Icons.local_parking, size: 18, color: AppColors.primary),
                 const SizedBox(width: 6),
                 Text(
-                  '${_sessions.length} active',
+                  l10n.activeCount(_sessions.length),
                   style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
                 ),
                 if (_selectedZone != null) ...[
@@ -449,11 +457,11 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildLegendItem(AppColors.success, 'Valid'),
+                _buildLegendItem(AppColors.success, l10n.valid),
                 const SizedBox(height: 4),
-                _buildLegendItem(AppColors.warning, '< 10 min'),
+                _buildLegendItem(AppColors.warning, l10n.lessThan10Min),
                 const SizedBox(height: 4),
-                _buildLegendItem(AppColors.error, 'Expired'),
+                _buildLegendItem(AppColors.error, l10n.expiredStatus),
               ],
             ),
           ),
@@ -541,6 +549,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   Widget _buildSessionDetailsPanel(ParkingSession session) {
+    final l10n = AppLocalizations.of(context)!;
     final remainingMinutes = session.remainingMinutes;
     final isExpired = session.isExpired;
 
@@ -613,15 +622,15 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                       children: [
                         Text(
                           isExpired
-                              ? 'Expired'
-                              : '$remainingMinutes min remaining',
+                              ? l10n.expiredStatus
+                              : l10n.minutesRemaining(remainingMinutes),
                           style: AppTextStyles.body.copyWith(
                             fontWeight: FontWeight.w600,
                             color: _getMarkerColor(session),
                           ),
                         ),
                         Text(
-                          'Ends at ${_formatTime(session.endTime)}',
+                          l10n.endsAt(_formatTime(session.endTime)),
                           style: AppTextStyles.caption,
                         ),
                       ],
@@ -636,14 +645,14 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                 Expanded(
                   child: _buildDetailItem(
                     Icons.schedule,
-                    'Duration',
+                    l10n.duration,
                     '${session.durationMinutes} min',
                   ),
                 ),
                 Expanded(
                   child: _buildDetailItem(
                     Icons.attach_money,
-                    'Amount',
+                    l10n.amount,
                     '${session.amount.toStringAsFixed(2)} MAD',
                   ),
                 ),

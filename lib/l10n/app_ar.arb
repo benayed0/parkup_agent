@@ -151,5 +151,63 @@
 
   "failedToLoadTickets": "ما نجمتش نجيب الخطيةات",
 
-  "refresh": "حدّث"
+  "refresh": "حدّث",
+
+  "language": "اللغة",
+
+  "sessionsMap": "خريطة الجلسات",
+
+  "viewActiveSessionsOnMap": "شوف الجلسات الخدّامة على الخريطة",
+
+  "activeSessions": "الجلسات الخدّامة",
+
+  "newSession": "جلسة جديدة: {licensePlate}",
+
+  "sessionEvent": "جلسة {reason}: {sessionId}...",
+
+  "noAssignedZones": "ما عندكش زونات",
+
+  "criticalExpiring": "انتباه! {licensePlate} باقي {minutes} دقيقة!",
+
+  "sessionExpiring": "{licensePlate} باقي {minutes} دقيقة",
+
+  "view": "شوف",
+
+  "retry": "عاود",
+
+  "activeCount": "{count} خدّامين",
+
+  "valid": "صالح",
+
+  "lessThan10Min": "< 10 دق",
+
+  "expiredStatus": "فات وقتو",
+
+  "minutesRemaining": "باقي {minutes} دقيقة",
+
+  "endsAt": "يكمّل في {time}",
+
+  "duration": "المدة",
+
+  "amount": "المبلغ",
+
+  "serieNormale": "سلسلة عادية",
+
+  "gouvernement": "حكومة",
+
+  "libye": "ليبيا",
+
+  "algerie": "الجزائر",
+
+  "unionEuropeenne": "الاتحاد الأوروبي",
+
+  "autre": "آخر",
+
+  "diplomatiqueConsulaire": "دبلوماسي وقنصلي",
+
+  "corpsDiplomatique": "السلك الدبلوماسي",
+
+  "corpsConsulaire": "السلك القنصلي",
+
+  "plaquesDiplomatiques": "الماتريكيلات الدبلوماسية"
 }
