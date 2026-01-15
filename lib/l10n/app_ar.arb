@@ -1,0 +1,155 @@
+{
+  "@@locale": "ar",
+
+  "appName": "ParkUp Agent",
+
+  "signInToContinue": "ادخل باش تكمّل",
+
+  "username": "الإسم متاعك",
+
+  "enterUsername": "اكتب اسمك هوني",
+
+  "password": "الكلمة السرية",
+
+  "enterPassword": "اكتب الكلمة السرية",
+
+  "pleaseEnterUsername": "يا ولدي اكتب اسمك!",
+
+  "pleaseEnterPassword": "وين الكلمة السرية؟",
+
+  "signIn": "ادخل",
+
+  "contactAdminForPassword": "نسيت الكلمة السرية؟ كلّم المسؤول",
+
+  "loginFailed": "ما نجمتش تدخل. عاود حاول!",
+
+  "welcomeUser": "عسلامة يا {name}!",
+
+  "whatWouldYouLikeToDo": "آش تحب تعمل توّا؟",
+
+  "checkVehicle": "شوف الكرهبة",
+
+  "checkStatusCreateTickets": "شوف الحالة واعمل خطية",
+
+  "removeSabots": "فكّ السابو",
+
+  "paidSabotsToRemove": "سابوات خالصين لازم يتفكّو",
+
+  "history": "التاريخ",
+
+  "viewPastTickets": "شوف الخطيةات القديمة",
+
+  "active": "خدّام",
+
+  "inactive": "واقف",
+
+  "logout": "اخرج",
+
+  "logoutConfirmation": "متأكد تحب تخرج؟",
+
+  "cancel": "لا خلّي",
+
+  "confirm": "إيه أكّد",
+
+  "licensePlate": "الماتريكيل",
+
+  "gpsLocationUpdated": "البلاصة تحدّثت",
+
+  "couldNotGetGpsLocation": "ما لقيتش البلاصة متاعك",
+
+  "pleaseEnterValidPlate": "اكتب ماتريكيل صحيح!",
+
+  "failedToCheckVehicle": "ما نجمتش نشوف الكرهبة. عاود حاول",
+
+  "pleaseSelectParkingZone": "اختار الزون وين الكرهبة",
+
+  "usingZoneLocation": "نستعمل بلاصة الزون (GPS ما يخدمش)",
+
+  "ticketCreated": "يا سلام! خطية #{number} تعملت",
+
+  "failedToCreateTicket": "ما نجمتش نعمل خطية. عاود حاول",
+
+  "checking": "مستنّي... نشوف",
+
+  "check": "شوف",
+
+  "recheck": "عاود شوف",
+
+  "newSearch": "بحث جديد",
+
+  "enterPlateThenCheck": "اكتب الماتريكيل وبعد عيّط على شوف",
+
+  "selectZone": "اختار الزون",
+
+  "refreshGps": "حدّث البلاصة",
+
+  "expired": "فات وقتو: {date}",
+
+  "error": "مشكلة!",
+
+  "somethingWentWrong": "صار شي ما يصلحش",
+
+  "tryAgain": "عاود حاول",
+
+  "noTicketsYet": "مازال ما عندك حتى خطية",
+
+  "ticketsWillAppearHere": "الخطيةات اللي تعملها تظهر هوني",
+
+  "ticketCount": "{count, plural, =1{خطية وحدة} other{{count} خطيةات}}",
+
+  "goToLocation": "امشي للبلاصة",
+
+  "print": "اطبع",
+
+  "yesterday": "البارح",
+
+  "minutesAgo": "قبل {count} دقيقة",
+
+  "hoursAgo": "قبل {count} ساعات",
+
+  "printPreview": "شوف قبل ما تطبع",
+
+  "shareAsImage": "ابعث كتصويرة",
+
+  "parkingTicket": "خطية باركينغ",
+
+  "scanToPay": "سكاني باش تخلّص",
+
+  "viewOnMap": "شوف في الكارطة",
+
+  "share": "ابعث",
+
+  "bluetoothPrintingComingSoon": "الطباعة بالبلوتوث جايّة قريب!",
+
+  "failedToShare": "ما نجمتش نبعث",
+
+  "failedToLoadPrintData": "ما نجمتش نحمّل بيانات الطباعة",
+
+  "pendingRemovals": "سابوات يستنّاو التفكيك",
+
+  "confirmRemoval": "أكّد التفكيك",
+
+  "markSabotAsRemoved": "تحب تقول السابو متاع {plate} تفكّ؟",
+
+  "sabotMarkedAsRemoved": "تمام! السابو تفكّ",
+
+  "allClear": "كل شي باهي!",
+
+  "noSabotsPendingRemoval": "ما فمّاش سابوات يستنّاو",
+
+  "sabotCount": "{count, plural, =1{سابو واحد للتفكيك} other{{count} سابوات للتفكيك}}",
+
+  "paid": "مخلّص",
+
+  "paidTime": "خلّص {time}",
+
+  "navigate": "روّح للبلاصة",
+
+  "removed": "تفكّ",
+
+  "failedToLoadPendingRemovals": "ما نجمتش نجيب السابوات",
+
+  "failedToLoadTickets": "ما نجمتش نجيب الخطيةات",
+
+  "refresh": "حدّث"
+}

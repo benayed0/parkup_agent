@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/widgets/widgets.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -67,8 +68,8 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login failed. Please try again.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.loginFailed),
           backgroundColor: AppColors.error,
         ),
       );
@@ -81,6 +82,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -102,13 +105,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'ParkUp Agent',
+                  l10n.appName,
                   style: AppTextStyles.h1,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Sign in to continue',
+                  l10n.signInToContinue,
                   style: AppTextStyles.bodySmall,
                   textAlign: TextAlign.center,
                 ),
@@ -120,14 +123,14 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _usernameController,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    hintText: 'Enter your username',
-                    prefixIcon: Icon(Icons.person_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.username,
+                    hintText: l10n.enterUsername,
+                    prefixIcon: const Icon(Icons.person_outlined),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your username';
+                      return l10n.pleaseEnterUsername;
                     }
                     return null;
                   },
@@ -141,8 +144,8 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: _obscurePassword,
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
+                    labelText: l10n.password,
+                    hintText: l10n.enterPassword,
                     prefixIcon: const Icon(Icons.lock_outlined),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -157,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return l10n.pleaseEnterPassword;
                     }
                     return null;
                   },
@@ -168,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Login button
                 PrimaryButton(
-                  text: 'Sign In',
+                  text: l10n.signIn,
                   onPressed: _handleLogin,
                   isLoading: _isLoading,
                   icon: Icons.login,
@@ -178,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Help text
                 Text(
-                  'Contact your administrator if you forgot your password',
+                  l10n.contactAdminForPassword,
                   style: AppTextStyles.caption,
                   textAlign: TextAlign.center,
                 ),

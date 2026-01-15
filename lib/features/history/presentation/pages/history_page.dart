@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
@@ -77,14 +78,16 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        title: Text(l10n.history),
         actions: [
           // Refresh button
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
+            tooltip: l10n.refresh,
             onPressed: _loadTickets,
           ),
         ],
@@ -92,14 +95,14 @@ class _HistoryPageState extends State<HistoryPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
-          ? _buildErrorState()
+          ? _buildErrorState(l10n)
           : _tickets.isEmpty
-          ? _buildEmptyState()
-          : _buildTicketList(),
+          ? _buildEmptyState(l10n)
+          : _buildTicketList(l10n),
     );
   }
 
-  Widget _buildErrorState() {
+  Widget _buildErrorState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -112,10 +115,10 @@ class _HistoryPageState extends State<HistoryPage> {
               color: AppColors.error.withValues(alpha: 0.7),
             ),
             const SizedBox(height: 16),
-            Text('Error', style: AppTextStyles.h3),
+            Text(l10n.error, style: AppTextStyles.h3),
             const SizedBox(height: 8),
             Text(
-              _errorMessage ?? 'Something went wrong',
+              _errorMessage ?? l10n.somethingWentWrong,
               style: AppTextStyles.bodySmall,
               textAlign: TextAlign.center,
             ),
@@ -123,7 +126,7 @@ class _HistoryPageState extends State<HistoryPage> {
             OutlinedButton.icon(
               onPressed: _loadTickets,
               icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
+              label: Text(l10n.tryAgain),
             ),
           ],
         ),
@@ -131,7 +134,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -144,10 +147,10 @@ class _HistoryPageState extends State<HistoryPage> {
               color: AppColors.secondary.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            Text('No tickets yet', style: AppTextStyles.h3),
+            Text(l10n.noTicketsYet, style: AppTextStyles.h3),
             const SizedBox(height: 8),
             Text(
-              'Tickets you create will appear here',
+              l10n.ticketsWillAppearHere,
               style: AppTextStyles.bodySmall,
               textAlign: TextAlign.center,
             ),
@@ -157,7 +160,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Widget _buildTicketList() {
+  Widget _buildTicketList(AppLocalizations l10n) {
     return RefreshIndicator(
       onRefresh: _loadTickets,
       child: ListView.builder(
@@ -168,7 +171,7 @@ class _HistoryPageState extends State<HistoryPage> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                '${_tickets.length} ticket${_tickets.length == 1 ? '' : 's'}',
+                l10n.ticketCount(_tickets.length),
                 style: AppTextStyles.bodySmall,
               ),
             );

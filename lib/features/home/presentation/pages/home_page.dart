@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 import '../../../../shared/widgets/widgets.dart';
@@ -43,6 +44,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final agent = authRepository.currentAgent;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -61,15 +63,21 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(width: 10),
-            const Text('ParkUp Agent'),
+            Text(l10n.appName),
           ],
         ),
         automaticallyImplyLeading: false,
         actions: [
+          // Language selector button
+          IconButton(
+            icon: const Icon(Icons.language),
+            tooltip: 'Language',
+            onPressed: () => _showLanguageDialog(context),
+          ),
           // Logout button
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
+            tooltip: l10n.logout,
             onPressed: () => _handleLogout(context),
           ),
         ],
@@ -82,12 +90,12 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Welcome message with agent name
               Text(
-                'Welcome, ${agent?.name ?? 'Agent'}',
+                l10n.welcomeUser(agent?.name ?? 'Agent'),
                 style: AppTextStyles.h2,
               ),
               const SizedBox(height: 4),
               Text(
-                'What would you like to do?',
+                l10n.whatWouldYouLikeToDo,
                 style: AppTextStyles.bodySmall,
               ),
 
@@ -100,8 +108,8 @@ class _HomePageState extends State<HomePage> {
                     // Check vehicle action
                     ActionCard(
                       icon: Icons.search,
-                      title: 'Check Vehicle',
-                      subtitle: 'Check status & create tickets',
+                      title: l10n.checkVehicle,
+                      subtitle: l10n.checkStatusCreateTickets,
                       backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                       iconColor: AppColors.primary,
                       onTap: () => Navigator.of(context).pushNamed(
@@ -114,8 +122,8 @@ class _HomePageState extends State<HomePage> {
                     // Pending removals action
                     ActionCard(
                       icon: Icons.build_circle,
-                      title: 'Remove Sabots',
-                      subtitle: 'Paid sabots to remove',
+                      title: l10n.removeSabots,
+                      subtitle: l10n.paidSabotsToRemove,
                       backgroundColor: AppColors.warning.withValues(alpha: 0.1),
                       iconColor: AppColors.warning,
                       badgeCount: _pendingRemovalsCount,
@@ -133,8 +141,8 @@ class _HomePageState extends State<HomePage> {
                     // History action
                     ActionCard(
                       icon: Icons.history,
-                      title: 'History',
-                      subtitle: 'View past tickets',
+                      title: l10n.history,
+                      subtitle: l10n.viewPastTickets,
                       backgroundColor: AppColors.secondary.withValues(alpha: 0.1),
                       iconColor: AppColors.secondary,
                       onTap: () => Navigator.of(context).pushNamed(
@@ -168,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      agent?.isActive == true ? 'Active' : 'Inactive',
+                      agent?.isActive == true ? l10n.active : l10n.inactive,
                       style: AppTextStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
@@ -188,16 +196,49 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _handleLogout(BuildContext context) {
+  void _showLanguageDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: const Text('Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: LocaleService.supportedLocales.map((locale) {
+            final isSelected =
+                localeService.currentLocale?.languageCode == locale.languageCode;
+            return ListTile(
+              leading: Text(
+                LocaleService.getLocaleFlag(locale),
+                style: const TextStyle(fontSize: 24),
+              ),
+              title: Text(LocaleService.getLocaleName(locale)),
+              trailing: isSelected
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              selected: isSelected,
+              onTap: () {
+                localeService.setLocale(locale);
+                Navigator.of(dialogContext).pop();
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  void _handleLogout(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.logout),
+        content: Text(l10n.logoutConfirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -210,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pushReplacementNamed(AppRoutes.login);
               }
             },
-            child: const Text('Logout'),
+            child: Text(l10n.logout),
           ),
         ],
       ),
