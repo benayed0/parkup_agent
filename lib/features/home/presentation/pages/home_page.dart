@@ -28,9 +28,11 @@ class _HomePageState extends State<HomePage> {
     try {
       final tickets = await historyRepository.getTickets();
       final count = tickets
-          .where((t) =>
-              t.reason == TicketReason.carSabot &&
-              t.status == TicketStatus.paid)
+          .where(
+            (t) =>
+                t.reason == TicketReason.carSabot &&
+                t.status == TicketStatus.paid,
+          )
           .length;
 
       if (mounted) {
@@ -57,10 +59,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Image.asset(
-                'assets/icons/parkup-logo.png',
-                height: 32,
-              ),
+              child: Image.asset('assets/icons/parkup-logo.png', height: 32),
             ),
             const SizedBox(width: 10),
             Text(l10n.appName),
@@ -71,7 +70,7 @@ class _HomePageState extends State<HomePage> {
           // Language selector button
           IconButton(
             icon: const Icon(Icons.language),
-            tooltip: 'Language',
+            tooltip: 'language',
             onPressed: () => _showLanguageDialog(context),
           ),
           // Logout button
@@ -94,10 +93,7 @@ class _HomePageState extends State<HomePage> {
                 style: AppTextStyles.h2,
               ),
               const SizedBox(height: 4),
-              Text(
-                l10n.whatWouldYouLikeToDo,
-                style: AppTextStyles.bodySmall,
-              ),
+              Text(l10n.whatWouldYouLikeToDo, style: AppTextStyles.bodySmall),
 
               const SizedBox(height: 24),
 
@@ -111,11 +107,13 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.search,
                         title: l10n.checkVehicle,
                         subtitle: l10n.checkStatusCreateTickets,
-                        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                        iconColor: AppColors.primary,
-                        onTap: () => Navigator.of(context).pushNamed(
-                          AppRoutes.checkVehicle,
+                        backgroundColor: AppColors.primary.withValues(
+                          alpha: 0.1,
                         ),
+                        iconColor: AppColors.primary,
+                        onTap: () => Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.checkVehicle),
                       ),
 
                       const SizedBox(height: 12),
@@ -125,13 +123,15 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.build_circle,
                         title: l10n.removeSabots,
                         subtitle: l10n.paidSabotsToRemove,
-                        backgroundColor: AppColors.warning.withValues(alpha: 0.1),
+                        backgroundColor: AppColors.warning.withValues(
+                          alpha: 0.1,
+                        ),
                         iconColor: AppColors.warning,
                         badgeCount: _pendingRemovalsCount,
                         onTap: () async {
-                          await Navigator.of(context).pushNamed(
-                            AppRoutes.pendingRemovals,
-                          );
+                          await Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.pendingRemovals);
                           // Refresh count when returning
                           _loadPendingRemovalsCount();
                         },
@@ -144,11 +144,13 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.map,
                         title: 'Sessions Map',
                         subtitle: 'View active sessions on map',
-                        backgroundColor: AppColors.success.withValues(alpha: 0.1),
-                        iconColor: AppColors.success,
-                        onTap: () => Navigator.of(context).pushNamed(
-                          AppRoutes.activeSessionsMap,
+                        backgroundColor: AppColors.success.withValues(
+                          alpha: 0.1,
                         ),
+                        iconColor: AppColors.success,
+                        onTap: () => Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.activeSessionsMap),
                       ),
 
                       const SizedBox(height: 12),
@@ -158,11 +160,12 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.history,
                         title: l10n.history,
                         subtitle: l10n.viewPastTickets,
-                        backgroundColor: AppColors.secondary.withValues(alpha: 0.1),
-                        iconColor: AppColors.secondary,
-                        onTap: () => Navigator.of(context).pushNamed(
-                          AppRoutes.history,
+                        backgroundColor: AppColors.secondary.withValues(
+                          alpha: 0.1,
                         ),
+                        iconColor: AppColors.secondary,
+                        onTap: () =>
+                            Navigator.of(context).pushNamed(AppRoutes.history),
                       ),
                     ],
                   ),
@@ -213,15 +216,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showLanguageDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Language'),
+        title: Text('l10n.selectLanguage'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: LocaleService.supportedLocales.map((locale) {
             final isSelected =
-                localeService.currentLocale?.languageCode == locale.languageCode;
+                localeService.currentLocale?.languageCode ==
+                locale.languageCode;
             return ListTile(
               leading: Text(
                 LocaleService.getLocaleFlag(locale),

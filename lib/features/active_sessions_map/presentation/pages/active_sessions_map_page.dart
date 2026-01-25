@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/theme.dart';
 import '../../../../core/services/location_service.dart';
 import '../../../../core/services/socket_service.dart';
@@ -31,7 +32,8 @@ class ZoneGroup {
 
   bool get hasExpired => sessions.any((s) => s.isExpired && !s.alreadyTicketed);
   bool get hasExpiringSoon => sessions.any((s) => !s.isExpired);
-  int get expiredCount => sessions.where((s) => s.isExpired && !s.alreadyTicketed).length;
+  int get expiredCount =>
+      sessions.where((s) => s.isExpired && !s.alreadyTicketed).length;
   int get expiringSoonCount => sessions.where((s) => !s.isExpired).length;
 }
 
@@ -136,8 +138,9 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     // Session ended - refresh data
     _endedSub = socketService.onSessionEnded.listen((event) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         _showNotification(
-          'Session ${event.reason}: ${event.sessionId.substring(0, 8)}...',
+          l10n.sessionEvent(event.reason, event.sessionId.substring(0, 8)),
           Icons.remove_circle,
         );
         // Refresh enforcement data
@@ -231,17 +234,24 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
 
   void _showExpiringNotification(ExpiringSessionEvent event) {
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           event.isCritical
-              ? 'CRITICAL: ${event.session.licensePlate} expires in ${event.minutesRemaining} min!'
-              : '${event.session.licensePlate} expires in ${event.minutesRemaining} min',
+              ? l10n.criticalExpiring(
+                  event.session.licensePlate,
+                  event.minutesRemaining,
+                )
+              : l10n.sessionExpiring(
+                  event.session.licensePlate,
+                  event.minutesRemaining,
+                ),
         ),
         backgroundColor: event.isCritical ? AppColors.error : AppColors.warning,
         duration: Duration(seconds: event.isCritical ? 10 : 5),
         action: SnackBarAction(
-          label: 'Refresh',
+          label: l10n.refresh,
           textColor: Colors.white,
           onPressed: _loadEnforcementData,
         ),
@@ -309,7 +319,9 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   IconData _getLocationConfidenceIcon(EnforcementSession session) {
     switch (session.locationSource) {
       case LocationSource.gpsAuto:
-        return session.locationWithinZone ? Icons.gps_fixed : Icons.gps_not_fixed;
+        return session.locationWithinZone
+            ? Icons.gps_fixed
+            : Icons.gps_not_fixed;
       case LocationSource.userPin:
         return Icons.touch_app;
       case LocationSource.zoneCentroid:
@@ -323,10 +335,11 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   Widget build(BuildContext context) {
     final agent = authRepository.currentAgent;
     final zones = agent?.assignedZones ?? [];
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Enforcement Map'),
+        title: Text(l10n.enforcementMap),
         actions: [
           // Connection status indicator
           Padding(
@@ -343,14 +356,14 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               _showTicketed == true ? Icons.visibility : Icons.visibility_off,
               color: _showTicketed == true ? AppColors.success : null,
             ),
-            tooltip: _showTicketed == true ? 'Hide ticketed' : 'Show ticketed',
+            tooltip: _showTicketed == true ? l10n.hideTicketed : l10n.showTicketed,
             onPressed: _toggleShowTicketed,
           ),
           // Zone selector dropdown
           if (zones.length > 1)
             PopupMenuButton<ParkingZone>(
               icon: const Icon(Icons.location_on),
-              tooltip: 'Select Zone',
+              tooltip: l10n.selectZone,
               onSelected: _onZoneChanged,
               itemBuilder: (context) => zones.map((zone) {
                 final isSelected = zone.id == _selectedZone?.id;
@@ -372,7 +385,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadEnforcementData,
-            tooltip: 'Refresh',
+            tooltip: l10n.refresh,
           ),
         ],
       ),
@@ -381,6 +394,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   Widget _buildBody() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -392,11 +407,15 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
           children: [
             Icon(Icons.error_outline, size: 64, color: AppColors.error),
             const SizedBox(height: 16),
-            Text(_error!, style: AppTextStyles.body, textAlign: TextAlign.center),
+            Text(
+              _error!,
+              style: AppTextStyles.body,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadEnforcementData,
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -440,12 +459,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
         ),
 
         // Bottom sheet with sessions list
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: _buildBottomSheet(),
-        ),
+        Positioned(bottom: 0, left: 0, right: 0, child: _buildBottomSheet()),
 
         // Selected session details overlay - only show when sheet is collapsed
         if (_selectedSession != null && !_isSheetExpanded)
@@ -516,12 +530,14 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
         borderColor = AppColors.border;
       }
 
-      polygons.add(Polygon(
-        points: points,
-        color: fillColor,
-        borderColor: borderColor,
-        borderStrokeWidth: 2,
-      ));
+      polygons.add(
+        Polygon(
+          points: points,
+          color: fillColor,
+          borderColor: borderColor,
+          borderStrokeWidth: 2,
+        ),
+      );
     }
 
     return polygons;
@@ -531,18 +547,19 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     return _allSessions
         .where((s) => s.displayLatitude != null && s.displayLongitude != null)
         .map((session) {
-      final isSelected = _selectedSession?.id == session.id;
+          final isSelected = _selectedSession?.id == session.id;
 
-      return Marker(
-        point: LatLng(session.displayLatitude!, session.displayLongitude!),
-        width: isSelected ? 50 : 40,
-        height: isSelected ? 50 : 40,
-        child: GestureDetector(
-          onTap: () => _onMarkerTapped(session),
-          child: _buildMarkerWidget(session, isSelected),
-        ),
-      );
-    }).toList();
+          return Marker(
+            point: LatLng(session.displayLatitude!, session.displayLongitude!),
+            width: isSelected ? 50 : 40,
+            height: isSelected ? 50 : 40,
+            child: GestureDetector(
+              onTap: () => _onMarkerTapped(session),
+              child: _buildMarkerWidget(session, isSelected),
+            ),
+          );
+        })
+        .toList();
   }
 
   /// Build marker widget based on location confidence
@@ -569,7 +586,11 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   /// High confidence marker - sharp pin icon, full opacity
-  Widget _buildPreciseMarker(EnforcementSession session, Color color, bool isSelected) {
+  Widget _buildPreciseMarker(
+    EnforcementSession session,
+    Color color,
+    bool isSelected,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -599,7 +620,11 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   /// GPS location outside zone - sharp pin with orange warning border
-  Widget _buildOutsideZoneMarker(EnforcementSession session, Color color, bool isSelected) {
+  Widget _buildOutsideZoneMarker(
+    EnforcementSession session,
+    Color color,
+    bool isSelected,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -629,13 +654,19 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   /// Medium confidence marker - softer circle, slight transparency
-  Widget _buildApproximateMarker(EnforcementSession session, Color color, bool isSelected) {
+  Widget _buildApproximateMarker(
+    EnforcementSession session,
+    Color color,
+    bool isSelected,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.85),
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected ? AppColors.primary : Colors.white.withValues(alpha: 0.8),
+          color: isSelected
+              ? AppColors.primary
+              : Colors.white.withValues(alpha: 0.8),
           width: isSelected ? 3 : 2,
           strokeAlign: BorderSide.strokeAlignOutside,
         ),
@@ -658,7 +689,11 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   /// Low confidence marker - large translucent circle
-  Widget _buildLowConfidenceMarker(EnforcementSession session, Color color, bool isSelected) {
+  Widget _buildLowConfidenceMarker(
+    EnforcementSession session,
+    Color color,
+    bool isSelected,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.4),
@@ -680,6 +715,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   Widget _buildBottomSheet() {
+    final l10n = AppLocalizations.of(context)!;
     final filteredSessions = _filteredSessions;
 
     final screenHeight = MediaQuery.of(context).size.height;
@@ -708,16 +744,19 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
             color: Colors.transparent,
             child: InkWell(
               onTap: _toggleSheet,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               child: Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 16,
+                ),
                 child: Row(
                   children: [
                     Text(
-                      'Sessions',
+                      l10n.sessions,
                       style: AppTextStyles.body.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -726,7 +765,9 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                     // Expired badge
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.error.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
@@ -743,7 +784,9 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                     // Expiring badge
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.warning.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
@@ -813,8 +856,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                             const SizedBox(height: 12),
                             Text(
                               _searchQuery.isEmpty
-                                  ? 'No violations found'
-                                  : 'No sessions found',
+                                  ? l10n.noViolationsFound
+                                  : l10n.noSessionsFound,
                               style: AppTextStyles.body.copyWith(
                                 color: AppColors.textSecondary,
                               ),
@@ -826,8 +869,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                   else
                     ..._buildZoneGroupedList(filteredSessions),
                   // Bottom padding for safe area
-                  SizedBox(
-                      height: MediaQuery.of(context).padding.bottom + 16),
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
                 ],
               ),
             ),
@@ -844,10 +886,12 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     for (final group in groups) {
       widgets.add(_buildZoneHeader(group));
       for (final session in group.sessions) {
-        widgets.add(Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: _buildSessionListItem(session, showZone: false),
-        ));
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _buildSessionListItem(session, showZone: false),
+          ),
+        );
       }
       widgets.add(Divider(height: 20, color: AppColors.border));
     }
@@ -870,9 +914,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
           Expanded(
             child: Text(
               group.zoneName,
-              style: AppTextStyles.body.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
           // Expired count badge
@@ -914,7 +956,11 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     );
   }
 
-  Widget _buildSessionListItem(EnforcementSession session, {bool showZone = true}) {
+  Widget _buildSessionListItem(
+    EnforcementSession session, {
+    bool showZone = true,
+  }) {
+    final l10n = AppLocalizations.of(context)!;
     final isSelected = _selectedSession?.id == session.id;
     final color = _getMarkerColor(session);
 
@@ -945,8 +991,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               child: Icon(
                 session.isExpired
                     ? (session.alreadyTicketed
-                        ? Icons.check_circle
-                        : Icons.warning)
+                          ? Icons.check_circle
+                          : Icons.warning)
                     : Icons.timer,
                 color: color,
                 size: 20,
@@ -971,13 +1017,15 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                         const SizedBox(width: 6),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.success.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'Ticketed',
+                            l10n.ticketed,
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.success,
                               fontSize: 10,
@@ -1006,7 +1054,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          session.locationConfidenceText,
+                          _getLocationConfidenceText(session),
                           style: AppTextStyles.caption.copyWith(
                             color: AppColors.textTertiary,
                             fontSize: 11,
@@ -1035,11 +1083,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               ),
             ),
             const SizedBox(width: 8),
-            Icon(
-              Icons.chevron_right,
-              color: AppColors.textSecondary,
-              size: 20,
-            ),
+            Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
           ],
         ),
       ),
@@ -1047,6 +1091,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   Widget _buildInlineSessionDetails(EnforcementSession session) {
+    final l10n = AppLocalizations.of(context)!;
     final color = _getMarkerColor(session);
 
     return Container(
@@ -1072,8 +1117,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                 child: Icon(
                   session.isExpired
                       ? (session.alreadyTicketed
-                          ? Icons.check_circle
-                          : Icons.warning)
+                            ? Icons.check_circle
+                            : Icons.warning)
                       : Icons.timer,
                   color: color,
                   size: 18,
@@ -1110,7 +1155,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          session.locationConfidenceText,
+                          _getLocationConfidenceText(session),
                           style: AppTextStyles.caption.copyWith(
                             color: session.isLocationOutsideZone
                                 ? Colors.orange
@@ -1125,8 +1170,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               ),
               // Time badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -1161,7 +1205,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               child: ElevatedButton.icon(
                 onPressed: () => _navigateToCreateTicket(session),
                 icon: const Icon(Icons.receipt_long, size: 16),
-                label: const Text('Create Ticket'),
+                label: Text(l10n.createTicket),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.error,
                   foregroundColor: Colors.white,
@@ -1181,7 +1225,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                 Icon(Icons.check_circle, size: 14, color: AppColors.success),
                 const SizedBox(width: 4),
                 Text(
-                  'Already ticketed',
+                  l10n.alreadyTicketed,
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.success,
                     fontWeight: FontWeight.w500,
@@ -1195,6 +1239,21 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     );
   }
 
+  /// Get localized location confidence text
+  String _getLocationConfidenceText(EnforcementSession session) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (session.locationSource) {
+      case LocationSource.gpsAuto:
+        return session.locationWithinZone ? l10n.locationGps : l10n.locationGpsOutsideZone;
+      case LocationSource.userPin:
+        return l10n.locationUserPlaced;
+      case LocationSource.zoneCentroid:
+        return l10n.locationZoneOnly;
+      case LocationSource.unknown:
+        return l10n.locationUnknown;
+    }
+  }
+
   void _selectAndCenterSession(EnforcementSession session) {
     setState(() {
       _selectedSession = session;
@@ -1202,11 +1261,15 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
     });
     // Center map on session (use display coordinates that account for low confidence fallback)
     if (session.displayLatitude != null && session.displayLongitude != null) {
-      _mapController.move(LatLng(session.displayLatitude!, session.displayLongitude!), 17);
+      _mapController.move(
+        LatLng(session.displayLatitude!, session.displayLongitude!),
+        17,
+      );
     }
   }
 
   Widget _buildSessionDetailsCard(EnforcementSession session) {
+    final l10n = AppLocalizations.of(context)!;
     final color = _getMarkerColor(session);
 
     return Container(
@@ -1238,8 +1301,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                 child: Icon(
                   session.isExpired
                       ? (session.alreadyTicketed
-                          ? Icons.check_circle
-                          : Icons.warning)
+                            ? Icons.check_circle
+                            : Icons.warning)
                       : Icons.timer,
                   color: color,
                   size: 24,
@@ -1274,7 +1337,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          session.locationConfidenceText,
+                          _getLocationConfidenceText(session),
                           style: AppTextStyles.caption.copyWith(
                             color: session.isLocationOutsideZone
                                 ? Colors.orange
@@ -1301,8 +1364,10 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
             children: [
               Expanded(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
@@ -1331,8 +1396,10 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               if (session.alreadyTicketed) ...[
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
@@ -1346,7 +1413,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Ticketed',
+                        l10n.ticketed,
                         style: AppTextStyles.bodySmall.copyWith(
                           color: AppColors.success,
                           fontWeight: FontWeight.w500,
@@ -1366,7 +1433,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               child: ElevatedButton.icon(
                 onPressed: () => _navigateToCreateTicket(session),
                 icon: const Icon(Icons.receipt_long, size: 18),
-                label: const Text('Create Ticket'),
+                label: Text(l10n.createTicket),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.error,
                   foregroundColor: Colors.white,
@@ -1393,7 +1460,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   }
 
   void _centerOnMyLocation() async {
-    final pos = locationService.cachedPosition ??
+    final pos =
+        locationService.cachedPosition ??
         await locationService.getCurrentPosition();
     if (pos != null) {
       _mapController.move(LatLng(pos.latitude, pos.longitude), 17);
