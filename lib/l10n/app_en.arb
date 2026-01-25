@@ -628,5 +628,75 @@
   "plaquesDiplomatiques": "Diplomatic Plates",
   "@plaquesDiplomatiques": {
     "description": "Diplomatic plates bottom sheet title"
+  },
+
+  "enforcementMap": "Enforcement Map",
+  "@enforcementMap": {
+    "description": "Title for the enforcement map page"
+  },
+
+  "sessions": "Sessions",
+  "@sessions": {
+    "description": "Sessions header in bottom sheet"
+  },
+
+  "hideTicketed": "Hide ticketed",
+  "@hideTicketed": {
+    "description": "Tooltip for hiding ticketed sessions"
+  },
+
+  "showTicketed": "Show ticketed",
+  "@showTicketed": {
+    "description": "Tooltip for showing ticketed sessions"
+  },
+
+  "noViolationsFound": "No violations found",
+  "@noViolationsFound": {
+    "description": "Empty state when no violations exist"
+  },
+
+  "noSessionsFound": "No sessions found",
+  "@noSessionsFound": {
+    "description": "Empty state when search returns no results"
+  },
+
+  "ticketed": "Ticketed",
+  "@ticketed": {
+    "description": "Badge text for ticketed sessions"
+  },
+
+  "createTicket": "Create Ticket",
+  "@createTicket": {
+    "description": "Button text to create a ticket"
+  },
+
+  "alreadyTicketed": "Already ticketed",
+  "@alreadyTicketed": {
+    "description": "Status text for sessions that have been ticketed"
+  },
+
+  "locationGps": "GPS location",
+  "@locationGps": {
+    "description": "Location confidence: GPS auto-detected"
+  },
+
+  "locationGpsOutsideZone": "GPS (outside zone)",
+  "@locationGpsOutsideZone": {
+    "description": "Location confidence: GPS detected but outside zone boundaries"
+  },
+
+  "locationUserPlaced": "User-placed location",
+  "@locationUserPlaced": {
+    "description": "Location confidence: User manually placed marker"
+  },
+
+  "locationZoneOnly": "Zone only (no precise location)",
+  "@locationZoneOnly": {
+    "description": "Location confidence: Only zone centroid available"
+  },
+
+  "locationUnknown": "Location unknown",
+  "@locationUnknown": {
+    "description": "Location confidence: Unknown source"
   }
 }

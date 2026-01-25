@@ -268,4 +268,147 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get refresh => 'Refresh';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get sessionsMap => 'Sessions Map';
+
+  @override
+  String get viewActiveSessionsOnMap => 'View active sessions on map';
+
+  @override
+  String get activeSessions => 'Active Sessions';
+
+  @override
+  String newSession(String licensePlate) {
+    return 'New session: $licensePlate';
+  }
+
+  @override
+  String sessionEvent(String reason, String sessionId) {
+    return 'Session $reason: $sessionId...';
+  }
+
+  @override
+  String get noAssignedZones => 'No assigned zones';
+
+  @override
+  String criticalExpiring(String licensePlate, int minutes) {
+    return 'CRITICAL: $licensePlate expires in $minutes min!';
+  }
+
+  @override
+  String sessionExpiring(String licensePlate, int minutes) {
+    return '$licensePlate expires in $minutes min';
+  }
+
+  @override
+  String get view => 'View';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String activeCount(int count) {
+    return '$count active';
+  }
+
+  @override
+  String get valid => 'Valid';
+
+  @override
+  String get lessThan10Min => '< 10 min';
+
+  @override
+  String get expiredStatus => 'Expired';
+
+  @override
+  String minutesRemaining(int minutes) {
+    return '$minutes min remaining';
+  }
+
+  @override
+  String endsAt(String time) {
+    return 'Ends at $time';
+  }
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get serieNormale => 'Standard Series';
+
+  @override
+  String get gouvernement => 'Government';
+
+  @override
+  String get libye => 'Libya';
+
+  @override
+  String get algerie => 'Algeria';
+
+  @override
+  String get unionEuropeenne => 'European Union';
+
+  @override
+  String get autre => 'Other';
+
+  @override
+  String get diplomatiqueConsulaire => 'Diplomatic & Consular';
+
+  @override
+  String get corpsDiplomatique => 'Diplomatic Corps';
+
+  @override
+  String get corpsConsulaire => 'Consular Corps';
+
+  @override
+  String get plaquesDiplomatiques => 'Diplomatic Plates';
+
+  @override
+  String get enforcementMap => 'Enforcement Map';
+
+  @override
+  String get sessions => 'Sessions';
+
+  @override
+  String get hideTicketed => 'Hide ticketed';
+
+  @override
+  String get showTicketed => 'Show ticketed';
+
+  @override
+  String get noViolationsFound => 'No violations found';
+
+  @override
+  String get noSessionsFound => 'No sessions found';
+
+  @override
+  String get ticketed => 'Ticketed';
+
+  @override
+  String get createTicket => 'Create Ticket';
+
+  @override
+  String get alreadyTicketed => 'Already ticketed';
+
+  @override
+  String get locationGps => 'GPS location';
+
+  @override
+  String get locationGpsOutsideZone => 'GPS (outside zone)';
+
+  @override
+  String get locationUserPlaced => 'User-placed location';
+
+  @override
+  String get locationZoneOnly => 'Zone only (no precise location)';
+
+  @override
+  String get locationUnknown => 'Location unknown';
 }

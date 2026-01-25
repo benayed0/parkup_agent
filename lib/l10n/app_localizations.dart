@@ -555,6 +555,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Refresh'**
   String get refresh;
+
+  /// Language selector tooltip and dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// Sessions map action title
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions Map'**
+  String get sessionsMap;
+
+  /// Sessions map action subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'View active sessions on map'**
+  String get viewActiveSessionsOnMap;
+
+  /// Active sessions page title
+  ///
+  /// In en, this message translates to:
+  /// **'Active Sessions'**
+  String get activeSessions;
+
+  /// New session notification message
+  ///
+  /// In en, this message translates to:
+  /// **'New session: {licensePlate}'**
+  String newSession(String licensePlate);
+
+  /// Session event notification message
+  ///
+  /// In en, this message translates to:
+  /// **'Session {reason}: {sessionId}...'**
+  String sessionEvent(String reason, String sessionId);
+
+  /// Error message when agent has no assigned zones
+  ///
+  /// In en, this message translates to:
+  /// **'No assigned zones'**
+  String get noAssignedZones;
+
+  /// Critical expiring session notification
+  ///
+  /// In en, this message translates to:
+  /// **'CRITICAL: {licensePlate} expires in {minutes} min!'**
+  String criticalExpiring(String licensePlate, int minutes);
+
+  /// Session expiring notification
+  ///
+  /// In en, this message translates to:
+  /// **'{licensePlate} expires in {minutes} min'**
+  String sessionExpiring(String licensePlate, int minutes);
+
+  /// View action button text
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
+  /// Retry button text
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// Number of active sessions
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active'**
+  String activeCount(int count);
+
+  /// Valid session status label
+  ///
+  /// In en, this message translates to:
+  /// **'Valid'**
+  String get valid;
+
+  /// Less than 10 minutes remaining label
+  ///
+  /// In en, this message translates to:
+  /// **'< 10 min'**
+  String get lessThan10Min;
+
+  /// Expired status label without date
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expiredStatus;
+
+  /// Minutes remaining for session
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min remaining'**
+  String minutesRemaining(int minutes);
+
+  /// Session end time
+  ///
+  /// In en, this message translates to:
+  /// **'Ends at {time}'**
+  String endsAt(String time);
+
+  /// Duration label
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// Amount/price label
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// Standard license plate series
+  ///
+  /// In en, this message translates to:
+  /// **'Standard Series'**
+  String get serieNormale;
+
+  /// Government license plates
+  ///
+  /// In en, this message translates to:
+  /// **'Government'**
+  String get gouvernement;
+
+  /// Libyan license plates
+  ///
+  /// In en, this message translates to:
+  /// **'Libya'**
+  String get libye;
+
+  /// Algerian license plates
+  ///
+  /// In en, this message translates to:
+  /// **'Algeria'**
+  String get algerie;
+
+  /// European Union license plates
+  ///
+  /// In en, this message translates to:
+  /// **'European Union'**
+  String get unionEuropeenne;
+
+  /// Other license plate types
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get autre;
+
+  /// Diplomatic and consular plates section
+  ///
+  /// In en, this message translates to:
+  /// **'Diplomatic & Consular'**
+  String get diplomatiqueConsulaire;
+
+  /// Diplomatic corps plates
+  ///
+  /// In en, this message translates to:
+  /// **'Diplomatic Corps'**
+  String get corpsDiplomatique;
+
+  /// Consular corps plates
+  ///
+  /// In en, this message translates to:
+  /// **'Consular Corps'**
+  String get corpsConsulaire;
+
+  /// Diplomatic plates bottom sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Diplomatic Plates'**
+  String get plaquesDiplomatiques;
+
+  /// Title for the enforcement map page
+  ///
+  /// In en, this message translates to:
+  /// **'Enforcement Map'**
+  String get enforcementMap;
+
+  /// Sessions header in bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get sessions;
+
+  /// Tooltip for hiding ticketed sessions
+  ///
+  /// In en, this message translates to:
+  /// **'Hide ticketed'**
+  String get hideTicketed;
+
+  /// Tooltip for showing ticketed sessions
+  ///
+  /// In en, this message translates to:
+  /// **'Show ticketed'**
+  String get showTicketed;
+
+  /// Empty state when no violations exist
+  ///
+  /// In en, this message translates to:
+  /// **'No violations found'**
+  String get noViolationsFound;
+
+  /// Empty state when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions found'**
+  String get noSessionsFound;
+
+  /// Badge text for ticketed sessions
+  ///
+  /// In en, this message translates to:
+  /// **'Ticketed'**
+  String get ticketed;
+
+  /// Button text to create a ticket
+  ///
+  /// In en, this message translates to:
+  /// **'Create Ticket'**
+  String get createTicket;
+
+  /// Status text for sessions that have been ticketed
+  ///
+  /// In en, this message translates to:
+  /// **'Already ticketed'**
+  String get alreadyTicketed;
+
+  /// Location confidence: GPS auto-detected
+  ///
+  /// In en, this message translates to:
+  /// **'GPS location'**
+  String get locationGps;
+
+  /// Location confidence: GPS detected but outside zone boundaries
+  ///
+  /// In en, this message translates to:
+  /// **'GPS (outside zone)'**
+  String get locationGpsOutsideZone;
+
+  /// Location confidence: User manually placed marker
+  ///
+  /// In en, this message translates to:
+  /// **'User-placed location'**
+  String get locationUserPlaced;
+
+  /// Location confidence: Only zone centroid available
+  ///
+  /// In en, this message translates to:
+  /// **'Zone only (no precise location)'**
+  String get locationZoneOnly;
+
+  /// Location confidence: Unknown source
+  ///
+  /// In en, this message translates to:
+  /// **'Location unknown'**
+  String get locationUnknown;
 }
 
 class _AppLocalizationsDelegate

@@ -265,4 +265,147 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get refresh => 'حدّث';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get sessionsMap => 'خريطة التيكيات';
+
+  @override
+  String get viewActiveSessionsOnMap => 'شوف التيكيات الخدّامة على الخريطة';
+
+  @override
+  String get activeSessions => 'التيكيات الخدّامة';
+
+  @override
+  String newSession(String licensePlate) {
+    return 'تيكي جديد: $licensePlate';
+  }
+
+  @override
+  String sessionEvent(String reason, String sessionId) {
+    return 'تيكي $reason: $sessionId...';
+  }
+
+  @override
+  String get noAssignedZones => 'ما عندكش زونات';
+
+  @override
+  String criticalExpiring(String licensePlate, int minutes) {
+    return 'انتباه! $licensePlate باقي $minutes دقيقة!';
+  }
+
+  @override
+  String sessionExpiring(String licensePlate, int minutes) {
+    return '$licensePlate باقي $minutes دقيقة';
+  }
+
+  @override
+  String get view => 'شوف';
+
+  @override
+  String get retry => 'عاود';
+
+  @override
+  String activeCount(int count) {
+    return '$count خدّامين';
+  }
+
+  @override
+  String get valid => 'صالح';
+
+  @override
+  String get lessThan10Min => '< 10 دق';
+
+  @override
+  String get expiredStatus => 'فات وقتو';
+
+  @override
+  String minutesRemaining(int minutes) {
+    return 'باقي $minutes دقيقة';
+  }
+
+  @override
+  String endsAt(String time) {
+    return 'يكمّل في $time';
+  }
+
+  @override
+  String get duration => 'المدة';
+
+  @override
+  String get amount => 'المبلغ';
+
+  @override
+  String get serieNormale => 'سلسلة عادية';
+
+  @override
+  String get gouvernement => 'حكومة';
+
+  @override
+  String get libye => 'ليبيا';
+
+  @override
+  String get algerie => 'الجزائر';
+
+  @override
+  String get unionEuropeenne => 'الاتحاد الأوروبي';
+
+  @override
+  String get autre => 'آخر';
+
+  @override
+  String get diplomatiqueConsulaire => 'دبلوماسي وقنصلي';
+
+  @override
+  String get corpsDiplomatique => 'السلك الدبلوماسي';
+
+  @override
+  String get corpsConsulaire => 'السلك القنصلي';
+
+  @override
+  String get plaquesDiplomatiques => 'الماتريكيلات الدبلوماسية';
+
+  @override
+  String get enforcementMap => 'خريطة المراقبة';
+
+  @override
+  String get sessions => 'التيكيات';
+
+  @override
+  String get hideTicketed => 'خبّي المخطيين';
+
+  @override
+  String get showTicketed => 'وري المخطيين';
+
+  @override
+  String get noViolationsFound => 'ما لقيت حتى مخالفة';
+
+  @override
+  String get noSessionsFound => 'ما لقيت حتى تيكي';
+
+  @override
+  String get ticketed => 'تخطى';
+
+  @override
+  String get createTicket => 'اعمل خطية';
+
+  @override
+  String get alreadyTicketed => 'مخطي من قبل';
+
+  @override
+  String get locationGps => 'بلاصة GPS';
+
+  @override
+  String get locationGpsOutsideZone => 'GPS (برّا الزون)';
+
+  @override
+  String get locationUserPlaced => 'بلاصة وضعها المستعمل';
+
+  @override
+  String get locationZoneOnly => 'الزون فقط (بلاصة مش دقيقة)';
+
+  @override
+  String get locationUnknown => 'بلاصة مش معروفة';
 }

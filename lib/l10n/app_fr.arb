@@ -209,5 +209,33 @@
 
   "corpsConsulaire": "Corps Consulaire",
 
-  "plaquesDiplomatiques": "Plaques Diplomatiques"
+  "plaquesDiplomatiques": "Plaques Diplomatiques",
+
+  "enforcementMap": "Carte de contrôle",
+
+  "sessions": "Sessions",
+
+  "hideTicketed": "Masquer verbalisés",
+
+  "showTicketed": "Afficher verbalisés",
+
+  "noViolationsFound": "Aucune infraction trouvée",
+
+  "noSessionsFound": "Aucune session trouvée",
+
+  "ticketed": "Verbalisé",
+
+  "createTicket": "Créer contravention",
+
+  "alreadyTicketed": "Déjà verbalisé",
+
+  "locationGps": "Position GPS",
+
+  "locationGpsOutsideZone": "GPS (hors zone)",
+
+  "locationUserPlaced": "Position manuelle",
+
+  "locationZoneOnly": "Zone uniquement (position imprécise)",
+
+  "locationUnknown": "Position inconnue"
 }

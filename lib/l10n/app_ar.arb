@@ -209,5 +209,33 @@
 
   "corpsConsulaire": "السلك القنصلي",
 
-  "plaquesDiplomatiques": "الماتريكيلات الدبلوماسية"
+  "plaquesDiplomatiques": "الماتريكيلات الدبلوماسية",
+
+  "enforcementMap": "خريطة المراقبة",
+
+  "sessions": "التيكيات",
+
+  "hideTicketed": "خبّي المخطيين",
+
+  "showTicketed": "وري المخطيين",
+
+  "noViolationsFound": "ما لقيت حتى مخالفة",
+
+  "noSessionsFound": "ما لقيت حتى تيكي",
+
+  "ticketed": "تخطى",
+
+  "createTicket": "اعمل خطية",
+
+  "alreadyTicketed": "مخطي من قبل",
+
+  "locationGps": "بلاصة GPS",
+
+  "locationGpsOutsideZone": "GPS (برّا الزون)",
+
+  "locationUserPlaced": "بلاصة وضعها المستعمل",
+
+  "locationZoneOnly": "الزون فقط (بلاصة مش دقيقة)",
+
+  "locationUnknown": "بلاصة مش معروفة"
 }
