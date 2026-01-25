@@ -101,69 +101,71 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 24),
 
-              // Action cards
+              // Action cards - scrollable for smaller screens
               Expanded(
-                child: Column(
-                  children: [
-                    // Check vehicle action
-                    ActionCard(
-                      icon: Icons.search,
-                      title: l10n.checkVehicle,
-                      subtitle: l10n.checkStatusCreateTickets,
-                      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                      iconColor: AppColors.primary,
-                      onTap: () => Navigator.of(context).pushNamed(
-                        AppRoutes.checkVehicle,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Check vehicle action
+                      ActionCard(
+                        icon: Icons.search,
+                        title: l10n.checkVehicle,
+                        subtitle: l10n.checkStatusCreateTickets,
+                        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                        iconColor: AppColors.primary,
+                        onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutes.checkVehicle,
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                    // Pending removals action
-                    ActionCard(
-                      icon: Icons.build_circle,
-                      title: l10n.removeSabots,
-                      subtitle: l10n.paidSabotsToRemove,
-                      backgroundColor: AppColors.warning.withValues(alpha: 0.1),
-                      iconColor: AppColors.warning,
-                      badgeCount: _pendingRemovalsCount,
-                      onTap: () async {
-                        await Navigator.of(context).pushNamed(
-                          AppRoutes.pendingRemovals,
-                        );
-                        // Refresh count when returning
-                        _loadPendingRemovalsCount();
-                      },
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    // Active sessions map action
-                    ActionCard(
-                      icon: Icons.map,
-                      title: 'Sessions Map',
-                      subtitle: 'View active sessions on map',
-                      backgroundColor: AppColors.success.withValues(alpha: 0.1),
-                      iconColor: AppColors.success,
-                      onTap: () => Navigator.of(context).pushNamed(
-                        AppRoutes.activeSessionsMap,
+                      // Pending removals action
+                      ActionCard(
+                        icon: Icons.build_circle,
+                        title: l10n.removeSabots,
+                        subtitle: l10n.paidSabotsToRemove,
+                        backgroundColor: AppColors.warning.withValues(alpha: 0.1),
+                        iconColor: AppColors.warning,
+                        badgeCount: _pendingRemovalsCount,
+                        onTap: () async {
+                          await Navigator.of(context).pushNamed(
+                            AppRoutes.pendingRemovals,
+                          );
+                          // Refresh count when returning
+                          _loadPendingRemovalsCount();
+                        },
                       ),
-                    ),
 
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                    // History action
-                    ActionCard(
-                      icon: Icons.history,
-                      title: l10n.history,
-                      subtitle: l10n.viewPastTickets,
-                      backgroundColor: AppColors.secondary.withValues(alpha: 0.1),
-                      iconColor: AppColors.secondary,
-                      onTap: () => Navigator.of(context).pushNamed(
-                        AppRoutes.history,
+                      // Active sessions map action
+                      ActionCard(
+                        icon: Icons.map,
+                        title: 'Sessions Map',
+                        subtitle: 'View active sessions on map',
+                        backgroundColor: AppColors.success.withValues(alpha: 0.1),
+                        iconColor: AppColors.success,
+                        onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutes.activeSessionsMap,
+                        ),
                       ),
-                    ),
-                  ],
+
+                      const SizedBox(height: 12),
+
+                      // History action
+                      ActionCard(
+                        icon: Icons.history,
+                        title: l10n.history,
+                        subtitle: l10n.viewPastTickets,
+                        backgroundColor: AppColors.secondary.withValues(alpha: 0.1),
+                        iconColor: AppColors.secondary,
+                        onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutes.history,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 

@@ -37,6 +37,104 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
     super.initState();
     _initLocation();
     _loadZones();
+
+    // Parse route arguments after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _parseRouteArguments();
+    });
+  }
+
+  void _parseRouteArguments() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args == null || args is! Map<String, dynamic>) return;
+
+    // Parse plate data
+    final plateData = args['plate'] as Map<String, dynamic>?;
+    final licensePlate = args['licensePlate'] as String?;
+    final zoneId = args['zoneId'] as String?;
+
+    // Set zone if provided
+    if (zoneId != null && _zones.isNotEmpty) {
+      final zone = _zones.where((z) => z.id == zoneId).firstOrNull;
+      if (zone != null) {
+        setState(() => _selectedZone = zone);
+      }
+    }
+
+    // Parse and set plate
+    if (plateData != null) {
+      final plate = _parsePlateFromApi(plateData);
+      if (plate != null) {
+        setState(() {
+          _currentPlate = plate;
+          _inputKey++; // Force input widget to rebuild with new values
+        });
+        // Trigger auto-check after a short delay
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted && _isPlateComplete(_currentPlate)) {
+            _handleAutoCheck();
+          }
+        });
+      }
+    } else if (licensePlate != null && licensePlate.isNotEmpty) {
+      // Fallback: just set formatted string (won't be parsed properly)
+      setState(() {
+        _currentPlate = LicensePlate(
+          type: PlateType.tunis,
+          left: licensePlate,
+        );
+        _inputKey++;
+      });
+    }
+  }
+
+  /// Parse plate data from API format to LicensePlate
+  LicensePlate? _parsePlateFromApi(Map<String, dynamic> data) {
+    final typeStr = data['type'] as String?;
+    if (typeStr == null) return null;
+
+    // Map API type string to PlateType enum
+    final type = _plateTypeFromString(typeStr);
+
+    return LicensePlate(
+      type: type,
+      left: data['left'] as String?,
+      right: data['right'] as String?,
+    );
+  }
+
+  /// Convert API plate type string to PlateType enum
+  PlateType _plateTypeFromString(String typeStr) {
+    switch (typeStr.toLowerCase()) {
+      case 'tunis':
+        return PlateType.tunis;
+      case 'rs':
+        return PlateType.rs;
+      case 'government':
+        return PlateType.government;
+      case 'libya':
+        return PlateType.libya;
+      case 'algeria':
+        return PlateType.algeria;
+      case 'eu':
+        return PlateType.eu;
+      case 'other':
+        return PlateType.other;
+      case 'cmd':
+        return PlateType.cmd;
+      case 'cd':
+        return PlateType.cd;
+      case 'md':
+        return PlateType.md;
+      case 'pat':
+        return PlateType.pat;
+      case 'cc':
+        return PlateType.cc;
+      case 'mc':
+        return PlateType.mc;
+      default:
+        return PlateType.tunis;
+    }
   }
 
   void _loadZones() {

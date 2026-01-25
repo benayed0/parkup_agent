@@ -578,7 +578,7 @@ class LicensePlateDisplay extends StatelessWidget {
                   decoration: const BoxDecoration(color: euBlue),
                   child: Center(
                     child: Image.asset(
-                      'images/Eu-stars.png',
+                      'assets/images/Eu-stars.png',
                       width: (mini ? 16.0 : 24.0) * scale,
                       height: (mini ? 16.0 : 24.0) * scale,
                       fit: BoxFit.contain,
@@ -940,7 +940,7 @@ class PlateTypeChip extends StatelessWidget {
                           borderRadius: BorderRadius.circular(2),
                         ),
                         child: Image.asset(
-                          'images/Eu-stars.png',
+                          'assets/images/Eu-stars.png',
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -1359,7 +1359,7 @@ class PlateTypePicker extends StatelessWidget {
               color: euBlue,
               borderRadius: BorderRadius.circular(2),
             ),
-            child: Image.asset('images/Eu-stars.png', fit: BoxFit.contain),
+            child: Image.asset('assets/images/Eu-stars.png', fit: BoxFit.contain),
           ),
           const SizedBox(width: 3),
           Text(
@@ -1886,7 +1886,7 @@ class _LicensePlateInputState extends State<LicensePlateInput> {
                       decoration: const BoxDecoration(color: euBlue),
                       child: Center(
                         child: Image.asset(
-                          'images/Eu-stars.png',
+                          'assets/images/Eu-stars.png',
                           width: 28,
                           height: 28,
                           fit: BoxFit.contain,
