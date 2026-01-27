@@ -1,3 +1,7 @@
+import 'package:intl/intl.dart';
+import '../../l10n/app_localizations.dart';
+import 'ticket.dart';
+
 /// Line type for styling in the UI
 enum PrintLineType {
   header,
@@ -98,6 +102,105 @@ class PrintableTicketData {
       qrCode: QrCodeData.fromJson(json['qrCode'] as Map<String, dynamic>),
       ticketId: json['ticketId'] as String,
       ticketNumber: json['ticketNumber'] as String,
+    );
+  }
+
+  /// Build PrintableTicketData from Ticket with localized labels
+  factory PrintableTicketData.fromTicket({
+    required Ticket ticket,
+    required QrCodeData qrCode,
+    required AppLocalizations l10n,
+  }) {
+    final parkingZone = ticket.parkingZone;
+    final dateFormat = DateFormat('dd/MM/yyyy');
+    final timeFormat = DateFormat('HH:mm');
+
+    // Get localized reason
+    String reasonLabel;
+    switch (ticket.reason) {
+      case TicketReason.carSabot:
+        reasonLabel = l10n.printReasonCarSabot;
+        break;
+      case TicketReason.pound:
+        reasonLabel = l10n.printReasonPound;
+        break;
+    }
+
+    final lines = <PrintableTicketLine>[
+      // License plate
+      PrintableTicketLine(
+        label: l10n.printLabelPlate,
+        value: ticket.licensePlate,
+        type: PrintLineType.plate,
+      ),
+      // Reason
+      PrintableTicketLine(
+        label: l10n.printLabelReason,
+        value: reasonLabel,
+        type: PrintLineType.text,
+      ),
+      // Fine amount
+      PrintableTicketLine(
+        label: l10n.printLabelFine,
+        value: '${ticket.fineAmount.toStringAsFixed(0)} TND',
+        type: PrintLineType.amount,
+      ),
+      // Date
+      PrintableTicketLine(
+        label: l10n.printLabelDate,
+        value: dateFormat.format(ticket.issuedAt),
+        type: PrintLineType.date,
+      ),
+      // Time
+      PrintableTicketLine(
+        label: l10n.printLabelTime,
+        value: timeFormat.format(ticket.issuedAt),
+        type: PrintLineType.date,
+      ),
+    ];
+
+    // Add address if available
+    if (ticket.address != null && ticket.address!.isNotEmpty) {
+      lines.add(PrintableTicketLine(
+        label: l10n.printLabelAddress,
+        value: ticket.address!,
+        type: PrintLineType.text,
+      ));
+    }
+
+    // Add parking zone info if available
+    if (parkingZone != null) {
+      // Zone name
+      lines.add(PrintableTicketLine(
+        label: l10n.printLabelZone,
+        value: parkingZone.name,
+        type: PrintLineType.text,
+      ));
+
+      // Zone address
+      if (parkingZone.address != null && parkingZone.address!.isNotEmpty) {
+        lines.add(PrintableTicketLine(
+          label: l10n.printLabelZoneAddress,
+          value: parkingZone.address!,
+          type: PrintLineType.text,
+        ));
+      }
+
+      // Zone phone
+      if (parkingZone.phoneNumber != null && parkingZone.phoneNumber!.isNotEmpty) {
+        lines.add(PrintableTicketLine(
+          label: l10n.printLabelZonePhone,
+          value: parkingZone.phoneNumber!,
+          type: PrintLineType.phone,
+        ));
+      }
+    }
+
+    return PrintableTicketData(
+      lines: lines,
+      qrCode: qrCode,
+      ticketId: ticket.id,
+      ticketNumber: ticket.ticketNumber,
     );
   }
 }

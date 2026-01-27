@@ -123,8 +123,29 @@ class TicketRepository {
     }
   }
 
-  /// Get print-ready ticket data with structured lines and QR code
-  Future<PrintableTicketData> getPrintData(String ticketId) async {
+  /// Get a single ticket by ID
+  Future<Ticket> getTicketById(String ticketId) async {
+    try {
+      final response = await _dio.get(ApiConfig.ticketById(ticketId));
+
+      final data = response.data as Map<String, dynamic>;
+
+      if (data['success'] == true && data['data'] != null) {
+        return Ticket.fromJson(data['data'] as Map<String, dynamic>);
+      }
+
+      throw const ApiException(
+        message: 'Failed to get ticket',
+        statusCode: 500,
+      );
+    } on DioException catch (e) {
+      final message = _extractErrorMessage(e);
+      throw ApiException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
+  /// Get QR code data for a ticket
+  Future<QrCodeData> getTicketQrCode(String ticketId) async {
     try {
       final response = await _dio.get(
         '${ApiConfig.ticketById(ticketId)}/print',
@@ -133,18 +154,35 @@ class TicketRepository {
       final data = response.data as Map<String, dynamic>;
 
       if (data['success'] == true && data['data'] != null) {
-        return PrintableTicketData.fromJson(
-          data['data'] as Map<String, dynamic>,
-        );
+        final printData = data['data'] as Map<String, dynamic>;
+        return QrCodeData.fromJson(printData['qrCode'] as Map<String, dynamic>);
       }
 
       throw const ApiException(
-        message: 'Failed to get print data',
+        message: 'Failed to get QR code',
         statusCode: 500,
       );
     } on DioException catch (e) {
       final message = _extractErrorMessage(e);
       throw ApiException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
+  /// Get parking zone by ID
+  Future<ParkingZone?> getParkingZoneById(String zoneId) async {
+    try {
+      final response = await _dio.get(ApiConfig.parkingZoneById(zoneId));
+
+      final data = response.data as Map<String, dynamic>;
+
+      if (data['success'] == true && data['data'] != null) {
+        return ParkingZone.fromJson(data['data'] as Map<String, dynamic>);
+      }
+
+      return null;
+    } on DioException {
+      // Return null if zone not found - not critical for printing
+      return null;
     }
   }
 

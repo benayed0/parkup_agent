@@ -48,6 +48,30 @@ enum TicketStatus {
   }
 }
 
+/// Parking zone info (populated from ticket response)
+class ParkingZoneInfo {
+  final String id;
+  final String name;
+  final String? address;
+  final String? phoneNumber;
+
+  const ParkingZoneInfo({
+    required this.id,
+    required this.name,
+    this.address,
+    this.phoneNumber,
+  });
+
+  factory ParkingZoneInfo.fromJson(Map<String, dynamic> json) {
+    return ParkingZoneInfo(
+      id: json['_id'] as String? ?? json['id'] as String,
+      name: json['name'] as String,
+      address: json['address'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
+    );
+  }
+}
+
 /// Position model for GeoJSON Point
 class Position {
   final double longitude;
@@ -89,6 +113,7 @@ class Ticket {
   final DateTime dueDate;
   final String agentId;
   final String? parkingZoneId;
+  final ParkingZoneInfo? parkingZone; // Populated zone data
   final String? notes;
   final List<String>? evidencePhotos;
   final DateTime? paidAt;
@@ -107,6 +132,7 @@ class Ticket {
     required this.dueDate,
     required this.agentId,
     this.parkingZoneId,
+    this.parkingZone,
     this.notes,
     this.evidencePhotos,
     this.paidAt,
@@ -115,6 +141,19 @@ class Ticket {
 
   /// Create from JSON (API response)
   factory Ticket.fromJson(Map<String, dynamic> json) {
+    // Parse parking zone - can be string ID or populated object
+    String? parkingZoneId;
+    ParkingZoneInfo? parkingZone;
+    if (json['parkingZoneId'] != null) {
+      if (json['parkingZoneId'] is String) {
+        parkingZoneId = json['parkingZoneId'] as String;
+      } else {
+        final zoneJson = json['parkingZoneId'] as Map<String, dynamic>;
+        parkingZoneId = zoneJson['_id'] as String;
+        parkingZone = ParkingZoneInfo.fromJson(zoneJson);
+      }
+    }
+
     return Ticket(
       id: json['_id'] as String? ?? json['id'] as String,
       ticketNumber: json['ticketNumber'] as String,
@@ -129,11 +168,8 @@ class Ticket {
       agentId: json['agentId'] is String
           ? json['agentId'] as String
           : (json['agentId']['_id'] as String),
-      parkingZoneId: json['parkingZoneId'] == null
-          ? null
-          : (json['parkingZoneId'] is String
-              ? json['parkingZoneId'] as String
-              : (json['parkingZoneId']['_id'] as String)),
+      parkingZoneId: parkingZoneId,
+      parkingZone: parkingZone,
       notes: json['notes'] as String?,
       evidencePhotos: (json['evidencePhotos'] as List<dynamic>?)
           ?.map((e) => e as String)

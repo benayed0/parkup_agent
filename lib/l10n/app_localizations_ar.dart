@@ -408,4 +408,114 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get locationUnknown => 'بلاصة مش معروفة';
+
+  @override
+  String get settings => 'الإعدادات';
+
+  @override
+  String get printerSettings => 'إعدادات الطابعة';
+
+  @override
+  String get scanForPrinters => 'ابحث على طابعات';
+
+  @override
+  String get connectPrinter => 'اربط';
+
+  @override
+  String get disconnectPrinter => 'افصل';
+
+  @override
+  String get testPrint => 'طباعة تجريبية';
+
+  @override
+  String get noPrinterConnected => 'ما فماش طابعة مربوطة';
+
+  @override
+  String get printerConnected => 'الطابعة مربوطة';
+
+  @override
+  String get scanning => 'نبحث...';
+
+  @override
+  String get connecting => 'نربط...';
+
+  @override
+  String get noDevicesFound => 'ما لقيت حتى جهاز';
+
+  @override
+  String get enableBluetooth => 'شغّل البلوتوث';
+
+  @override
+  String get bluetoothPermissionDenied => 'ما عندكش إذن للبلوتوث';
+
+  @override
+  String get printSuccess => 'الطباعة نجحت';
+
+  @override
+  String get printFailed => 'الطباعة ما مشاتش';
+
+  @override
+  String connectedTo(String name) {
+    return 'مربوط مع $name';
+  }
+
+  @override
+  String get savedPrinter => 'طابعة محفوظة';
+
+  @override
+  String get tapToConnect => 'اضغط باش تربط';
+
+  @override
+  String get availableDevices => 'أجهزة متوفرة';
+
+  @override
+  String get stopScan => 'وقّف';
+
+  @override
+  String get connectToPrinterFirst => 'اربط طابعة الأول';
+
+  @override
+  String get printing => 'نطبع...';
+
+  @override
+  String get printLabelTicketNumber => 'رقم الخطية';
+
+  @override
+  String get printLabelPlate => 'الماتريكيل';
+
+  @override
+  String get printLabelReason => 'السبب';
+
+  @override
+  String get printLabelFine => 'المبلغ';
+
+  @override
+  String get printLabelDate => 'التاريخ';
+
+  @override
+  String get printLabelTime => 'الوقت';
+
+  @override
+  String get printLabelAddress => 'العنوان';
+
+  @override
+  String get printReasonCarSabot => 'سابو';
+
+  @override
+  String get printReasonPound => 'الحجز';
+
+  @override
+  String get printLabelZone => 'المنطقة';
+
+  @override
+  String get printLabelZoneAddress => 'عنوان المنطقة';
+
+  @override
+  String get printLabelZonePhone => 'الهاتف';
+
+  @override
+  String get stopPrint => 'وقّف';
+
+  @override
+  String get printCancelled => 'الطباعة تلغات';
 }

@@ -237,5 +237,77 @@
 
   "locationZoneOnly": "الزون فقط (بلاصة مش دقيقة)",
 
-  "locationUnknown": "بلاصة مش معروفة"
+  "locationUnknown": "بلاصة مش معروفة",
+
+  "settings": "الإعدادات",
+
+  "printerSettings": "إعدادات الطابعة",
+
+  "scanForPrinters": "ابحث على طابعات",
+
+  "connectPrinter": "اربط",
+
+  "disconnectPrinter": "افصل",
+
+  "testPrint": "طباعة تجريبية",
+
+  "noPrinterConnected": "ما فماش طابعة مربوطة",
+
+  "printerConnected": "الطابعة مربوطة",
+
+  "scanning": "نبحث...",
+
+  "connecting": "نربط...",
+
+  "noDevicesFound": "ما لقيت حتى جهاز",
+
+  "enableBluetooth": "شغّل البلوتوث",
+
+  "bluetoothPermissionDenied": "ما عندكش إذن للبلوتوث",
+
+  "printSuccess": "الطباعة نجحت",
+
+  "printFailed": "الطباعة ما مشاتش",
+
+  "connectedTo": "مربوط مع {name}",
+
+  "savedPrinter": "طابعة محفوظة",
+
+  "tapToConnect": "اضغط باش تربط",
+
+  "availableDevices": "أجهزة متوفرة",
+
+  "stopScan": "وقّف",
+
+  "connectToPrinterFirst": "اربط طابعة الأول",
+
+  "printing": "نطبع...",
+
+  "printLabelTicketNumber": "رقم الخطية",
+
+  "printLabelPlate": "الماتريكيل",
+
+  "printLabelReason": "السبب",
+
+  "printLabelFine": "المبلغ",
+
+  "printLabelDate": "التاريخ",
+
+  "printLabelTime": "الوقت",
+
+  "printLabelAddress": "العنوان",
+
+  "printReasonCarSabot": "سابو",
+
+  "printReasonPound": "الحجز",
+
+  "printLabelZone": "المنطقة",
+
+  "printLabelZoneAddress": "عنوان المنطقة",
+
+  "printLabelZonePhone": "الهاتف",
+
+  "stopPrint": "وقّف",
+
+  "printCancelled": "الطباعة تلغات"
 }

@@ -422,4 +422,114 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get locationUnknown => 'Position inconnue';
+
+  @override
+  String get settings => 'Parametres';
+
+  @override
+  String get printerSettings => 'Parametres imprimante';
+
+  @override
+  String get scanForPrinters => 'Rechercher imprimantes';
+
+  @override
+  String get connectPrinter => 'Connecter';
+
+  @override
+  String get disconnectPrinter => 'Deconnecter';
+
+  @override
+  String get testPrint => 'Test d\'impression';
+
+  @override
+  String get noPrinterConnected => 'Aucune imprimante connectee';
+
+  @override
+  String get printerConnected => 'Imprimante connectee';
+
+  @override
+  String get scanning => 'Recherche en cours...';
+
+  @override
+  String get connecting => 'Connexion en cours...';
+
+  @override
+  String get noDevicesFound => 'Aucun appareil trouve';
+
+  @override
+  String get enableBluetooth => 'Veuillez activer le Bluetooth';
+
+  @override
+  String get bluetoothPermissionDenied => 'Permission Bluetooth refusee';
+
+  @override
+  String get printSuccess => 'Impression reussie';
+
+  @override
+  String get printFailed => 'Echec de l\'impression';
+
+  @override
+  String connectedTo(String name) {
+    return 'Connecte a $name';
+  }
+
+  @override
+  String get savedPrinter => 'Imprimante enregistree';
+
+  @override
+  String get tapToConnect => 'Appuyez pour connecter';
+
+  @override
+  String get availableDevices => 'Appareils disponibles';
+
+  @override
+  String get stopScan => 'Arreter';
+
+  @override
+  String get connectToPrinterFirst => 'Connectez d\'abord une imprimante';
+
+  @override
+  String get printing => 'Impression en cours...';
+
+  @override
+  String get printLabelTicketNumber => 'Ticket #';
+
+  @override
+  String get printLabelPlate => 'Plaque';
+
+  @override
+  String get printLabelReason => 'Motif';
+
+  @override
+  String get printLabelFine => 'Amende';
+
+  @override
+  String get printLabelDate => 'Date';
+
+  @override
+  String get printLabelTime => 'Heure';
+
+  @override
+  String get printLabelAddress => 'Adresse';
+
+  @override
+  String get printReasonCarSabot => 'Sabot';
+
+  @override
+  String get printReasonPound => 'Fourriere';
+
+  @override
+  String get printLabelZone => 'Zone';
+
+  @override
+  String get printLabelZoneAddress => 'Adresse zone';
+
+  @override
+  String get printLabelZonePhone => 'Telephone';
+
+  @override
+  String get stopPrint => 'Arrêter';
+
+  @override
+  String get printCancelled => 'Impression annulée';
 }

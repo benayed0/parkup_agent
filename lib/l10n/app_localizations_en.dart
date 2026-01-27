@@ -411,4 +411,114 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locationUnknown => 'Location unknown';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get printerSettings => 'Printer Settings';
+
+  @override
+  String get scanForPrinters => 'Scan for Printers';
+
+  @override
+  String get connectPrinter => 'Connect';
+
+  @override
+  String get disconnectPrinter => 'Disconnect';
+
+  @override
+  String get testPrint => 'Test Print';
+
+  @override
+  String get noPrinterConnected => 'No printer connected';
+
+  @override
+  String get printerConnected => 'Printer connected';
+
+  @override
+  String get scanning => 'Scanning...';
+
+  @override
+  String get connecting => 'Connecting...';
+
+  @override
+  String get noDevicesFound => 'No devices found';
+
+  @override
+  String get enableBluetooth => 'Please enable Bluetooth';
+
+  @override
+  String get bluetoothPermissionDenied => 'Bluetooth permission denied';
+
+  @override
+  String get printSuccess => 'Print successful';
+
+  @override
+  String get printFailed => 'Print failed';
+
+  @override
+  String connectedTo(String name) {
+    return 'Connected to $name';
+  }
+
+  @override
+  String get savedPrinter => 'Saved printer';
+
+  @override
+  String get tapToConnect => 'Tap to connect';
+
+  @override
+  String get availableDevices => 'Available devices';
+
+  @override
+  String get stopScan => 'Stop';
+
+  @override
+  String get connectToPrinterFirst => 'Connect to a printer first';
+
+  @override
+  String get printing => 'Printing...';
+
+  @override
+  String get printLabelTicketNumber => 'Ticket #';
+
+  @override
+  String get printLabelPlate => 'Plate';
+
+  @override
+  String get printLabelReason => 'Reason';
+
+  @override
+  String get printLabelFine => 'Fine';
+
+  @override
+  String get printLabelDate => 'Date';
+
+  @override
+  String get printLabelTime => 'Time';
+
+  @override
+  String get printLabelAddress => 'Address';
+
+  @override
+  String get printReasonCarSabot => 'Car Sabot';
+
+  @override
+  String get printReasonPound => 'Pound';
+
+  @override
+  String get printLabelZone => 'Zone';
+
+  @override
+  String get printLabelZoneAddress => 'Zone Address';
+
+  @override
+  String get printLabelZonePhone => 'Phone';
+
+  @override
+  String get stopPrint => 'Stop';
+
+  @override
+  String get printCancelled => 'Print cancelled';
 }

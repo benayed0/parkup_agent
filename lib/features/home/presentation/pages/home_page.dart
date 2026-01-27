@@ -22,6 +22,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadPendingRemovalsCount();
+    printerService.addListener(_onPrinterChanged);
+  }
+
+  @override
+  void dispose() {
+    printerService.removeListener(_onPrinterChanged);
+    super.dispose();
+  }
+
+  void _onPrinterChanged() {
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadPendingRemovalsCount() async {
@@ -67,17 +78,38 @@ class _HomePageState extends State<HomePage> {
         ),
         automaticallyImplyLeading: false,
         actions: [
-          // Language selector button
+          // Printer status indicator
           IconButton(
-            icon: const Icon(Icons.language),
-            tooltip: 'language',
-            onPressed: () => _showLanguageDialog(context),
+            icon: Stack(
+              children: [
+                const Icon(Icons.print),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: printerService.isConnected
+                          ? AppColors.success
+                          : AppColors.textSecondary,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.primary, width: 1.5),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            tooltip: printerService.isConnected
+                ? l10n.printerConnected
+                : l10n.noPrinterConnected,
+            onPressed: () => Navigator.of(context).pushNamed(AppRoutes.printerScan),
           ),
-          // Logout button
+          // Settings button
           IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: l10n.logout,
-            onPressed: () => _handleLogout(context),
+            icon: const Icon(Icons.settings),
+            tooltip: l10n.settings,
+            onPressed: () => Navigator.of(context).pushNamed(AppRoutes.settings),
           ),
         ],
       ),
@@ -211,70 +243,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _showLanguageDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('l10n.selectLanguage'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: LocaleService.supportedLocales.map((locale) {
-            final isSelected =
-                localeService.currentLocale?.languageCode ==
-                locale.languageCode;
-            return ListTile(
-              leading: Text(
-                LocaleService.getLocaleFlag(locale),
-                style: const TextStyle(fontSize: 24),
-              ),
-              title: Text(LocaleService.getLocaleName(locale)),
-              trailing: isSelected
-                  ? const Icon(Icons.check, color: AppColors.primary)
-                  : null,
-              selected: isSelected,
-              onTap: () {
-                localeService.setLocale(locale);
-                Navigator.of(dialogContext).pop();
-              },
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  void _handleLogout(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.logout),
-        content: Text(l10n.logoutConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(dialogContext).pop();
-
-              // Clear auth data
-              await authRepository.logout();
-
-              if (context.mounted) {
-                Navigator.of(context).pushReplacementNamed(AppRoutes.login);
-              }
-            },
-            child: Text(l10n.logout),
-          ),
-        ],
       ),
     );
   }

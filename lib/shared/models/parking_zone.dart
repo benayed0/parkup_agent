@@ -10,6 +10,8 @@ class ParkingZone {
   final ZonePrices prices;
   final Position? location;
   final String? description;
+  final String? address;
+  final String? phoneNumber;
   final bool isActive;
 
   const ParkingZone({
@@ -20,6 +22,8 @@ class ParkingZone {
     required this.prices,
     this.location,
     this.description,
+    this.address,
+    this.phoneNumber,
     this.isActive = true,
   });
 
@@ -45,6 +49,8 @@ class ParkingZone {
       prices: ZonePrices.fromJson(json['prices'] as Map<String, dynamic>),
       location: location,
       description: json['description'] as String?,
+      address: json['address'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
       isActive: json['isActive'] as bool? ?? true,
     );
   }
@@ -59,6 +65,8 @@ class ParkingZone {
       'prices': prices.toJson(),
       'location': location?.toJson(),
       'description': description,
+      'address': address,
+      'phoneNumber': phoneNumber,
       'isActive': isActive,
     };
   }

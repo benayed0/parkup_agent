@@ -813,6 +813,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Location unknown'**
   String get locationUnknown;
+
+  /// Settings page title
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// Printer settings section title
+  ///
+  /// In en, this message translates to:
+  /// **'Printer Settings'**
+  String get printerSettings;
+
+  /// Button to start scanning for printers
+  ///
+  /// In en, this message translates to:
+  /// **'Scan for Printers'**
+  String get scanForPrinters;
+
+  /// Button to connect to a printer
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connectPrinter;
+
+  /// Button to disconnect from printer
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get disconnectPrinter;
+
+  /// Button to print a test page
+  ///
+  /// In en, this message translates to:
+  /// **'Test Print'**
+  String get testPrint;
+
+  /// Message when no printer is connected
+  ///
+  /// In en, this message translates to:
+  /// **'No printer connected'**
+  String get noPrinterConnected;
+
+  /// Message when printer is connected
+  ///
+  /// In en, this message translates to:
+  /// **'Printer connected'**
+  String get printerConnected;
+
+  /// Message while scanning for devices
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning...'**
+  String get scanning;
+
+  /// Message while connecting to device
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get connecting;
+
+  /// Message when no Bluetooth devices found
+  ///
+  /// In en, this message translates to:
+  /// **'No devices found'**
+  String get noDevicesFound;
+
+  /// Message prompting user to enable Bluetooth
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable Bluetooth'**
+  String get enableBluetooth;
+
+  /// Message when Bluetooth permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth permission denied'**
+  String get bluetoothPermissionDenied;
+
+  /// Message when printing succeeds
+  ///
+  /// In en, this message translates to:
+  /// **'Print successful'**
+  String get printSuccess;
+
+  /// Message when printing fails
+  ///
+  /// In en, this message translates to:
+  /// **'Print failed'**
+  String get printFailed;
+
+  /// Message showing connected printer name
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to {name}'**
+  String connectedTo(String name);
+
+  /// Label for saved printer
+  ///
+  /// In en, this message translates to:
+  /// **'Saved printer'**
+  String get savedPrinter;
+
+  /// Hint to tap a device to connect
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to connect'**
+  String get tapToConnect;
+
+  /// Section title for available Bluetooth devices
+  ///
+  /// In en, this message translates to:
+  /// **'Available devices'**
+  String get availableDevices;
+
+  /// Button to stop scanning
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stopScan;
+
+  /// Message prompting user to connect a printer
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to a printer first'**
+  String get connectToPrinterFirst;
+
+  /// Message while printing
+  ///
+  /// In en, this message translates to:
+  /// **'Printing...'**
+  String get printing;
+
+  /// Print label for ticket number
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket #'**
+  String get printLabelTicketNumber;
+
+  /// Print label for license plate
+  ///
+  /// In en, this message translates to:
+  /// **'Plate'**
+  String get printLabelPlate;
+
+  /// Print label for ticket reason
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get printLabelReason;
+
+  /// Print label for fine amount
+  ///
+  /// In en, this message translates to:
+  /// **'Fine'**
+  String get printLabelFine;
+
+  /// Print label for issue date
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get printLabelDate;
+
+  /// Print label for issue time
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get printLabelTime;
+
+  /// Print label for address
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get printLabelAddress;
+
+  /// Ticket reason: car sabot
+  ///
+  /// In en, this message translates to:
+  /// **'Car Sabot'**
+  String get printReasonCarSabot;
+
+  /// Ticket reason: pound
+  ///
+  /// In en, this message translates to:
+  /// **'Pound'**
+  String get printReasonPound;
+
+  /// Print label for parking zone name
+  ///
+  /// In en, this message translates to:
+  /// **'Zone'**
+  String get printLabelZone;
+
+  /// Print label for parking zone address
+  ///
+  /// In en, this message translates to:
+  /// **'Zone Address'**
+  String get printLabelZoneAddress;
+
+  /// Print label for parking zone phone number
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get printLabelZonePhone;
+
+  /// Stop print button text
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stopPrint;
+
+  /// Print cancelled message
+  ///
+  /// In en, this message translates to:
+  /// **'Print cancelled'**
+  String get printCancelled;
 }
 
 class _AppLocalizationsDelegate

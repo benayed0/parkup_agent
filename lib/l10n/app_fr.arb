@@ -237,5 +237,77 @@
 
   "locationZoneOnly": "Zone uniquement (position imprécise)",
 
-  "locationUnknown": "Position inconnue"
+  "locationUnknown": "Position inconnue",
+
+  "settings": "Parametres",
+
+  "printerSettings": "Parametres imprimante",
+
+  "scanForPrinters": "Rechercher imprimantes",
+
+  "connectPrinter": "Connecter",
+
+  "disconnectPrinter": "Deconnecter",
+
+  "testPrint": "Test d'impression",
+
+  "noPrinterConnected": "Aucune imprimante connectee",
+
+  "printerConnected": "Imprimante connectee",
+
+  "scanning": "Recherche en cours...",
+
+  "connecting": "Connexion en cours...",
+
+  "noDevicesFound": "Aucun appareil trouve",
+
+  "enableBluetooth": "Veuillez activer le Bluetooth",
+
+  "bluetoothPermissionDenied": "Permission Bluetooth refusee",
+
+  "printSuccess": "Impression reussie",
+
+  "printFailed": "Echec de l'impression",
+
+  "connectedTo": "Connecte a {name}",
+
+  "savedPrinter": "Imprimante enregistree",
+
+  "tapToConnect": "Appuyez pour connecter",
+
+  "availableDevices": "Appareils disponibles",
+
+  "stopScan": "Arreter",
+
+  "connectToPrinterFirst": "Connectez d'abord une imprimante",
+
+  "printing": "Impression en cours...",
+
+  "printLabelTicketNumber": "Ticket #",
+
+  "printLabelPlate": "Plaque",
+
+  "printLabelReason": "Motif",
+
+  "printLabelFine": "Amende",
+
+  "printLabelDate": "Date",
+
+  "printLabelTime": "Heure",
+
+  "printLabelAddress": "Adresse",
+
+  "printReasonCarSabot": "Sabot",
+
+  "printReasonPound": "Fourriere",
+
+  "printLabelZone": "Zone",
+
+  "printLabelZoneAddress": "Adresse zone",
+
+  "printLabelZonePhone": "Telephone",
+
+  "stopPrint": "Arrêter",
+
+  "printCancelled": "Impression annulée"
 }

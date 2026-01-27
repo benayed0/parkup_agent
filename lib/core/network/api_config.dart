@@ -41,4 +41,8 @@ class ApiConfig {
   static String ticketsByAgent(String agentId) => '/tickets/agent/$agentId';
   static String ticketsByPlate(String plate) => '/tickets/plate/$plate';
   static String checkUnpaidTickets(String plate) => '/tickets/check/$plate';
+
+  // Endpoints - Parking Zones
+  static const String parkingZones = '/parking-zones';
+  static String parkingZoneById(String id) => '/parking-zones/$id';
 }

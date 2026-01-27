@@ -14,4 +14,8 @@ class AppRoutes {
   static const String history = '/history';
   static const String pendingRemovals = '/pending-removals';
   static const String activeSessionsMap = '/active-sessions-map';
+
+  // Settings routes
+  static const String settings = '/settings';
+  static const String printerScan = '/printer-scan';
 }

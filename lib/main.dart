@@ -17,6 +17,9 @@ void main() async {
   // Runs in background - doesn't block app startup
   locationService.init();
 
+  // Initialize printer service to load saved printer
+  printerService.init();
+
   runApp(const ParkUpAgentApp());
 }
 

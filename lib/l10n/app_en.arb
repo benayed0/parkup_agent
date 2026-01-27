@@ -698,5 +698,191 @@
   "locationUnknown": "Location unknown",
   "@locationUnknown": {
     "description": "Location confidence: Unknown source"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings page title"
+  },
+
+  "printerSettings": "Printer Settings",
+  "@printerSettings": {
+    "description": "Printer settings section title"
+  },
+
+  "scanForPrinters": "Scan for Printers",
+  "@scanForPrinters": {
+    "description": "Button to start scanning for printers"
+  },
+
+  "connectPrinter": "Connect",
+  "@connectPrinter": {
+    "description": "Button to connect to a printer"
+  },
+
+  "disconnectPrinter": "Disconnect",
+  "@disconnectPrinter": {
+    "description": "Button to disconnect from printer"
+  },
+
+  "testPrint": "Test Print",
+  "@testPrint": {
+    "description": "Button to print a test page"
+  },
+
+  "noPrinterConnected": "No printer connected",
+  "@noPrinterConnected": {
+    "description": "Message when no printer is connected"
+  },
+
+  "printerConnected": "Printer connected",
+  "@printerConnected": {
+    "description": "Message when printer is connected"
+  },
+
+  "scanning": "Scanning...",
+  "@scanning": {
+    "description": "Message while scanning for devices"
+  },
+
+  "connecting": "Connecting...",
+  "@connecting": {
+    "description": "Message while connecting to device"
+  },
+
+  "noDevicesFound": "No devices found",
+  "@noDevicesFound": {
+    "description": "Message when no Bluetooth devices found"
+  },
+
+  "enableBluetooth": "Please enable Bluetooth",
+  "@enableBluetooth": {
+    "description": "Message prompting user to enable Bluetooth"
+  },
+
+  "bluetoothPermissionDenied": "Bluetooth permission denied",
+  "@bluetoothPermissionDenied": {
+    "description": "Message when Bluetooth permission is denied"
+  },
+
+  "printSuccess": "Print successful",
+  "@printSuccess": {
+    "description": "Message when printing succeeds"
+  },
+
+  "printFailed": "Print failed",
+  "@printFailed": {
+    "description": "Message when printing fails"
+  },
+
+  "connectedTo": "Connected to {name}",
+  "@connectedTo": {
+    "description": "Message showing connected printer name",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Printer XYZ"
+      }
+    }
+  },
+
+  "savedPrinter": "Saved printer",
+  "@savedPrinter": {
+    "description": "Label for saved printer"
+  },
+
+  "tapToConnect": "Tap to connect",
+  "@tapToConnect": {
+    "description": "Hint to tap a device to connect"
+  },
+
+  "availableDevices": "Available devices",
+  "@availableDevices": {
+    "description": "Section title for available Bluetooth devices"
+  },
+
+  "stopScan": "Stop",
+  "@stopScan": {
+    "description": "Button to stop scanning"
+  },
+
+  "connectToPrinterFirst": "Connect to a printer first",
+  "@connectToPrinterFirst": {
+    "description": "Message prompting user to connect a printer"
+  },
+
+  "printing": "Printing...",
+  "@printing": {
+    "description": "Message while printing"
+  },
+
+  "printLabelTicketNumber": "Ticket #",
+  "@printLabelTicketNumber": {
+    "description": "Print label for ticket number"
+  },
+
+  "printLabelPlate": "Plate",
+  "@printLabelPlate": {
+    "description": "Print label for license plate"
+  },
+
+  "printLabelReason": "Reason",
+  "@printLabelReason": {
+    "description": "Print label for ticket reason"
+  },
+
+  "printLabelFine": "Fine",
+  "@printLabelFine": {
+    "description": "Print label for fine amount"
+  },
+
+  "printLabelDate": "Date",
+  "@printLabelDate": {
+    "description": "Print label for issue date"
+  },
+
+  "printLabelTime": "Time",
+  "@printLabelTime": {
+    "description": "Print label for issue time"
+  },
+
+  "printLabelAddress": "Address",
+  "@printLabelAddress": {
+    "description": "Print label for address"
+  },
+
+  "printReasonCarSabot": "Car Sabot",
+  "@printReasonCarSabot": {
+    "description": "Ticket reason: car sabot"
+  },
+
+  "printReasonPound": "Pound",
+  "@printReasonPound": {
+    "description": "Ticket reason: pound"
+  },
+
+  "printLabelZone": "Zone",
+  "@printLabelZone": {
+    "description": "Print label for parking zone name"
+  },
+
+  "printLabelZoneAddress": "Zone Address",
+  "@printLabelZoneAddress": {
+    "description": "Print label for parking zone address"
+  },
+
+  "printLabelZonePhone": "Phone",
+  "@printLabelZonePhone": {
+    "description": "Print label for parking zone phone number"
+  },
+
+  "stopPrint": "Stop",
+  "@stopPrint": {
+    "description": "Stop print button text"
+  },
+
+  "printCancelled": "Print cancelled",
+  "@printCancelled": {
+    "description": "Print cancelled message"
   }
 }
