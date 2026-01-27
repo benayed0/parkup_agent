@@ -518,4 +518,64 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get printCancelled => 'الطباعة تلغات';
+
+  @override
+  String get connectionFailed => 'فشل الاتصال';
+
+  @override
+  String get reconnectionFailed => 'فشل إعادة الاتصال';
+
+  @override
+  String get makeSurePrinterOn => 'تأكد إن الطابعة مشغّلة';
+
+  @override
+  String get noPrintersFound => 'ما لقيت حتى طابعة';
+
+  @override
+  String get turnOnPrinterAndScan => 'شغّل الطابعة واضغط على بحث';
+
+  @override
+  String showAllDevicesCount(int count) {
+    return 'وري كل الأجهزة ($count مخبيين)';
+  }
+
+  @override
+  String get printers => 'الطابعات';
+
+  @override
+  String get printersOnly => 'الطابعات فقط';
+
+  @override
+  String showAllCount(int count) {
+    return 'وري الكل ($count)';
+  }
+
+  @override
+  String get unknownDevice => 'جهاز مش معروف';
+
+  @override
+  String get notPairedTapToPair => 'مش مقترن - اضغط للاقتران';
+
+  @override
+  String get systemDefault => 'الافتراضي للنظام';
+
+  @override
+  String get unknownError => 'خطأ مش معروف';
+
+  @override
+  String get showPrintersOnly => 'وري الطابعات فقط';
+
+  @override
+  String get showAllDevices => 'وري كل الأجهزة';
+
+  @override
+  String failedToLoadTicketsWithError(String error) {
+    return 'فشل تحميل الخطيةات: $error';
+  }
+
+  @override
+  String get euShort => 'أوروبي';
+
+  @override
+  String get diploShort => 'دبلو.';
 }

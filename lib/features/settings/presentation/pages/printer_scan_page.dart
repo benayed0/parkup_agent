@@ -79,18 +79,19 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
   }
 
   Future<void> _connectToDevice(BluetoothDiscoveryResult result) async {
+    final l10n = AppLocalizations.of(context)!;
     final success = await printerService.connect(result);
     if (mounted && success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.printerConnected),
+          content: Text(l10n.printerConnected),
           backgroundColor: AppColors.success,
         ),
       );
     } else if (mounted && !success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(printerService.errorMessage ?? 'Connection failed'),
+          content: Text(printerService.errorMessage ?? l10n.connectionFailed),
           backgroundColor: AppColors.error,
         ),
       );
@@ -330,7 +331,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
                           SnackBar(
                             content: Text(
                               printerService.errorMessage ??
-                                  'Reconnection failed',
+                                  l10n.reconnectionFailed,
                             ),
                             backgroundColor: AppColors.error,
                           ),
@@ -366,7 +367,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
               Text(l10n.scanning, style: AppTextStyles.body),
               const SizedBox(height: 8),
               Text(
-                'Make sure your printer is turned on',
+                l10n.makeSurePrinterOn,
                 style: AppTextStyles.caption,
               ),
             ],
@@ -390,12 +391,12 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
               ),
               const SizedBox(height: 16),
               Text(
-                _showAllDevices ? l10n.noDevicesFound : 'No printers found',
+                _showAllDevices ? l10n.noDevicesFound : l10n.noPrintersFound,
                 style: AppTextStyles.body,
               ),
               const SizedBox(height: 8),
               Text(
-                'Turn on your printer and tap scan',
+                l10n.turnOnPrinterAndScan,
                 style: AppTextStyles.caption,
               ),
               const SizedBox(height: 24),
@@ -408,7 +409,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () => setState(() => _showAllDevices = true),
-                  child: Text('Show all devices ($hiddenCount hidden)'),
+                  child: Text(l10n.showAllDevicesCount(hiddenCount)),
                 ),
               ],
             ],
@@ -426,7 +427,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
           child: Row(
             children: [
               Text(
-                _showAllDevices ? l10n.availableDevices : 'Printers',
+                _showAllDevices ? l10n.availableDevices : l10n.printers,
                 style: AppTextStyles.label.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -452,8 +453,8 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
                   ),
                   label: Text(
                     _showAllDevices
-                        ? 'Printers only'
-                        : 'Show all ($hiddenCount)',
+                        ? l10n.printersOnly
+                        : l10n.showAllCount(hiddenCount),
                     style: AppTextStyles.caption,
                   ),
                 ),
@@ -484,7 +485,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
                   isThisDeviceConnected,
                 ),
                 title: Text(
-                  device.name ?? 'Unknown Device',
+                  device.name ?? l10n.unknownDevice,
                   style: AppTextStyles.body.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -495,7 +496,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
                     Text(device.address, style: AppTextStyles.caption),
                     if (!device.isBonded)
                       Text(
-                        'Not paired - tap to pair',
+                        l10n.notPairedTapToPair,
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.warning,
                           fontStyle: FontStyle.italic,

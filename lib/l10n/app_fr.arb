@@ -309,5 +309,41 @@
 
   "stopPrint": "Arrêter",
 
-  "printCancelled": "Impression annulée"
+  "printCancelled": "Impression annulée",
+
+  "connectionFailed": "Échec de connexion",
+
+  "reconnectionFailed": "Échec de reconnexion",
+
+  "makeSurePrinterOn": "Assurez-vous que votre imprimante est allumée",
+
+  "noPrintersFound": "Aucune imprimante trouvée",
+
+  "turnOnPrinterAndScan": "Allumez votre imprimante et appuyez sur rechercher",
+
+  "showAllDevicesCount": "Afficher tous les appareils ({count} masqués)",
+
+  "printers": "Imprimantes",
+
+  "printersOnly": "Imprimantes uniquement",
+
+  "showAllCount": "Afficher tout ({count})",
+
+  "unknownDevice": "Appareil inconnu",
+
+  "notPairedTapToPair": "Non jumelé - appuyez pour jumeler",
+
+  "systemDefault": "Par défaut du système",
+
+  "unknownError": "Erreur inconnue",
+
+  "showPrintersOnly": "Afficher uniquement les imprimantes",
+
+  "showAllDevices": "Afficher tous les appareils",
+
+  "failedToLoadTicketsWithError": "Échec du chargement des contraventions: {error}",
+
+  "euShort": "UE",
+
+  "diploShort": "Diplo."
 }

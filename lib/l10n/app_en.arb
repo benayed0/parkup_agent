@@ -884,5 +884,113 @@
   "printCancelled": "Print cancelled",
   "@printCancelled": {
     "description": "Print cancelled message"
+  },
+
+  "connectionFailed": "Connection failed",
+  "@connectionFailed": {
+    "description": "Message when connection to device fails"
+  },
+
+  "reconnectionFailed": "Reconnection failed",
+  "@reconnectionFailed": {
+    "description": "Message when reconnection to device fails"
+  },
+
+  "makeSurePrinterOn": "Make sure your printer is turned on",
+  "@makeSurePrinterOn": {
+    "description": "Help text when scanning for printers"
+  },
+
+  "noPrintersFound": "No printers found",
+  "@noPrintersFound": {
+    "description": "Message when no printers are found"
+  },
+
+  "turnOnPrinterAndScan": "Turn on your printer and tap scan",
+  "@turnOnPrinterAndScan": {
+    "description": "Help text for empty printer list"
+  },
+
+  "showAllDevicesCount": "Show all devices ({count} hidden)",
+  "@showAllDevicesCount": {
+    "description": "Button to show all devices with hidden count",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+
+  "printers": "Printers",
+  "@printers": {
+    "description": "Printers section header"
+  },
+
+  "printersOnly": "Printers only",
+  "@printersOnly": {
+    "description": "Button to filter to printers only"
+  },
+
+  "showAllCount": "Show all ({count})",
+  "@showAllCount": {
+    "description": "Button to show all devices with count",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+
+  "unknownDevice": "Unknown Device",
+  "@unknownDevice": {
+    "description": "Fallback name for unknown device"
+  },
+
+  "notPairedTapToPair": "Not paired - tap to pair",
+  "@notPairedTapToPair": {
+    "description": "Status text for unpaired devices"
+  },
+
+  "systemDefault": "System default",
+  "@systemDefault": {
+    "description": "System default option in locale selector"
+  },
+
+  "unknownError": "Unknown error",
+  "@unknownError": {
+    "description": "Fallback error message"
+  },
+
+  "showPrintersOnly": "Show printers only",
+  "@showPrintersOnly": {
+    "description": "Button to filter to printers only in bottom sheet"
+  },
+
+  "showAllDevices": "Show all devices",
+  "@showAllDevices": {
+    "description": "Button to show all devices in bottom sheet"
+  },
+
+  "failedToLoadTicketsWithError": "Failed to load tickets: {error}",
+  "@failedToLoadTicketsWithError": {
+    "description": "Error message when loading tickets fails with details",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+
+  "euShort": "EU",
+  "@euShort": {
+    "description": "Short label for European Union plates"
+  },
+
+  "diploShort": "Diplo.",
+  "@diploShort": {
+    "description": "Short label for diplomatic plates"
   }
 }

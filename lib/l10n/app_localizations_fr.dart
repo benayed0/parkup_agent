@@ -532,4 +532,64 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get printCancelled => 'Impression annulée';
+
+  @override
+  String get connectionFailed => 'Échec de connexion';
+
+  @override
+  String get reconnectionFailed => 'Échec de reconnexion';
+
+  @override
+  String get makeSurePrinterOn => 'Assurez-vous que votre imprimante est allumée';
+
+  @override
+  String get noPrintersFound => 'Aucune imprimante trouvée';
+
+  @override
+  String get turnOnPrinterAndScan => 'Allumez votre imprimante et appuyez sur rechercher';
+
+  @override
+  String showAllDevicesCount(int count) {
+    return 'Afficher tous les appareils ($count masqués)';
+  }
+
+  @override
+  String get printers => 'Imprimantes';
+
+  @override
+  String get printersOnly => 'Imprimantes uniquement';
+
+  @override
+  String showAllCount(int count) {
+    return 'Afficher tout ($count)';
+  }
+
+  @override
+  String get unknownDevice => 'Appareil inconnu';
+
+  @override
+  String get notPairedTapToPair => 'Non jumelé - appuyez pour jumeler';
+
+  @override
+  String get systemDefault => 'Par défaut du système';
+
+  @override
+  String get unknownError => 'Erreur inconnue';
+
+  @override
+  String get showPrintersOnly => 'Afficher uniquement les imprimantes';
+
+  @override
+  String get showAllDevices => 'Afficher tous les appareils';
+
+  @override
+  String failedToLoadTicketsWithError(String error) {
+    return 'Échec du chargement des contraventions: $error';
+  }
+
+  @override
+  String get euShort => 'UE';
+
+  @override
+  String get diploShort => 'Diplo.';
 }

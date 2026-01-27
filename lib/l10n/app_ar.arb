@@ -309,5 +309,41 @@
 
   "stopPrint": "وقّف",
 
-  "printCancelled": "الطباعة تلغات"
+  "printCancelled": "الطباعة تلغات",
+
+  "connectionFailed": "فشل الاتصال",
+
+  "reconnectionFailed": "فشل إعادة الاتصال",
+
+  "makeSurePrinterOn": "تأكد إن الطابعة مشغّلة",
+
+  "noPrintersFound": "ما لقيت حتى طابعة",
+
+  "turnOnPrinterAndScan": "شغّل الطابعة واضغط على بحث",
+
+  "showAllDevicesCount": "وري كل الأجهزة ({count} مخبيين)",
+
+  "printers": "الطابعات",
+
+  "printersOnly": "الطابعات فقط",
+
+  "showAllCount": "وري الكل ({count})",
+
+  "unknownDevice": "جهاز مش معروف",
+
+  "notPairedTapToPair": "مش مقترن - اضغط للاقتران",
+
+  "systemDefault": "الافتراضي للنظام",
+
+  "unknownError": "خطأ مش معروف",
+
+  "showPrintersOnly": "وري الطابعات فقط",
+
+  "showAllDevices": "وري كل الأجهزة",
+
+  "failedToLoadTicketsWithError": "فشل تحميل الخطيةات: {error}",
+
+  "euShort": "أوروبي",
+
+  "diploShort": "دبلو."
 }

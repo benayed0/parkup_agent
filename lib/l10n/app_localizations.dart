@@ -1029,6 +1029,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Print cancelled'**
   String get printCancelled;
+
+  /// Message when connection to device fails
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed'**
+  String get connectionFailed;
+
+  /// Message when reconnection to device fails
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnection failed'**
+  String get reconnectionFailed;
+
+  /// Help text when scanning for printers
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure your printer is turned on'**
+  String get makeSurePrinterOn;
+
+  /// Message when no printers are found
+  ///
+  /// In en, this message translates to:
+  /// **'No printers found'**
+  String get noPrintersFound;
+
+  /// Help text for empty printer list
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on your printer and tap scan'**
+  String get turnOnPrinterAndScan;
+
+  /// Button to show all devices with hidden count
+  ///
+  /// In en, this message translates to:
+  /// **'Show all devices ({count} hidden)'**
+  String showAllDevicesCount(int count);
+
+  /// Printers section header
+  ///
+  /// In en, this message translates to:
+  /// **'Printers'**
+  String get printers;
+
+  /// Button to filter to printers only
+  ///
+  /// In en, this message translates to:
+  /// **'Printers only'**
+  String get printersOnly;
+
+  /// Button to show all devices with count
+  ///
+  /// In en, this message translates to:
+  /// **'Show all ({count})'**
+  String showAllCount(int count);
+
+  /// Fallback name for unknown device
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Device'**
+  String get unknownDevice;
+
+  /// Status text for unpaired devices
+  ///
+  /// In en, this message translates to:
+  /// **'Not paired - tap to pair'**
+  String get notPairedTapToPair;
+
+  /// System default option in locale selector
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get systemDefault;
+
+  /// Fallback error message
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error'**
+  String get unknownError;
+
+  /// Button to filter to printers only in bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Show printers only'**
+  String get showPrintersOnly;
+
+  /// Button to show all devices in bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Show all devices'**
+  String get showAllDevices;
+
+  /// Error message when loading tickets fails with details
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load tickets: {error}'**
+  String failedToLoadTicketsWithError(String error);
+
+  /// Short label for European Union plates
+  ///
+  /// In en, this message translates to:
+  /// **'EU'**
+  String get euShort;
+
+  /// Short label for diplomatic plates
+  ///
+  /// In en, this message translates to:
+  /// **'Diplo.'**
+  String get diploShort;
 }
 
 class _AppLocalizationsDelegate

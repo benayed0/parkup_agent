@@ -521,4 +521,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get printCancelled => 'Print cancelled';
+
+  @override
+  String get connectionFailed => 'Connection failed';
+
+  @override
+  String get reconnectionFailed => 'Reconnection failed';
+
+  @override
+  String get makeSurePrinterOn => 'Make sure your printer is turned on';
+
+  @override
+  String get noPrintersFound => 'No printers found';
+
+  @override
+  String get turnOnPrinterAndScan => 'Turn on your printer and tap scan';
+
+  @override
+  String showAllDevicesCount(int count) {
+    return 'Show all devices ($count hidden)';
+  }
+
+  @override
+  String get printers => 'Printers';
+
+  @override
+  String get printersOnly => 'Printers only';
+
+  @override
+  String showAllCount(int count) {
+    return 'Show all ($count)';
+  }
+
+  @override
+  String get unknownDevice => 'Unknown Device';
+
+  @override
+  String get notPairedTapToPair => 'Not paired - tap to pair';
+
+  @override
+  String get systemDefault => 'System default';
+
+  @override
+  String get unknownError => 'Unknown error';
+
+  @override
+  String get showPrintersOnly => 'Show printers only';
+
+  @override
+  String get showAllDevices => 'Show all devices';
+
+  @override
+  String failedToLoadTicketsWithError(String error) {
+    return 'Failed to load tickets: $error';
+  }
+
+  @override
+  String get euShort => 'EU';
+
+  @override
+  String get diploShort => 'Diplo.';
 }

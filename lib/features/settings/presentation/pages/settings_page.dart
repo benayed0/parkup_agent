@@ -201,7 +201,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Text(
                       currentLocale != null
                           ? LocaleService.getLocaleName(currentLocale)
-                          : 'System default',
+                          : l10n.systemDefault,
                       style: AppTextStyles.caption,
                     ),
                   ],

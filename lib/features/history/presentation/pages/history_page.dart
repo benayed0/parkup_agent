@@ -50,8 +50,9 @@ class _HistoryPageState extends State<HistoryPage> {
       });
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _errorMessage = 'Failed to load tickets : $e';
+        _errorMessage = l10n.failedToLoadTicketsWithError(e.toString());
         _isLoading = false;
       });
     }
