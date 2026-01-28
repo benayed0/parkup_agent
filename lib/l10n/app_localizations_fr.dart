@@ -540,13 +540,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reconnectionFailed => 'Échec de reconnexion';
 
   @override
-  String get makeSurePrinterOn => 'Assurez-vous que votre imprimante est allumée';
+  String get makeSurePrinterOn =>
+      'Assurez-vous que votre imprimante est allumée';
 
   @override
   String get noPrintersFound => 'Aucune imprimante trouvée';
 
   @override
-  String get turnOnPrinterAndScan => 'Allumez votre imprimante et appuyez sur rechercher';
+  String get turnOnPrinterAndScan =>
+      'Allumez votre imprimante et appuyez sur rechercher';
 
   @override
   String showAllDevicesCount(int count) {

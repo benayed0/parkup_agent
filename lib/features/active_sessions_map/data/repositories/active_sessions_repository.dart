@@ -9,14 +9,17 @@ class ActiveSessionsRepository {
   /// Fetch enforcement data for agents
   /// Returns expired sessions and soon-to-expire sessions
   /// Set includeTicketed=true to also show sessions that already have tickets
+  /// maxExpiredHours: auto-dismiss sessions expired longer than this (default 2 hours)
   Future<EnforcementData> getEnforcementData({
     String? zoneId,
     int expiringThresholdMinutes = 15,
+    double maxExpiredHours = 2,
     int limit = 50,
     bool includeTicketed = false,
   }) async {
     final queryParams = <String, dynamic>{
       'expiringThresholdMinutes': expiringThresholdMinutes.toString(),
+      'maxExpiredHours': maxExpiredHours.toString(),
       'limit': limit.toString(),
     };
     if (zoneId != null) {
