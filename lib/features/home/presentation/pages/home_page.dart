@@ -174,8 +174,8 @@ class _HomePageState extends State<HomePage> {
                       // Active sessions map action
                       ActionCard(
                         icon: Icons.map,
-                        title: 'Sessions Map',
-                        subtitle: 'View active sessions on map',
+                        title: l10n.sessionsMap,
+                        subtitle: l10n.viewActiveSessionsOnMap,
                         backgroundColor: AppColors.success.withValues(
                           alpha: 0.1,
                         ),

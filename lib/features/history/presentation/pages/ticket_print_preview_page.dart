@@ -219,7 +219,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
       // Check if it was cancelled
-      final wasCancelled = printerService.errorMessage == 'Print cancelled';
+      final wasCancelled = printerService.errorMessage == l10n.printCancelled;
 
       // Update printer error state
       setState(() {
@@ -232,7 +232,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
               ? l10n.printSuccess
               : wasCancelled
                   ? l10n.printCancelled
-                  : '${l10n.printFailed}: ${printerService.errorMessage ?? "Unknown error"}'),
+                  : '${l10n.printFailed}: ${printerService.errorMessage ?? l10n.unknownError}'),
           backgroundColor: success
               ? AppColors.success
               : wasCancelled
@@ -854,7 +854,7 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
                             const SizedBox(height: 8),
                             TextButton(
                               onPressed: () => setState(() => _showAllDevices = !_showAllDevices),
-                              child: Text(_showAllDevices ? 'Show printers only' : 'Show all devices'),
+                              child: Text(_showAllDevices ? l10n.showPrintersOnly : l10n.showAllDevices),
                             ),
                           ],
                         ),
@@ -872,7 +872,7 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
                               device.isBonded ? Icons.bluetooth_connected : Icons.bluetooth,
                               color: device.isBonded ? AppColors.primary : null,
                             ),
-                            title: Text(device.name ?? 'Unknown Device'),
+                            title: Text(device.name ?? l10n.unknownDevice),
                             subtitle: Text(device.address),
                             trailing: isConnecting
                                 ? const SizedBox(
@@ -892,7 +892,7 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
               padding: const EdgeInsets.all(16),
               child: TextButton(
                 onPressed: () => setState(() => _showAllDevices = !_showAllDevices),
-                child: Text(_showAllDevices ? 'Show printers only' : 'Show all devices'),
+                child: Text(_showAllDevices ? l10n.showPrintersOnly : l10n.showAllDevices),
               ),
             ),
         ],

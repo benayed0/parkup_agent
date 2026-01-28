@@ -847,6 +847,7 @@ class PlateTypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final style = PlateStyle.forCategory(type.category);
     final isGov = type.isGovernment;
     final isEu = type.isEu;
@@ -947,7 +948,7 @@ class PlateTypeChip extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'EU',
+                        l10n.euShort,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -1265,6 +1266,7 @@ class PlateTypePicker extends StatelessWidget {
   }
 
   Widget _buildTypeChip(BuildContext context, PlateType type) {
+    final l10n = AppLocalizations.of(context)!;
     final isSelected = type == selectedType;
     final style = PlateStyle.forCategory(type.category);
     final isGov = type.isGovernment;
@@ -1303,7 +1305,7 @@ class PlateTypePicker extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             border: Border.all(color: borderColor, width: 1.5),
           ),
-          child: _buildTypeChipContent(type, isSelected, style),
+          child: _buildTypeChipContent(type, isSelected, style, l10n),
         ),
       ),
     );
@@ -1313,6 +1315,7 @@ class PlateTypePicker extends StatelessWidget {
     PlateType type,
     bool isSelected,
     PlateStyle style,
+    AppLocalizations l10n,
   ) {
     final isRegular = type.category == PlateCategory.regular; // tunis, rs
 
@@ -1366,7 +1369,7 @@ class PlateTypePicker extends StatelessWidget {
           ),
           const SizedBox(width: 3),
           Text(
-            'EU',
+            l10n.euShort,
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -1392,6 +1395,7 @@ class PlateTypePicker extends StatelessWidget {
   }
 
   Widget _buildDiplomaticChip(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isSelected = _isDiplomaticSelected;
 
     return Padding(
@@ -1413,7 +1417,7 @@ class PlateTypePicker extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                isSelected ? selectedType.latinLabel : 'Diplo.',
+                isSelected ? selectedType.latinLabel : l10n.diploShort,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
