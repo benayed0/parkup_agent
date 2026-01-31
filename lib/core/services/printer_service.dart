@@ -1,37 +1,37 @@
 import 'dart:convert';
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image/image.dart' as img;
 
 import '../../shared/models/printer_device.dart' as models;
 import '../../shared/models/printable_ticket.dart';
+import 'bluetooth/bluetooth_printer_adapter.dart';
+import 'bluetooth/bluetooth_adapter_factory.dart';
 
 /// Connection status for the printer
 enum PrinterConnectionStatus { disconnected, connecting, connected, error }
 
 /// Printer service
-/// Handles Bluetooth thermal printer discovery, connection, and printing
+/// Handles Bluetooth thermal printer discovery, connection, and printing.
+/// Uses Classic Bluetooth on Android and BLE on iOS via platform adapters.
 class PrinterService extends ChangeNotifier {
   static const String _savedPrinterKey = 'saved_printer';
 
   SharedPreferences? _prefs;
-  final FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
-  BluetoothConnection? _connection;
+  final BluetoothPrinterAdapter _adapter = createBluetoothAdapter();
   StreamSubscription? _scanSubscription;
 
   models.PrinterDevice? _connectedPrinter;
   models.PrinterDevice? _savedPrinter;
   PrinterConnectionStatus _status = PrinterConnectionStatus.disconnected;
   String? _errorMessage;
-  List<BluetoothDiscoveryResult> _discoveredDevices = [];
+  List<DiscoveredPrinter> _discoveredDevices = [];
   bool _isScanning = false;
 
   // Print lock - block concurrent print requests
@@ -43,7 +43,7 @@ class PrinterService extends ChangeNotifier {
   models.PrinterDevice? get savedPrinter => _savedPrinter;
   PrinterConnectionStatus get status => _status;
   String? get errorMessage => _errorMessage;
-  List<BluetoothDiscoveryResult> get discoveredDevices => _discoveredDevices;
+  List<DiscoveredPrinter> get discoveredDevices => _discoveredDevices;
   bool get isScanning => _isScanning;
   bool get isConnected => _status == PrinterConnectionStatus.connected;
   bool get hasSavedPrinter => _savedPrinter != null;
@@ -66,9 +66,8 @@ class PrinterService extends ChangeNotifier {
     if (_savedPrinter == null) return;
 
     try {
-      // Check if Bluetooth is available and enabled
-      final isAvailable = await _bluetooth.isAvailable ?? false;
-      final isEnabled = await _bluetooth.isEnabled ?? false;
+      final isAvailable = await _adapter.isAvailable;
+      final isEnabled = await _adapter.isEnabled;
 
       if (!isAvailable || !isEnabled) {
         _status = PrinterConnectionStatus.disconnected;
@@ -90,11 +89,9 @@ class PrinterService extends ChangeNotifier {
       // Small delay to let Bluetooth stack initialize
       await Future.delayed(const Duration(milliseconds: 500));
 
-      _connection = await BluetoothConnection.toAddress(
-        _savedPrinter!.address,
-      ).timeout(const Duration(seconds: 10));
+      final connected = await _adapter.connect(_savedPrinter!.address);
 
-      if (_connection != null && _connection!.isConnected) {
+      if (connected) {
         _connectedPrinter = _savedPrinter!.copyWith(isConnected: true);
         _status = PrinterConnectionStatus.connected;
       } else {
@@ -167,15 +164,14 @@ class PrinterService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Start Bluetooth discovery
-      _scanSubscription = _bluetooth.startDiscovery().listen(
-        (result) {
+      _scanSubscription = _adapter.startScan().listen(
+        (device) {
           // Check if device already in list
           final existingIndex = _discoveredDevices.indexWhere(
-            (d) => d.device.address == result.device.address,
+            (d) => d.address == device.address,
           );
           if (existingIndex < 0) {
-            _discoveredDevices.add(result);
+            _discoveredDevices.add(device);
             notifyListeners();
           }
         },
@@ -198,9 +194,7 @@ class PrinterService extends ChangeNotifier {
 
   /// Stop scanning
   Future<void> stopScan() async {
-    try {
-      await _bluetooth.cancelDiscovery();
-    } catch (_) {}
+    await _adapter.stopScan();
     _scanSubscription?.cancel();
     _scanSubscription = null;
     _isScanning = false;
@@ -209,19 +203,16 @@ class PrinterService extends ChangeNotifier {
 
   /// Stop scanning without notifying listeners (for use during disposal)
   void stopScanSilent() {
-    try {
-      _bluetooth.cancelDiscovery();
-    } catch (_) {}
+    _adapter.stopScan();
     _scanSubscription?.cancel();
     _scanSubscription = null;
     _isScanning = false;
   }
 
-  /// Request pairing with a device
-  Future<bool> requestPairing(BluetoothDevice device) async {
+  /// Request pairing with a device (Android only, no-op on iOS)
+  Future<bool> requestPairing(String address) async {
     try {
-      final bonded = await _bluetooth.bondDeviceAtAddress(device.address);
-      return bonded ?? false;
+      return await _adapter.requestPairing(address);
     } catch (e) {
       _errorMessage = 'Pairing failed: $e';
       notifyListeners();
@@ -229,14 +220,11 @@ class PrinterService extends ChangeNotifier {
     }
   }
 
-  /// Connect to a printer
-  Future<bool> connect(BluetoothDiscoveryResult result) async {
-    final device = result.device;
-
-    // Check if device is paired
+  /// Connect to a discovered printer
+  Future<bool> connect(DiscoveredPrinter device) async {
+    // On Android, check if device is paired first
     if (!device.isBonded) {
-      // Request pairing first
-      final paired = await requestPairing(device);
+      final paired = await requestPairing(device.address);
       if (!paired) {
         _errorMessage = 'Device not paired';
         notifyListeners();
@@ -249,11 +237,11 @@ class PrinterService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _connection = await BluetoothConnection.toAddress(device.address);
+      final connected = await _adapter.connect(device.address);
 
-      if (_connection != null && _connection!.isConnected) {
+      if (connected) {
         final printerDevice = models.PrinterDevice(
-          name: device.name ?? 'Unknown Printer',
+          name: device.name.isNotEmpty ? device.name : 'Unknown Printer',
           address: device.address,
           isConnected: true,
         );
@@ -287,9 +275,9 @@ class PrinterService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _connection = await BluetoothConnection.toAddress(address);
+      final connected = await _adapter.connect(address);
 
-      if (_connection != null && _connection!.isConnected) {
+      if (connected) {
         final printerDevice = models.PrinterDevice(
           name: name,
           address: address,
@@ -317,12 +305,7 @@ class PrinterService extends ChangeNotifier {
 
   /// Disconnect from current printer
   Future<void> disconnect() async {
-    try {
-      await _connection?.close();
-    } catch (_) {
-      // Ignore disconnect errors
-    }
-    _connection = null;
+    await _adapter.disconnect();
     _connectedPrinter = null;
     _status = PrinterConnectionStatus.disconnected;
     _errorMessage = null;
@@ -343,17 +326,9 @@ class PrinterService extends ChangeNotifier {
     }
   }
 
-  /// Send raw bytes to printer
+  /// Send raw bytes to printer via the platform adapter
   Future<bool> _sendBytes(List<int> bytes) async {
-    if (_connection == null) {
-      _errorMessage = 'No connection object';
-      _status = PrinterConnectionStatus.disconnected;
-      _connectedPrinter = null;
-      notifyListeners();
-      return false;
-    }
-
-    if (!_connection!.isConnected) {
+    if (!_adapter.isConnected) {
       _errorMessage = 'Connection lost';
       _status = PrinterConnectionStatus.disconnected;
       _connectedPrinter = null;
@@ -362,27 +337,19 @@ class PrinterService extends ChangeNotifier {
     }
 
     try {
-      // Send bytes in chunks to avoid buffer overflow
-      const chunkSize = 512;
-      for (var i = 0; i < bytes.length; i += chunkSize) {
-        // Check for cancellation request
-        if (_cancelRequested) {
-          _errorMessage = 'Print cancelled';
-          return false;
-        }
-
-        final end = (i + chunkSize < bytes.length)
-            ? i + chunkSize
-            : bytes.length;
-        final chunk = bytes.sublist(i, end);
-        _connection!.output.add(Uint8List.fromList(chunk));
-        await _connection!.output.allSent;
-        // Small delay between chunks
-        if (end < bytes.length) {
-          await Future.delayed(const Duration(milliseconds: 50));
-        }
+      // Check for cancellation before sending
+      if (_cancelRequested) {
+        _errorMessage = 'Print cancelled';
+        return false;
       }
-      return true;
+
+      final success = await _adapter.sendBytes(bytes);
+      if (!success) {
+        _errorMessage = 'Send failed';
+        _status = PrinterConnectionStatus.error;
+        notifyListeners();
+      }
+      return success;
     } catch (e) {
       _errorMessage = 'Send failed: $e';
       _status = PrinterConnectionStatus.error;
@@ -1057,7 +1024,7 @@ class PrinterService extends ChangeNotifier {
   @override
   void dispose() {
     _scanSubscription?.cancel();
-    _connection?.close();
+    _adapter.dispose();
     super.dispose();
   }
 }

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/services/bluetooth/bluetooth_printer_adapter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/core.dart';
@@ -716,16 +716,16 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
     return printerKeywords.any((keyword) => lowerName.contains(keyword));
   }
 
-  List<BluetoothDiscoveryResult> get _filteredDevices {
+  List<DiscoveredPrinter> get _filteredDevices {
     final devices = printerService.discoveredDevices;
     if (_showAllDevices) return devices;
-    final printers = devices.where((d) => _isProbablyPrinter(d.device.name)).toList();
+    final printers = devices.where((d) => _isProbablyPrinter(d.name)).toList();
     printers.sort((a, b) => (b.rssi).compareTo(a.rssi));
     return printers;
   }
 
-  Future<void> _connectToDevice(BluetoothDiscoveryResult result) async {
-    final success = await printerService.connect(result);
+  Future<void> _connectToDevice(DiscoveredPrinter device) async {
+    final success = await printerService.connect(device);
     if (mounted && success) {
       Navigator.of(context).pop(); // Close modal on successful connection
     }
@@ -863,8 +863,7 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: _filteredDevices.length,
                         itemBuilder: (context, index) {
-                          final result = _filteredDevices[index];
-                          final device = result.device;
+                          final device = _filteredDevices[index];
                           final isConnecting = printerService.status == PrinterConnectionStatus.connecting;
 
                           return ListTile(
@@ -872,7 +871,7 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
                               device.isBonded ? Icons.bluetooth_connected : Icons.bluetooth,
                               color: device.isBonded ? AppColors.primary : null,
                             ),
-                            title: Text(device.name ?? l10n.unknownDevice),
+                            title: Text(device.name.isNotEmpty ? device.name : l10n.unknownDevice),
                             subtitle: Text(device.address),
                             trailing: isConnecting
                                 ? const SizedBox(
@@ -881,7 +880,7 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
                                 : const Icon(Icons.chevron_right),
-                            onTap: isConnecting ? null : () => _connectToDevice(result),
+                            onTap: isConnecting ? null : () => _connectToDevice(device),
                           );
                         },
                       ),

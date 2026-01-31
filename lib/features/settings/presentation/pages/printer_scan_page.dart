@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/core.dart';
+import '../../../../core/services/bluetooth/bluetooth_printer_adapter.dart';
 
 /// Printer scan page
 /// Allows users to discover and connect to Bluetooth thermal printers
@@ -37,13 +37,13 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
   }
 
   /// Get filtered device list
-  List<BluetoothDiscoveryResult> get _filteredDevices {
+  List<DiscoveredPrinter> get _filteredDevices {
     final devices = printerService.discoveredDevices;
     if (_showAllDevices) return devices;
 
     // Filter to likely printers, sorted by signal strength
     final printers = devices
-        .where((d) => _isProbablyPrinter(d.device.name))
+        .where((d) => _isProbablyPrinter(d.name))
         .toList();
     printers.sort(
       (a, b) => (b.rssi).compareTo(a.rssi),
@@ -78,9 +78,9 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
     await printerService.startScan();
   }
 
-  Future<void> _connectToDevice(BluetoothDiscoveryResult result) async {
+  Future<void> _connectToDevice(DiscoveredPrinter device) async {
     final l10n = AppLocalizations.of(context)!;
-    final success = await printerService.connect(result);
+    final success = await printerService.connect(device);
     if (mounted && success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -468,8 +468,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: devices.length,
           itemBuilder: (context, index) {
-            final result = devices[index];
-            final device = result.device;
+            final device = devices[index];
             final isConnecting =
                 printerService.status == PrinterConnectionStatus.connecting;
             final isThisDeviceConnected =
@@ -485,7 +484,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
                   isThisDeviceConnected,
                 ),
                 title: Text(
-                  device.name ?? l10n.unknownDevice,
+                  device.name.isNotEmpty ? device.name : l10n.unknownDevice,
                   style: AppTextStyles.body.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -517,7 +516,7 @@ class _PrinterScanPageState extends State<PrinterScanPage> {
                     : const Icon(Icons.bluetooth, color: AppColors.warning),
                 onTap: isThisDeviceConnected || isConnecting
                     ? null
-                    : () => _connectToDevice(result),
+                    : () => _connectToDevice(device),
               ),
             );
           },

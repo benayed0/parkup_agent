@@ -41,7 +41,8 @@ dependencies:
   path_provider: ^2.1.5
 
   # Bluetooth thermal printing
-  flutter_bluetooth_serial: ^0.4.0  # Classic Bluetooth discovery + connection
+  flutter_bluetooth_serial: ^0.4.0  # Classic Bluetooth discovery + connection (Android)
+  flutter_blue_plus: ^1.32.12       # BLE discovery + connection (iOS)
   esc_pos_utils: ^1.1.0             # ESC/POS command generation
   permission_handler: ^11.3.0       # Runtime permission management
   image: ^3.3.0                     # Image processing for Arabic text printing
