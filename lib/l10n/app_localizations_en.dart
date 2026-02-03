@@ -130,6 +130,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newSearch => 'New Search';
 
   @override
+  String get done => 'Done';
+
+  @override
   String get enterPlateThenCheck => 'Enter license plate, then tap Check';
 
   @override
@@ -581,4 +584,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diploShort => 'Diplo.';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get allTickets => 'All';
+
+  @override
+  String get thisWeek => 'This Week';
+
+  @override
+  String get thisMonth => 'This Month';
 }

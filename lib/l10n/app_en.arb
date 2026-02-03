@@ -203,6 +203,11 @@
     "description": "New search button text"
   },
 
+  "done": "Done",
+  "@done": {
+    "description": "Done button text to clear and move to next vehicle"
+  },
+
   "enterPlateThenCheck": "Enter license plate, then tap Check",
   "@enterPlateThenCheck": {
     "description": "Empty state hint"
@@ -992,5 +997,25 @@
   "diploShort": "Diplo.",
   "@diploShort": {
     "description": "Short label for diplomatic plates"
+  },
+
+  "today": "Today",
+  "@today": {
+    "description": "Filter label for today's tickets"
+  },
+
+  "allTickets": "All",
+  "@allTickets": {
+    "description": "Filter label for all tickets"
+  },
+
+  "thisWeek": "This Week",
+  "@thisWeek": {
+    "description": "Filter label for this week's tickets"
+  },
+
+  "thisMonth": "This Month",
+  "@thisMonth": {
+    "description": "Filter label for this month's tickets"
   }
 }

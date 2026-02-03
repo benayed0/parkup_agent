@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import '../../../../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,7 +20,7 @@ class TicketPrintPreviewPage extends StatefulWidget {
 }
 
 class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
-  PrintableTicketData? _printData;
+  Ticket? _ticket;
   bool _isLoading = true;
   String? _errorMessage;
   final GlobalKey _printKey = GlobalKey();
@@ -33,12 +33,18 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     super.initState();
     _wasConnected = printerService.isConnected;
     printerService.addListener(_onPrinterChanged);
+    localeService.addListener(_onLocaleChanged);
   }
 
   @override
   void dispose() {
     printerService.removeListener(_onPrinterChanged);
+    localeService.removeListener(_onLocaleChanged);
     super.dispose();
+  }
+
+  void _onLocaleChanged() {
+    if (mounted) setState(() {});
   }
 
   void _onPrinterChanged() {
@@ -79,42 +85,24 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Only load once - didChangeDependencies can be called multiple times
     if (!_dataLoaded) {
       _dataLoaded = true;
-      _loadPrintData();
+      _loadTicket();
     }
   }
 
-  Future<void> _loadPrintData() async {
+  Future<void> _loadTicket() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
     try {
-      final l10n = AppLocalizations.of(context)!;
-
-      // Fetch ticket data and QR code in parallel
-      final results = await Future.wait([
-        ticketRepository.getTicketById(widget.ticketId),
-        ticketRepository.getTicketQrCode(widget.ticketId),
-      ]);
-
-      final ticket = results[0] as Ticket;
-      final qrCode = results[1] as QrCodeData;
-
-      // Build PrintableTicketData with localized labels
-      // (parking zone is already populated in ticket)
-      final data = PrintableTicketData.fromTicket(
-        ticket: ticket,
-        qrCode: qrCode,
-        l10n: l10n,
-      );
+      final ticket = await ticketRepository.getTicketById(widget.ticketId);
 
       if (mounted) {
         setState(() {
-          _printData = data;
+          _ticket = ticket;
           _isLoading = false;
         });
       }
@@ -135,13 +123,40 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     }
   }
 
-  /// Show printer settings in a bottom modal sheet
   void _showPrinterModal() {
-    showModalBottomSheet(
+    PrinterBottomSheet.show(context);
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const _PrinterBottomSheet(),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.language),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: LocaleService.supportedLocales.map((locale) {
+            final isSelected =
+                localeService.currentLocale?.languageCode ==
+                    locale.languageCode;
+            return ListTile(
+              leading: Text(
+                LocaleService.getLocaleFlag(locale),
+                style: const TextStyle(fontSize: 24),
+              ),
+              title: Text(LocaleService.getLocaleName(locale)),
+              trailing: isSelected
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              selected: isSelected,
+              onTap: () {
+                localeService.setLocale(locale);
+                Navigator.of(dialogContext).pop();
+              },
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
@@ -152,32 +167,31 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     }
   }
 
-  Future<void> _openMap(String coordinates) async {
-    final parts = coordinates.split(',').map((s) => s.trim()).toList();
-    if (parts.length == 2) {
-      final lat = parts[0];
-      final lng = parts[1];
-      final url = Uri.parse(
-        'https://www.google.com/maps/search/?api=1&query=$lat,$lng',
-      );
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      }
+  Future<void> _openMap(double lat, double lng) async {
+    final url = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$lat,$lng',
+    );
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 
   Future<void> _handlePrint() async {
     final l10n = AppLocalizations.of(context)!;
 
-    // Check if printer is connected
     if (!printerService.isConnected) {
-      // Show printer modal instead of navigating
       _showPrinterModal();
       setState(() {
         _hasPrinterError = true;
       });
       return;
     }
+
+    // Build PrintableTicketData for the printer service
+    final printData = PrintableTicketData.fromTicket(
+      ticket: _ticket!,
+      l10n: l10n,
+    );
 
     // Show printing indicator with stop button
     if (mounted) {
@@ -209,16 +223,13 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
       );
     }
 
-    // Print the ticket
-    final success = await printerService.printTicket(_printData!);
+    final success = await printerService.printTicket(printData);
 
     if (mounted) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-      // Check if it was cancelled
       final wasCancelled = printerService.errorMessage == l10n.printCancelled;
 
-      // Update printer error state
       setState(() {
         _hasPrinterError = !success && !wasCancelled;
       });
@@ -247,13 +258,22 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    // Show printer button if not connected or has error
     final showPrinterButton = !printerService.isConnected || _hasPrinterError;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.printPreview),
         actions: [
+          IconButton(
+            icon: Text(
+              LocaleService.getLocaleFlag(
+                localeService.currentLocale ?? const Locale('en'),
+              ),
+              style: const TextStyle(fontSize: 20),
+            ),
+            onPressed: () => _showLanguageDialog(context),
+            tooltip: l10n.language,
+          ),
           if (showPrinterButton)
             IconButton(
               icon: Icon(
@@ -266,7 +286,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
         ],
       ),
       body: _buildBody(l10n),
-      bottomNavigationBar: _printData != null
+      bottomNavigationBar: _ticket != null
           ? _buildBottomBar(l10n, showPrinterButton)
           : null,
     );
@@ -299,7 +319,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
               ),
               const SizedBox(height: 24),
               OutlinedButton.icon(
-                onPressed: _loadPrintData,
+                onPressed: _loadTicket,
                 icon: const Icon(Icons.refresh),
                 label: Text(l10n.tryAgain),
               ),
@@ -307,6 +327,22 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
           ),
         ),
       );
+    }
+
+    final ticket = _ticket!;
+    final dateFormat = DateFormat('dd/MM/yyyy');
+    final timeFormat = DateFormat('HH:mm');
+    final parkingZone = ticket.parkingZone;
+
+    // Get localized reason
+    String reasonLabel;
+    switch (ticket.reason) {
+      case TicketReason.carSabot:
+        reasonLabel = l10n.printReasonCarSabot;
+        break;
+      case TicketReason.pound:
+        reasonLabel = l10n.printReasonPound;
+        break;
     }
 
     return SingleChildScrollView(
@@ -365,8 +401,72 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    // Lines
-                    ..._printData!.lines.map((line) => _buildLine(line, l10n)),
+                    // License plate
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Column(
+                        children: [
+                          Text(
+                            l10n.printLabelPlate,
+                            style: AppTextStyles.bodySmall,
+                          ),
+                          const SizedBox(height: 8),
+                          LicensePlateDisplay.fromPlate(
+                            ticket.plate,
+                            scale: 1.0,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Reason
+                    _buildDetailRow(l10n.printLabelReason, reasonLabel),
+
+                    // Fine amount
+                    _buildDetailRow(
+                      l10n.printLabelFine,
+                      '${ticket.fineAmount.toStringAsFixed(0)} TND',
+                      valueStyle: AppTextStyles.h3.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    // Date
+                    _buildDetailRow(
+                      l10n.printLabelDate,
+                      dateFormat.format(ticket.issuedAt),
+                    ),
+
+                    // Time
+                    _buildDetailRow(
+                      l10n.printLabelTime,
+                      timeFormat.format(ticket.issuedAt),
+                    ),
+
+                    // Address
+                    if (ticket.address != null && ticket.address!.isNotEmpty)
+                      _buildDetailRow(l10n.printLabelAddress, ticket.address!),
+
+                    // Parking zone info
+                    if (parkingZone != null) ...[
+                      _buildDetailRow(l10n.printLabelZone, parkingZone.name),
+                      if (parkingZone.address != null &&
+                          parkingZone.address!.isNotEmpty)
+                        _buildDetailRow(
+                          l10n.printLabelZoneAddress,
+                          parkingZone.address!,
+                        ),
+                      if (parkingZone.phoneNumber != null &&
+                          parkingZone.phoneNumber!.isNotEmpty)
+                        _buildPhoneRow(
+                          l10n.printLabelZonePhone,
+                          parkingZone.phoneNumber!,
+                        ),
+                    ],
+
+                    // Location
+                    _buildLocationRow(l10n, ticket),
 
                     const SizedBox(height: 24),
                     const Divider(),
@@ -383,7 +483,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                     _buildQrCode(),
                     const SizedBox(height: 8),
                     Text(
-                      _printData!.ticketNumber,
+                      ticket.ticketNumber,
                       style: AppTextStyles.caption,
                     ),
                   ],
@@ -396,148 +496,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     );
   }
 
-  Widget _buildLine(PrintableTicketLine line, AppLocalizations l10n) {
-    switch (line.type) {
-      case PrintLineType.header:
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Center(
-            child: Text(
-              line.value,
-              style: AppTextStyles.h1.copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 4,
-              ),
-            ),
-          ),
-        );
-
-      case PrintLineType.plate:
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Center(
-            child: LicensePlateDisplay.fromString(line.value, scale: 1.0),
-          ),
-        );
-
-      case PrintLineType.amount:
-        return _buildDetailRow(
-          line.label,
-          line.value,
-          valueStyle: AppTextStyles.h3.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
-          ),
-        );
-
-      case PrintLineType.status:
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(line.label, style: AppTextStyles.bodySmall),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: _getStatusColor(line.value).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  line.value,
-                  style: AppTextStyles.label.copyWith(
-                    color: _getStatusColor(line.value),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-
-      case PrintLineType.phone:
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(line.label, style: AppTextStyles.bodySmall),
-              GestureDetector(
-                onTap: () => _openPhone(line.value),
-                // Force LTR for phone numbers
-                child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Text(
-                    line.value,
-                    style: AppTextStyles.body.copyWith(
-                      color: AppColors.secondary,
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-
-      case PrintLineType.coordinates:
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(line.label, style: AppTextStyles.bodySmall),
-              GestureDetector(
-                onTap: () => _openMap(line.value),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 16,
-                      color: AppColors.secondary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      l10n.viewOnMap,
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.secondary,
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-
-      case PrintLineType.footer:
-        return Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 8),
-          child: Text(
-            line.value,
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
-              fontStyle: FontStyle.italic,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        );
-
-      case PrintLineType.date:
-      case PrintLineType.text:
-        return _buildDetailRow(line.label, line.value);
-    }
-  }
-
   Widget _buildDetailRow(String label, String value, {TextStyle? valueStyle}) {
-    // For long values, show label and value on separate lines
     if (value.length > 25) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
@@ -579,10 +538,75 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
     );
   }
 
+  Widget _buildPhoneRow(String label, String phone) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: AppTextStyles.bodySmall),
+          GestureDetector(
+            onTap: () => _openPhone(phone),
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: Text(
+                phone,
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.secondary,
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLocationRow(AppLocalizations l10n, Ticket ticket) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(l10n.goToLocation, style: AppTextStyles.bodySmall),
+          GestureDetector(
+            onTap: () => _openMap(
+              ticket.position.latitude,
+              ticket.position.longitude,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.location_on,
+                  size: 16,
+                  color: AppColors.secondary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  l10n.viewOnMap,
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.secondary,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildQrCode() {
-    final dataUrl = _printData!.qrCode.dataUrl;
-    // Extract base64 from data URL
-    final base64Data = dataUrl.split(',').last;
+    final qrCode = _ticket!.qrCode;
+    if (qrCode == null) {
+      return const SizedBox.shrink();
+    }
+    final base64Data = qrCode.dataUrl.split(',').last;
     final bytes = base64Decode(base64Data);
 
     return Container(
@@ -599,25 +623,6 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
         fit: BoxFit.contain,
       ),
     );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return AppColors.warning;
-      case 'paid':
-        return AppColors.success;
-      case 'overdue':
-        return AppColors.error;
-      case 'appealed':
-        return AppColors.info;
-      case 'dismissed':
-        return AppColors.secondary;
-      case 'sabot removed':
-        return AppColors.primary;
-      default:
-        return AppColors.textSecondary;
-    }
   }
 
   Widget _buildBottomBar(AppLocalizations l10n, bool showPrinterButton) {
@@ -664,298 +669,6 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// Bottom sheet for printer settings
-class _PrinterBottomSheet extends StatefulWidget {
-  const _PrinterBottomSheet();
-
-  @override
-  State<_PrinterBottomSheet> createState() => _PrinterBottomSheetState();
-}
-
-class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
-  bool _showAllDevices = false;
-
-  @override
-  void initState() {
-    super.initState();
-    printerService.addListener(_onServiceChanged);
-    // Auto-start scan when modal opens
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!printerService.isConnected) {
-        printerService.startScan();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    printerService.removeListener(_onServiceChanged);
-    printerService.stopScanSilent();
-    super.dispose();
-  }
-
-  void _onServiceChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  bool _isProbablyPrinter(String? name) {
-    if (name == null || name.isEmpty) return false;
-    final lowerName = name.toLowerCase();
-    final printerKeywords = [
-      'print',
-      'printer',
-      'pos',
-      'thermal',
-      'receipt',
-      '58mm',
-      '80mm',
-      '58',
-      '80',
-      'esc',
-      'escpos',
-      'esc/pos',
-      'epson',
-      'star',
-      'bixolon',
-      'xprinter',
-      'goojprt',
-      'munbyn',
-      'rongta',
-      'hoin',
-      'milestone',
-      'netum',
-      'issyzonepos',
-      'zjiang',
-      'gprinter',
-      'sewoo',
-      'citizen',
-      'custom',
-      'MPT',
-      'mpt',
-      'rpm',
-      'spp',
-      'bt-',
-      'pt-',
-      'rpp',
-    ];
-    return printerKeywords.any((keyword) => lowerName.contains(keyword));
-  }
-
-  List<BluetoothDiscoveryResult> get _filteredDevices {
-    final devices = printerService.discoveredDevices;
-    if (_showAllDevices) return devices;
-    final printers = devices
-        .where((d) => _isProbablyPrinter(d.device.name))
-        .toList();
-    printers.sort((a, b) => (b.rssi).compareTo(a.rssi));
-    return printers;
-  }
-
-  Future<void> _connectToDevice(BluetoothDiscoveryResult result) async {
-    final success = await printerService.connect(result);
-    if (mounted && success) {
-      Navigator.of(context).pop(); // Close modal on successful connection
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: 12),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Text(l10n.printerSettings, style: AppTextStyles.h3),
-                const Spacer(),
-                if (printerService.isScanning)
-                  IconButton(
-                    icon: const Icon(Icons.stop),
-                    onPressed: () => printerService.stopScan(),
-                    tooltip: l10n.stopScan,
-                  )
-                else
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () => printerService.startScan(),
-                    tooltip: l10n.scanForPrinters,
-                  ),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
-          // Connection status
-          if (printerService.isConnected)
-            Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.success.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.check_circle, color: AppColors.success),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(l10n.printerConnected, style: AppTextStyles.label),
-                        Text(
-                          printerService.connectedPrinter?.name ?? '',
-                          style: AppTextStyles.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => printerService.disconnect(),
-                    child: Text(l10n.disconnectPrinter),
-                  ),
-                ],
-              ),
-            ),
-          // Error message
-          if (printerService.errorMessage != null)
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.error_outline, color: AppColors.error, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      printerService.errorMessage!,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.error,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          // Device list
-          Expanded(
-            child: printerService.isScanning && _filteredDevices.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CircularProgressIndicator(),
-                        const SizedBox(height: 16),
-                        Text(l10n.scanning, style: AppTextStyles.bodySmall),
-                      ],
-                    ),
-                  )
-                : _filteredDevices.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.bluetooth_searching,
-                          size: 48,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.noDevicesFound,
-                          style: AppTextStyles.bodySmall,
-                        ),
-                        const SizedBox(height: 8),
-                        TextButton(
-                          onPressed: () => setState(
-                            () => _showAllDevices = !_showAllDevices,
-                          ),
-                          child: Text(
-                            _showAllDevices
-                                ? l10n.showPrintersOnly
-                                : l10n.showAllDevices,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: _filteredDevices.length,
-                    itemBuilder: (context, index) {
-                      final result = _filteredDevices[index];
-                      final device = result.device;
-                      final isConnecting =
-                          printerService.status ==
-                          PrinterConnectionStatus.connecting;
-
-                      return ListTile(
-                        leading: Icon(
-                          device.isBonded
-                              ? Icons.bluetooth_connected
-                              : Icons.bluetooth,
-                          color: device.isBonded ? AppColors.primary : null,
-                        ),
-                        title: Text(device.name ?? l10n.unknownDevice),
-                        subtitle: Text(device.address),
-                        trailing: isConnecting
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Icon(Icons.chevron_right),
-                        onTap: isConnecting
-                            ? null
-                            : () => _connectToDevice(result),
-                      );
-                    },
-                  ),
-          ),
-          // Toggle show all devices
-          if (_filteredDevices.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: TextButton(
-                onPressed: () =>
-                    setState(() => _showAllDevices = !_showAllDevices),
-                child: Text(
-                  _showAllDevices ? l10n.showPrintersOnly : l10n.showAllDevices,
-                ),
-              ),
-            ),
-        ],
       ),
     );
   }

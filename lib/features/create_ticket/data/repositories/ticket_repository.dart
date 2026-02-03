@@ -10,7 +10,7 @@ class TicketRepository {
 
   /// Create a new ticket
   Future<Ticket> createTicket({
-    required String licensePlate,
+    required LicensePlate plate,
     required Position position,
     required TicketReason reason,
     required double fineAmount,
@@ -32,7 +32,11 @@ class TicketRepository {
         ApiConfig.tickets,
         data: {
           'position': position.toJson(),
-          'licensePlate': licensePlate.toUpperCase().replaceAll(' ', ''),
+          'plate': {
+            'type': plate.type.name,
+            if (plate.left != null && plate.left!.isNotEmpty) 'left': plate.left,
+            if (plate.right != null && plate.right!.isNotEmpty) 'right': plate.right,
+          },
           'reason': reason.value,
           'fineAmount': fineAmount,
           'issuedAt': now.toIso8601String(),
@@ -136,30 +140,6 @@ class TicketRepository {
 
       throw const ApiException(
         message: 'Failed to get ticket',
-        statusCode: 500,
-      );
-    } on DioException catch (e) {
-      final message = _extractErrorMessage(e);
-      throw ApiException(message: message, statusCode: e.response?.statusCode);
-    }
-  }
-
-  /// Get QR code data for a ticket
-  Future<QrCodeData> getTicketQrCode(String ticketId) async {
-    try {
-      final response = await _dio.get(
-        '${ApiConfig.ticketById(ticketId)}/print',
-      );
-
-      final data = response.data as Map<String, dynamic>;
-
-      if (data['success'] == true && data['data'] != null) {
-        final printData = data['data'] as Map<String, dynamic>;
-        return QrCodeData.fromJson(printData['qrCode'] as Map<String, dynamic>);
-      }
-
-      throw const ApiException(
-        message: 'Failed to get QR code',
         statusCode: 500,
       );
     } on DioException catch (e) {

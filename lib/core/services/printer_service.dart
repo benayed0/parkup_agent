@@ -13,6 +13,7 @@ import 'package:image/image.dart' as img;
 
 import '../../shared/models/printer_device.dart' as models;
 import '../../shared/models/printable_ticket.dart';
+import '../widgets/license_plate_input.dart';
 
 /// Connection status for the printer
 enum PrinterConnectionStatus { disconnected, connecting, connected, error }
@@ -578,36 +579,20 @@ class PrinterService extends ChangeNotifier {
 
   /// Render a license plate like the LicensePlateDisplay widget
   /// Format: "LEFT_NUM  LABEL  RIGHT_NUM" with proper styling
-  Future<img.Image?> _licensePlateToImage(String plateText) async {
+  /// If the plate is too wide for the paper, it breaks into two lines:
+  ///   Line 1: LEFT_NUM
+  ///   Line 2: LABEL  RIGHT_NUM  (or just LABEL for RS/Libya)
+  Future<img.Image?> _licensePlateToImage(LicensePlate plate) async {
     try {
-      final recorder = ui.PictureRecorder();
-      final canvas = Canvas(recorder);
-
-      // Parse the plate - typically format is "NUM LABEL NUM" or "NUM LABEL"
-      // e.g., "232 تونس 32" or "123456 ن ت"
-      final parts = plateText.split(' ');
-
-      String leftNum = '';
-      String label = '';
-      String rightNum = '';
-
-      if (parts.length >= 3) {
-        // Standard format: NUM LABEL NUM (e.g., "232 تونس 32")
-        leftNum = parts.first;
-        rightNum = parts.last;
-        label = parts.sublist(1, parts.length - 1).join(' ');
-      } else if (parts.length == 2) {
-        // RS/Libya format: NUM LABEL (e.g., "123456 ن ت")
-        leftNum = parts.first;
-        label = parts.last;
-      } else {
-        // Single value - just render as is
-        leftNum = plateText;
-      }
+      final leftNum = plate.left ?? '';
+      final rightNum = plate.right ?? '';
+      final label = plate.type.displayLabel;
 
       // Styles
       const double fontSize = 36;
       const double labelFontSize = 28;
+      const double spacing = 20;
+      const double padding = 40; // 20px each side
 
       final numStyle = TextStyle(
         color: Colors.black,
@@ -623,70 +608,123 @@ class PrinterService extends ChangeNotifier {
         fontWeight: FontWeight.bold,
       );
 
-      // Create text painters
+      // Create text painters to measure
       final leftPainter = TextPainter(
         text: TextSpan(text: leftNum, style: numStyle),
         textDirection: TextDirection.ltr,
-      );
-      leftPainter.layout();
+      )..layout();
 
       final labelPainter = TextPainter(
         text: TextSpan(text: label, style: labelStyle),
-        textDirection: TextDirection.rtl, // Arabic text
-      );
-      labelPainter.layout();
+        textDirection: TextDirection.rtl,
+      )..layout();
 
       final rightPainter = TextPainter(
         text: TextSpan(text: rightNum, style: numStyle),
         textDirection: TextDirection.ltr,
-      );
-      rightPainter.layout();
+      )..layout();
 
-      // Calculate total width with spacing
-      const double spacing = 20;
-      final totalWidth =
+      // Calculate single-line width
+      final singleLineWidth =
           leftPainter.width +
           (label.isNotEmpty ? spacing + labelPainter.width + spacing : 0) +
           (rightNum.isNotEmpty ? rightPainter.width : 0) +
-          40;
-      final width = totalWidth.ceil();
-      final height = (fontSize + 16).ceil();
+          padding;
 
-      // Draw white background
-      canvas.drawRect(
-        Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
-        Paint()..color = Colors.white,
-      );
+      final maxWidth = _paperWidthDots.toDouble();
+      final fitsOnOneLine = singleLineWidth <= maxWidth;
 
-      // Draw plate components centered
-      double xOffset = 20;
-      final yOffset = (height - leftPainter.height) / 2;
+      if (fitsOnOneLine) {
+        // --- Single line layout (original behavior) ---
+        final width = singleLineWidth.ceil();
+        final height = (fontSize + 16).ceil();
 
-      // Left number
-      leftPainter.paint(canvas, Offset(xOffset, yOffset));
-      xOffset += leftPainter.width;
+        final recorder = ui.PictureRecorder();
+        final canvas = Canvas(recorder);
 
-      // Label (Arabic)
-      if (label.isNotEmpty) {
-        xOffset += spacing;
-        final labelY = (height - labelPainter.height) / 2;
-        labelPainter.paint(canvas, Offset(xOffset, labelY));
-        xOffset += labelPainter.width + spacing;
+        canvas.drawRect(
+          Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
+          Paint()..color = Colors.white,
+        );
+
+        double xOffset = 20;
+        final yOffset = (height - leftPainter.height) / 2;
+
+        leftPainter.paint(canvas, Offset(xOffset, yOffset));
+        xOffset += leftPainter.width;
+
+        if (label.isNotEmpty) {
+          xOffset += spacing;
+          final labelY = (height - labelPainter.height) / 2;
+          labelPainter.paint(canvas, Offset(xOffset, labelY));
+          xOffset += labelPainter.width + spacing;
+        }
+
+        if (rightNum.isNotEmpty) {
+          rightPainter.paint(canvas, Offset(xOffset, yOffset));
+        }
+
+        final picture = recorder.endRecording();
+        final uiImage = await picture.toImage(width, height);
+        final byteData = await uiImage.toByteData(format: ui.ImageByteFormat.png);
+        if (byteData == null) return null;
+
+        return img.decodeImage(byteData.buffer.asUint8List());
+      } else {
+        // --- Two line layout: break number and label onto separate lines ---
+        // Line 1: leftNum (centered)
+        // Line 2: label + rightNum (centered), or just label for RS/Libya
+        const double lineGap = 8;
+        final lineHeight = (fontSize + 12).ceil();
+
+        // Line 2 content width
+        final line2Width =
+            (label.isNotEmpty ? labelPainter.width : 0) +
+            (label.isNotEmpty && rightNum.isNotEmpty ? spacing : 0) +
+            (rightNum.isNotEmpty ? rightPainter.width : 0);
+
+        final width = _paperWidthDots;
+        final height = (lineHeight * 2 + lineGap).ceil();
+
+        final recorder = ui.PictureRecorder();
+        final canvas = Canvas(recorder);
+
+        canvas.drawRect(
+          Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
+          Paint()..color = Colors.white,
+        );
+
+        // Line 1: leftNum centered
+        final line1X = (width - leftPainter.width) / 2;
+        final line1Y = (lineHeight - leftPainter.height) / 2;
+        leftPainter.paint(canvas, Offset(line1X, line1Y));
+
+        // Line 2: label (+ rightNum) centered
+        final line2Y = lineHeight + lineGap;
+        if (label.isNotEmpty || rightNum.isNotEmpty) {
+          final line2StartX = (width - line2Width) / 2;
+          double x = line2StartX;
+
+          if (label.isNotEmpty) {
+            final labelY = line2Y + (lineHeight - labelPainter.height) / 2;
+            labelPainter.paint(canvas, Offset(x, labelY));
+            x += labelPainter.width;
+            if (rightNum.isNotEmpty) x += spacing;
+          }
+
+          if (rightNum.isNotEmpty) {
+            final rightY = line2Y + (lineHeight - rightPainter.height) / 2;
+            rightPainter.paint(canvas, Offset(x, rightY));
+          }
+        }
+
+        final picture = recorder.endRecording();
+        final uiImage = await picture.toImage(width, height);
+        final byteData = await uiImage.toByteData(format: ui.ImageByteFormat.png);
+        if (byteData == null) return null;
+
+        return img.decodeImage(byteData.buffer.asUint8List());
       }
-
-      // Right number
-      if (rightNum.isNotEmpty) {
-        rightPainter.paint(canvas, Offset(xOffset, yOffset));
-      }
-
-      // Convert to image
-      final picture = recorder.endRecording();
-      final uiImage = await picture.toImage(width, height);
-      final byteData = await uiImage.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData == null) return null;
-
-      final pngBytes = byteData.buffer.asUint8List();
-      return img.decodeImage(pngBytes);
     } catch (e) {
       debugPrint('Error converting license plate to image: $e');
       return null;
@@ -915,8 +953,18 @@ class PrinterService extends ChangeNotifier {
           break;
 
         case PrintLineType.plate:
-          // Render license plate with proper formatting (NUM LABEL NUM)
-          final plateImage = await _licensePlateToImage(line.value);
+          // Print plate label above the plate image
+          final plateLabelImage = await _textToImage(
+            line.label,
+            fontSize: 24,
+            bold: true,
+            textAlign: TextAlign.center,
+          );
+          if (plateLabelImage != null) {
+            bytes += generator.imageRaster(plateLabelImage, align: PosAlign.center);
+          }
+          // Render license plate using structured plate object
+          final plateImage = await _licensePlateToImage(ticketData.plate);
           if (plateImage != null) {
             bytes += generator.imageRaster(plateImage, align: PosAlign.center);
           } else {

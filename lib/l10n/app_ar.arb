@@ -77,6 +77,8 @@
 
   "newSearch": "بحث جديد",
 
+  "done": "تم",
+
   "enterPlateThenCheck": "اكتب الماتريكيل وبعد عيّط على شوف",
 
   "selectZone": "اختار الزون",
@@ -345,5 +347,13 @@
 
   "euShort": "أوروبي",
 
-  "diploShort": "دبلو."
+  "diploShort": "دبلو.",
+
+  "today": "اليوم",
+
+  "allTickets": "الكل",
+
+  "thisWeek": "هالجمعة",
+
+  "thisMonth": "هالشهر"
 }

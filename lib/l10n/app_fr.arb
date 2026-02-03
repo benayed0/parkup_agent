@@ -77,6 +77,8 @@
 
   "newSearch": "Nouvelle recherche",
 
+  "done": "Terminer",
+
   "enterPlateThenCheck": "Entrez la plaque, puis appuyez sur Verifier",
 
   "selectZone": "Selectionner la zone",
@@ -345,5 +347,13 @@
 
   "euShort": "UE",
 
-  "diploShort": "Diplo."
+  "diploShort": "Diplo.",
+
+  "today": "Aujourd'hui",
+
+  "allTickets": "Tous",
+
+  "thisWeek": "Cette semaine",
+
+  "thisMonth": "Ce mois"
 }

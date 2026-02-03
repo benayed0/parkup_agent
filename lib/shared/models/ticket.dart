@@ -1,3 +1,6 @@
+import '../../core/widgets/license_plate_input.dart';
+import 'printable_ticket.dart';
+
 /// Ticket reason enum matching backend
 enum TicketReason {
   carSabot('car_sabot', 'Car Sabot'),
@@ -104,6 +107,7 @@ class Ticket {
   final String id;
   final String ticketNumber;
   final String licensePlate;
+  final LicensePlate plate;
   final Position position;
   final String? address;
   final TicketReason reason;
@@ -118,11 +122,13 @@ class Ticket {
   final List<String>? evidencePhotos;
   final DateTime? paidAt;
   final String? appealReason;
+  final QrCodeData? qrCode;
 
   const Ticket({
     required this.id,
     required this.ticketNumber,
     required this.licensePlate,
+    required this.plate,
     required this.position,
     this.address,
     required this.reason,
@@ -137,6 +143,7 @@ class Ticket {
     this.evidencePhotos,
     this.paidAt,
     this.appealReason,
+    this.qrCode,
   });
 
   /// Create from JSON (API response)
@@ -154,10 +161,18 @@ class Ticket {
       }
     }
 
+    // Parse structured plate data, fallback to licensePlate string
+    final plateJson = json['plate'] as Map<String, dynamic>?;
+    final licensePlateStr = json['licensePlate'] as String;
+    final plate = plateJson != null
+        ? LicensePlate.fromJson(plateJson)
+        : LicensePlate(type: PlateType.tunis, left: licensePlateStr);
+
     return Ticket(
       id: json['_id'] as String? ?? json['id'] as String,
       ticketNumber: json['ticketNumber'] as String,
-      licensePlate: json['licensePlate'] as String,
+      licensePlate: licensePlateStr,
+      plate: plate,
       position: Position.fromJson(json['position'] as Map<String, dynamic>),
       address: json['address'] as String?,
       reason: TicketReason.fromValue(json['reason'] as String),
@@ -178,6 +193,9 @@ class Ticket {
           ? DateTime.parse(json['paidAt'] as String)
           : null,
       appealReason: json['appealReason'] as String?,
+      qrCode: json['qrCode'] != null
+          ? QrCodeData.fromJson(json['qrCode'] as Map<String, dynamic>)
+          : null,
     );
   }
 

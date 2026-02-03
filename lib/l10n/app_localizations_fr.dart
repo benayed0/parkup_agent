@@ -135,6 +135,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newSearch => 'Nouvelle recherche';
 
   @override
+  String get done => 'Terminer';
+
+  @override
   String get enterPlateThenCheck =>
       'Entrez la plaque, puis appuyez sur Verifier';
 
@@ -594,4 +597,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get diploShort => 'Diplo.';
+
+  @override
+  String get today => 'Aujourd\'hui';
+
+  @override
+  String get allTickets => 'Tous';
+
+  @override
+  String get thisWeek => 'Cette semaine';
+
+  @override
+  String get thisMonth => 'Ce mois';
 }

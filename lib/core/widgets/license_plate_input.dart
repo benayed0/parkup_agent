@@ -594,14 +594,17 @@ class LicensePlateDisplay extends StatelessWidget {
                   left: type.isEu ? (euBandWidth + 8) * scale : 12 * scale,
                   right: 12 * scale,
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _buildPlateContent(
-                    style,
-                    baseFontSize,
-                    centerFontSize,
-                    scale,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildPlateContent(
+                      style,
+                      baseFontSize,
+                      centerFontSize,
+                      scale,
+                    ),
                   ),
                 ),
               ),

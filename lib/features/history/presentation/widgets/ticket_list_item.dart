@@ -56,8 +56,8 @@ class TicketListItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        LicensePlateDisplay.fromString(
-                          ticket.licensePlate,
+                        LicensePlateDisplay.fromPlate(
+                          ticket.plate,
                           scale: 0.7,
                           mini: true,
                         ),
@@ -116,10 +116,7 @@ class TicketListItem extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        Text(
-                          ticket.ticketNumber,
-                          style: AppTextStyles.caption,
-                        ),
+                        Text(ticket.ticketNumber, style: AppTextStyles.caption),
                       ],
                     ),
 
@@ -132,7 +129,9 @@ class TicketListItem extends StatelessWidget {
                           child: OutlinedButton.icon(
                             onPressed: onGoToLocation,
                             icon: const Icon(Icons.location_on, size: 18),
-                            label: Text(AppLocalizations.of(context)!.goToLocation),
+                            label: Text(
+                              AppLocalizations.of(context)!.goToLocation,
+                            ),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.primary,
                               side: const BorderSide(color: AppColors.primary),

@@ -127,6 +127,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newSearch => 'بحث جديد';
 
   @override
+  String get done => 'تم';
+
+  @override
   String get enterPlateThenCheck => 'اكتب الماتريكيل وبعد عيّط على شوف';
 
   @override
@@ -578,4 +581,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get diploShort => 'دبلو.';
+
+  @override
+  String get today => 'اليوم';
+
+  @override
+  String get allTickets => 'الكل';
+
+  @override
+  String get thisWeek => 'هالجمعة';
+
+  @override
+  String get thisMonth => 'هالشهر';
 }

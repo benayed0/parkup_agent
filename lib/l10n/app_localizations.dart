@@ -328,6 +328,12 @@ abstract class AppLocalizations {
   /// **'New Search'**
   String get newSearch;
 
+  /// Done button text to clear and move to next vehicle
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
   /// Empty state hint
   ///
   /// In en, this message translates to:
@@ -1137,6 +1143,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Diplo.'**
   String get diploShort;
+
+  /// Filter label for today's tickets
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// Filter label for all tickets
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allTickets;
+
+  /// Filter label for this week's tickets
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// Filter label for this month's tickets
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get thisMonth;
 }
 
 class _AppLocalizationsDelegate

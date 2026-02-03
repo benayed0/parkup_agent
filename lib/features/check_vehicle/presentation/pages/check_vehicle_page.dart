@@ -27,6 +27,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   Position? _position;
   Timer? _debounceTimer;
   int _inputKey = 0; // Key to force rebuild of input widget
+  Ticket? _createdTicket; // Track ticket just created for print flow
+  bool _isPrinting = false;
 
   // Parking zone selection
   List<ParkingZone> _zones = [];
@@ -365,7 +367,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 
     try {
       final ticket = await ticketRepository.createTicket(
-        licensePlate: _checkResult!.licensePlate,
+        plate: _currentPlate,
         position: ticketPosition,
         reason: reason,
         fineAmount: fineAmount,
@@ -389,7 +391,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
         ),
       );
 
-      _clearAndReset();
+      setState(() => _createdTicket = ticket);
+
     } on ApiException catch (e) {
       if (!mounted) return;
       HapticFeedback.heavyImpact();
@@ -415,9 +418,99 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
     }
   }
 
+  Future<void> _printTicket(Ticket ticket) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (!printerService.isConnected) {
+      PrinterBottomSheet.show(context);
+      return;
+    }
+
+    setState(() => _isPrinting = true);
+
+    try {
+      // Re-fetch ticket to get QR code data
+      final fullTicket = await ticketRepository.getTicketById(ticket.id);
+      if (!mounted) return;
+
+      final printData = PrintableTicketData.fromTicket(
+        ticket: fullTicket,
+        l10n: l10n,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Text(l10n.printing)),
+            ],
+          ),
+          action: SnackBarAction(
+            label: l10n.stopPrint,
+            textColor: Colors.white,
+            onPressed: () => printerService.cancelPrint(),
+          ),
+          duration: const Duration(seconds: 30),
+        ),
+      );
+
+      final success = await printerService.printTicket(printData);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+      final wasCancelled = printerService.errorMessage == l10n.printCancelled;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            success
+                ? l10n.printSuccess
+                : wasCancelled
+                    ? l10n.printCancelled
+                    : '${l10n.printFailed}: ${printerService.errorMessage ?? l10n.unknownError}',
+          ),
+          backgroundColor: success
+              ? AppColors.success
+              : wasCancelled
+                  ? AppColors.warning
+                  : AppColors.error,
+          duration: Duration(seconds: success ? 3 : 5),
+        ),
+      );
+
+      if (success) {
+        _clearAndReset();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.printFailed),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isPrinting = false);
+      }
+    }
+  }
+
   void _clearAndReset() {
     setState(() {
       _checkResult = null;
+      _createdTicket = null;
       _currentPlate = const LicensePlate.empty();
       _lastCheckedPlate = null;
       _inputKey++; // Force input widget to rebuild with empty values
@@ -444,228 +537,304 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Parking zone selector
-              if (_zones.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<ParkingZone>(
-                      value: _selectedZone,
-                      isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      hint: Text(l10n.selectZone),
-                      items: _zones.map((zone) {
-                        return DropdownMenuItem<ParkingZone>(
-                          value: zone,
-                          child: Row(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight - 24),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Parking zone selector
+                      if (_zones.isNotEmpty) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<ParkingZone>(
+                              value: _selectedZone,
+                              isExpanded: true,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              hint: Text(l10n.selectZone),
+                              items: _zones.map((zone) {
+                                return DropdownMenuItem<ParkingZone>(
+                                  value: zone,
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 18, color: AppColors.primary),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          '${zone.code} - ${zone.name}',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (zone) {
+                                if (zone != null) {
+                                  setState(() => _selectedZone = zone);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+
+                      // License plate input
+                      LicensePlateInput(
+                        key: ValueKey(_inputKey),
+                        initialValue: _currentPlate.isEmpty ? null : _currentPlate,
+                        onChanged: _onPlateChanged,
+                        label: l10n.licensePlate,
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // Loading indicator or Check button
+                      if (_isLoading)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(
+                                  width: 32,
+                                  height: 32,
+                                  child: CircularProgressIndicator(strokeWidth: 3),
+                                ),
+                                const SizedBox(width: 16),
+                                Text(
+                                  l10n.checking,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      else if (_checkResult == null)
+                        // Manual check button - large and easy to tap
+                        SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: ElevatedButton.icon(
+                            onPressed: _isPlateValid ? _handleManualCheck : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isPlateValid ? AppColors.primary : AppColors.surface,
+                              foregroundColor: _isPlateValid ? Colors.white : AppColors.textTertiary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            icon: const Icon(Icons.search, size: 24),
+                            label: Text(
+                              l10n.check,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      // Result display
+                      if (_checkResult != null) ...[
+                        const SizedBox(height: 12),
+
+                        CheckResultCard(result: _checkResult!),
+
+                        const SizedBox(height: 12),
+
+                        // Post-creation: show Print + Done buttons
+                        if (_createdTicket != null)
+                          Row(
                             children: [
-                              const Icon(Icons.location_on, size: 18, color: AppColors.primary),
-                              const SizedBox(width: 8),
+                              // Print ticket button
                               Expanded(
-                                child: Text(
-                                  '${zone.code} - ${zone.name}',
-                                  overflow: TextOverflow.ellipsis,
+                                child: SizedBox(
+                                  height: 52,
+                                  child: ElevatedButton.icon(
+                                    onPressed: _isPrinting
+                                        ? null
+                                        : () => _printTicket(_createdTicket!),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primary,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    icon: _isPrinting
+                                        ? const SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : const Icon(Icons.print, size: 22),
+                                    label: Text(
+                                      _isPrinting ? l10n.printing : l10n.print,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Done / clear button
+                              Expanded(
+                                child: SizedBox(
+                                  height: 52,
+                                  child: OutlinedButton.icon(
+                                    onPressed: _isPrinting ? null : _clearAndReset,
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(color: AppColors.primary, width: 2),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    icon: const Icon(Icons.check_circle_outline, size: 22),
+                                    label: Text(
+                                      l10n.done,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        else ...[
+                          // Only show ticket buttons if vehicle has an issue (not valid) and zone is selected
+                          if (_checkResult!.hasIssue && _selectedZone != null) ...[
+                            // Ticket reason buttons - large and easy to tap
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _ReasonButton(
+                                    reason: TicketReason.carSabot,
+                                    fineAmount: _selectedZone!.prices.carSabot,
+                                    icon: Icons.lock,
+                                    color: AppColors.warning,
+                                    isLoading: _isCreatingTicket,
+                                    onPressed: () => _handleCreateTicket(TicketReason.carSabot),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _ReasonButton(
+                                    reason: TicketReason.pound,
+                                    fineAmount: _selectedZone!.prices.pound,
+                                    icon: Icons.local_shipping,
+                                    color: AppColors.error,
+                                    isLoading: _isCreatingTicket,
+                                    onPressed: () => _handleCreateTicket(TicketReason.pound),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+
+                          // Recheck and New search buttons
+                          Row(
+                            children: [
+                              // Recheck button
+                              Expanded(
+                                child: SizedBox(
+                                  height: 52,
+                                  child: ElevatedButton.icon(
+                                    onPressed: _isCreatingTicket || _isLoading ? null : _handleManualCheck,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primary,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    icon: const Icon(Icons.refresh, size: 22),
+                                    label: Text(
+                                      l10n.recheck,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // New search button
+                              Expanded(
+                                child: SizedBox(
+                                  height: 52,
+                                  child: OutlinedButton.icon(
+                                    onPressed: _isCreatingTicket ? null : _clearAndReset,
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(color: AppColors.primary, width: 2),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    icon: const Icon(Icons.search, size: 22),
+                                    label: Text(
+                                      l10n.newSearch,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (zone) {
-                        if (zone != null) {
-                          setState(() => _selectedZone = zone);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-              ],
-
-              // License plate input
-              LicensePlateInput(
-                key: ValueKey(_inputKey),
-                initialValue: _currentPlate.isEmpty ? null : _currentPlate,
-                onChanged: _onPlateChanged,
-                label: l10n.licensePlate,
-              ),
-
-              const SizedBox(height: 12),
-
-              // Loading indicator or Check button
-              if (_isLoading)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(
-                          width: 32,
-                          height: 32,
-                          child: CircularProgressIndicator(strokeWidth: 3),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          l10n.checking,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        ],
                       ],
-                    ),
-                  ),
-                )
-              else if (_checkResult == null)
-                // Manual check button - large and easy to tap
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton.icon(
-                    onPressed: _isPlateValid ? _handleManualCheck : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _isPlateValid ? AppColors.primary : AppColors.surface,
-                      foregroundColor: _isPlateValid ? Colors.white : AppColors.textTertiary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    icon: const Icon(Icons.search, size: 24),
-                    label: Text(
-                      l10n.check,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
 
-              // Result display
-              if (_checkResult != null) ...[
-                const SizedBox(height: 12),
-
-                CheckResultCard(result: _checkResult!),
-
-                const Spacer(),
-
-                // Only show ticket buttons if vehicle has an issue (not valid) and zone is selected
-                if (_checkResult!.hasIssue && _selectedZone != null) ...[
-                  // Ticket reason buttons - large and easy to tap
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _ReasonButton(
-                          reason: TicketReason.carSabot,
-                          fineAmount: _selectedZone!.prices.carSabot,
-                          icon: Icons.lock,
-                          color: AppColors.warning,
-                          isLoading: _isCreatingTicket,
-                          onPressed: () => _handleCreateTicket(TicketReason.carSabot),
+                      // Empty state hint
+                      if (_checkResult == null && !_isLoading) ...[
+                        const Spacer(),
+                        Icon(
+                          Icons.directions_car,
+                          size: 64,
+                          color: AppColors.secondary.withValues(alpha: 0.4),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _ReasonButton(
-                          reason: TicketReason.pound,
-                          fineAmount: _selectedZone!.prices.pound,
-                          icon: Icons.local_shipping,
-                          color: AppColors.error,
-                          isLoading: _isCreatingTicket,
-                          onPressed: () => _handleCreateTicket(TicketReason.pound),
+                        const SizedBox(height: 12),
+                        Text(
+                          l10n.enterPlateThenCheck,
+                          style: AppTextStyles.body.copyWith(
+                            color: AppColors.textTertiary,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
+                        const Spacer(),
+                      ],
                     ],
                   ),
-                  const SizedBox(height: 12),
-                ],
-
-                // Recheck and New search buttons
-                Row(
-                  children: [
-                    // Recheck button
-                    Expanded(
-                      child: SizedBox(
-                        height: 52,
-                        child: ElevatedButton.icon(
-                          onPressed: _isCreatingTicket || _isLoading ? null : _handleManualCheck,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(Icons.refresh, size: 22),
-                          label: Text(
-                            l10n.recheck,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    // New search button
-                    Expanded(
-                      child: SizedBox(
-                        height: 52,
-                        child: OutlinedButton.icon(
-                          onPressed: _isCreatingTicket ? null : _clearAndReset,
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.primary, width: 2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(Icons.search, size: 22),
-                          label: Text(
-                            l10n.newSearch,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
-              ],
-
-              // Empty state hint
-              if (_checkResult == null && !_isLoading) ...[
-                const Spacer(),
-                Icon(
-                  Icons.directions_car,
-                  size: 64,
-                  color: AppColors.secondary.withValues(alpha: 0.4),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  l10n.enterPlateThenCheck,
-                  style: AppTextStyles.body.copyWith(
-                    color: AppColors.textTertiary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const Spacer(),
-              ],
-            ],
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

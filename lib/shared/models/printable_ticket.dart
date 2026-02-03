@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import '../../core/widgets/license_plate_input.dart';
 import '../../l10n/app_localizations.dart';
 import 'ticket.dart';
 
@@ -86,15 +87,18 @@ class PrintableTicketData {
   final QrCodeData qrCode;
   final String ticketId;
   final String ticketNumber;
+  final LicensePlate plate;
 
   const PrintableTicketData({
     required this.lines,
     required this.qrCode,
     required this.ticketId,
     required this.ticketNumber,
+    required this.plate,
   });
 
   factory PrintableTicketData.fromJson(Map<String, dynamic> json) {
+    final plateJson = json['plate'] as Map<String, dynamic>?;
     return PrintableTicketData(
       lines: (json['lines'] as List)
           .map((l) => PrintableTicketLine.fromJson(l as Map<String, dynamic>))
@@ -102,15 +106,19 @@ class PrintableTicketData {
       qrCode: QrCodeData.fromJson(json['qrCode'] as Map<String, dynamic>),
       ticketId: json['ticketId'] as String,
       ticketNumber: json['ticketNumber'] as String,
+      plate: plateJson != null
+          ? LicensePlate.fromJson(plateJson)
+          : const LicensePlate.empty(),
     );
   }
 
   /// Build PrintableTicketData from Ticket with localized labels
   factory PrintableTicketData.fromTicket({
     required Ticket ticket,
-    required QrCodeData qrCode,
     required AppLocalizations l10n,
+    QrCodeData? qrCode,
   }) {
+    final resolvedQrCode = qrCode ?? ticket.qrCode!;
     final parkingZone = ticket.parkingZone;
     final dateFormat = DateFormat('dd/MM/yyyy');
     final timeFormat = DateFormat('HH:mm');
@@ -198,9 +206,10 @@ class PrintableTicketData {
 
     return PrintableTicketData(
       lines: lines,
-      qrCode: qrCode,
+      qrCode: resolvedQrCode,
       ticketId: ticket.id,
       ticketNumber: ticket.ticketNumber,
+      plate: ticket.plate,
     );
   }
 }
