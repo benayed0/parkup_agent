@@ -70,7 +70,10 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Image.asset('assets/icons/parkup-logo.png', height: 32),
+              child: Image.asset(
+                'assets/icons/parkup-agent-logo.png',
+                height: 32,
+              ),
             ),
             const SizedBox(width: 10),
             Text(l10n.appName),
@@ -103,13 +106,15 @@ class _HomePageState extends State<HomePage> {
             tooltip: printerService.isConnected
                 ? l10n.printerConnected
                 : l10n.noPrinterConnected,
-            onPressed: () => Navigator.of(context).pushNamed(AppRoutes.printerScan),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(AppRoutes.printerScan),
           ),
           // Settings button
           IconButton(
             icon: const Icon(Icons.settings),
             tooltip: l10n.settings,
-            onPressed: () => Navigator.of(context).pushNamed(AppRoutes.settings),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(AppRoutes.settings),
           ),
         ],
       ),

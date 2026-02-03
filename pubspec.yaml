@@ -1,6 +1,6 @@
 name: parkup_agent
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -41,20 +41,27 @@ dependencies:
   path_provider: ^2.1.5
 
   # Bluetooth thermal printing
-  flutter_bluetooth_serial: ^0.4.0  # Classic Bluetooth discovery + connection
-  esc_pos_utils: ^1.1.0             # ESC/POS command generation
-  permission_handler: ^11.3.0       # Runtime permission management
-  image: ^3.3.0                     # Image processing for Arabic text printing
+  flutter_bluetooth_serial: ^0.4.0 # Classic Bluetooth discovery + connection
+  esc_pos_utils: ^1.1.0 # ESC/POS command generation
+  permission_handler: ^11.3.0 # Runtime permission management
+  image: ^3.3.0 # Image processing for Arabic text printing
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.11.0
+
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icons/parkup-agent-logo.png"
 
 flutter:
   uses-material-design: true
   generate: true
 
   assets:
-    - assets/icons/parkup-logo.png
+    - assets/icons/parkup-agent-logo.png
     - assets/images/Eu-stars.png

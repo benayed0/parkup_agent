@@ -13,10 +13,7 @@ import '../../../create_ticket/data/repositories/ticket_repository.dart';
 class TicketPrintPreviewPage extends StatefulWidget {
   final String ticketId;
 
-  const TicketPrintPreviewPage({
-    super.key,
-    required this.ticketId,
-  });
+  const TicketPrintPreviewPage({super.key, required this.ticketId});
 
   @override
   State<TicketPrintPreviewPage> createState() => _TicketPrintPreviewPageState();
@@ -228,16 +225,18 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(success
-              ? l10n.printSuccess
-              : wasCancelled
-                  ? l10n.printCancelled
-                  : '${l10n.printFailed}: ${printerService.errorMessage ?? l10n.unknownError}'),
+          content: Text(
+            success
+                ? l10n.printSuccess
+                : wasCancelled
+                ? l10n.printCancelled
+                : '${l10n.printFailed}: ${printerService.errorMessage ?? l10n.unknownError}',
+          ),
           backgroundColor: success
               ? AppColors.success
               : wasCancelled
-                  ? AppColors.warning
-                  : AppColors.error,
+              ? AppColors.warning
+              : AppColors.error,
           duration: Duration(seconds: success ? 3 : 5),
         ),
       );
@@ -267,7 +266,9 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
         ],
       ),
       body: _buildBody(l10n),
-      bottomNavigationBar: _printData != null ? _buildBottomBar(l10n, showPrinterButton) : null,
+      bottomNavigationBar: _printData != null
+          ? _buildBottomBar(l10n, showPrinterButton)
+          : null,
     );
   }
 
@@ -343,7 +344,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Image.asset(
-                        'assets/icons/parkup-logo.png',
+                        'assets/icons/parkup-agent-logo.png',
                         height: 40,
                       ),
                     ),
@@ -415,10 +416,7 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: Center(
-            child: LicensePlateDisplay.fromString(
-              line.value,
-              scale: 1.0,
-            ),
+            child: LicensePlateDisplay.fromString(line.value, scale: 1.0),
           ),
         );
 
@@ -550,7 +548,8 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
             const SizedBox(height: 4),
             Text(
               value,
-              style: valueStyle ??
+              style:
+                  valueStyle ??
                   AppTextStyles.body.copyWith(fontWeight: FontWeight.w500),
             ),
           ],
@@ -569,7 +568,8 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
           Flexible(
             child: Text(
               value,
-              style: valueStyle ??
+              style:
+                  valueStyle ??
                   AppTextStyles.body.copyWith(fontWeight: FontWeight.w500),
               textAlign: TextAlign.end,
             ),
@@ -640,8 +640,12 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
               IconButton(
                 onPressed: _showPrinterModal,
                 icon: Icon(
-                  printerService.isConnected ? Icons.settings : Icons.print_disabled,
-                  color: printerService.isConnected ? AppColors.textSecondary : AppColors.warning,
+                  printerService.isConnected
+                      ? Icons.settings
+                      : Icons.print_disabled,
+                  color: printerService.isConnected
+                      ? AppColors.textSecondary
+                      : AppColors.warning,
                 ),
                 tooltip: l10n.printerSettings,
               ),
@@ -705,13 +709,41 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
     if (name == null || name.isEmpty) return false;
     final lowerName = name.toLowerCase();
     final printerKeywords = [
-      'print', 'printer', 'pos', 'thermal', 'receipt',
-      '58mm', '80mm', '58', '80',
-      'esc', 'escpos', 'esc/pos',
-      'epson', 'star', 'bixolon', 'xprinter', 'goojprt', 'munbyn',
-      'rongta', 'hoin', 'milestone', 'netum', 'issyzonepos',
-      'zjiang', 'gprinter', 'sewoo', 'citizen', 'custom',
-      'MPT', 'mpt', 'rpm', 'spp', 'bt-', 'pt-', 'rpp',
+      'print',
+      'printer',
+      'pos',
+      'thermal',
+      'receipt',
+      '58mm',
+      '80mm',
+      '58',
+      '80',
+      'esc',
+      'escpos',
+      'esc/pos',
+      'epson',
+      'star',
+      'bixolon',
+      'xprinter',
+      'goojprt',
+      'munbyn',
+      'rongta',
+      'hoin',
+      'milestone',
+      'netum',
+      'issyzonepos',
+      'zjiang',
+      'gprinter',
+      'sewoo',
+      'citizen',
+      'custom',
+      'MPT',
+      'mpt',
+      'rpm',
+      'spp',
+      'bt-',
+      'pt-',
+      'rpp',
     ];
     return printerKeywords.any((keyword) => lowerName.contains(keyword));
   }
@@ -719,7 +751,9 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
   List<BluetoothDiscoveryResult> get _filteredDevices {
     final devices = printerService.discoveredDevices;
     if (_showAllDevices) return devices;
-    final printers = devices.where((d) => _isProbablyPrinter(d.device.name)).toList();
+    final printers = devices
+        .where((d) => _isProbablyPrinter(d.device.name))
+        .toList();
     printers.sort((a, b) => (b.rssi).compareTo(a.rssi));
     return printers;
   }
@@ -824,7 +858,9 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
                   Expanded(
                     child: Text(
                       printerService.errorMessage!,
-                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.error),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.error,
+                      ),
                     ),
                   ),
                 ],
@@ -844,55 +880,79 @@ class _PrinterBottomSheetState extends State<_PrinterBottomSheet> {
                     ),
                   )
                 : _filteredDevices.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.bluetooth_searching, size: 48, color: Colors.grey[400]),
-                            const SizedBox(height: 16),
-                            Text(l10n.noDevicesFound, style: AppTextStyles.bodySmall),
-                            const SizedBox(height: 8),
-                            TextButton(
-                              onPressed: () => setState(() => _showAllDevices = !_showAllDevices),
-                              child: Text(_showAllDevices ? l10n.showPrintersOnly : l10n.showAllDevices),
-                            ),
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.bluetooth_searching,
+                          size: 48,
+                          color: Colors.grey[400],
                         ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: _filteredDevices.length,
-                        itemBuilder: (context, index) {
-                          final result = _filteredDevices[index];
-                          final device = result.device;
-                          final isConnecting = printerService.status == PrinterConnectionStatus.connecting;
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.noDevicesFound,
+                          style: AppTextStyles.bodySmall,
+                        ),
+                        const SizedBox(height: 8),
+                        TextButton(
+                          onPressed: () => setState(
+                            () => _showAllDevices = !_showAllDevices,
+                          ),
+                          child: Text(
+                            _showAllDevices
+                                ? l10n.showPrintersOnly
+                                : l10n.showAllDevices,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: _filteredDevices.length,
+                    itemBuilder: (context, index) {
+                      final result = _filteredDevices[index];
+                      final device = result.device;
+                      final isConnecting =
+                          printerService.status ==
+                          PrinterConnectionStatus.connecting;
 
-                          return ListTile(
-                            leading: Icon(
-                              device.isBonded ? Icons.bluetooth_connected : Icons.bluetooth,
-                              color: device.isBonded ? AppColors.primary : null,
-                            ),
-                            title: Text(device.name ?? l10n.unknownDevice),
-                            subtitle: Text(device.address),
-                            trailing: isConnecting
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
-                                  )
-                                : const Icon(Icons.chevron_right),
-                            onTap: isConnecting ? null : () => _connectToDevice(result),
-                          );
-                        },
-                      ),
+                      return ListTile(
+                        leading: Icon(
+                          device.isBonded
+                              ? Icons.bluetooth_connected
+                              : Icons.bluetooth,
+                          color: device.isBonded ? AppColors.primary : null,
+                        ),
+                        title: Text(device.name ?? l10n.unknownDevice),
+                        subtitle: Text(device.address),
+                        trailing: isConnecting
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.chevron_right),
+                        onTap: isConnecting
+                            ? null
+                            : () => _connectToDevice(result),
+                      );
+                    },
+                  ),
           ),
           // Toggle show all devices
           if (_filteredDevices.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(16),
               child: TextButton(
-                onPressed: () => setState(() => _showAllDevices = !_showAllDevices),
-                child: Text(_showAllDevices ? l10n.showPrintersOnly : l10n.showAllDevices),
+                onPressed: () =>
+                    setState(() => _showAllDevices = !_showAllDevices),
+                child: Text(
+                  _showAllDevices ? l10n.showPrintersOnly : l10n.showAllDevices,
+                ),
               ),
             ),
         ],

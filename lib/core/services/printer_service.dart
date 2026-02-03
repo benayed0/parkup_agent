@@ -465,7 +465,9 @@ class PrinterService extends ChangeNotifier {
 
     try {
       // Load logo from assets
-      final byteData = await rootBundle.load('assets/icons/parkup-logo.png');
+      final byteData = await rootBundle.load(
+        'assets/icons/parkup-agent-logo.png',
+      );
       final bytes = byteData.buffer.asUint8List();
       final originalImage = img.decodeImage(bytes);
       if (originalImage == null) return null;
@@ -642,9 +644,11 @@ class PrinterService extends ChangeNotifier {
 
       // Calculate total width with spacing
       const double spacing = 20;
-      final totalWidth = leftPainter.width +
+      final totalWidth =
+          leftPainter.width +
           (label.isNotEmpty ? spacing + labelPainter.width + spacing : 0) +
-          (rightNum.isNotEmpty ? rightPainter.width : 0) + 40;
+          (rightNum.isNotEmpty ? rightPainter.width : 0) +
+          40;
       final width = totalWidth.ceil();
       final height = (fontSize + 16).ceil();
 
@@ -727,14 +731,18 @@ class PrinterService extends ChangeNotifier {
       // Value is always LTR if valueLtr is true (for phone numbers, etc.)
       final valuePainter = TextPainter(
         text: TextSpan(text: value, style: valueStyle),
-        textDirection: valueLtr ? TextDirection.ltr : (isRtl ? TextDirection.rtl : TextDirection.ltr),
+        textDirection: valueLtr
+            ? TextDirection.ltr
+            : (isRtl ? TextDirection.rtl : TextDirection.ltr),
       );
       valuePainter.layout();
 
       // Use full paper width for RTL to right-align properly
       const int paperWidth = 380;
       final totalWidth = (labelPainter.width + valuePainter.width).ceil() + 20;
-      final width = isRtl ? paperWidth : (totalWidth > paperWidth ? paperWidth : totalWidth);
+      final width = isRtl
+          ? paperWidth
+          : (totalWidth > paperWidth ? paperWidth : totalWidth);
       final height = labelPainter.height.ceil() + 10;
 
       // Draw white background
@@ -910,10 +918,7 @@ class PrinterService extends ChangeNotifier {
           // Render license plate with proper formatting (NUM LABEL NUM)
           final plateImage = await _licensePlateToImage(line.value);
           if (plateImage != null) {
-            bytes += generator.imageRaster(
-              plateImage,
-              align: PosAlign.center,
-            );
+            bytes += generator.imageRaster(plateImage, align: PosAlign.center);
           } else {
             // Fallback to simple text
             bytes += generator.text(
@@ -956,10 +961,7 @@ class PrinterService extends ChangeNotifier {
             }
           } else {
             // Render as single row for short values
-            final rowImage = await _rowToImage(
-              line.label,
-              line.value,
-            );
+            final rowImage = await _rowToImage(line.label, line.value);
             if (rowImage != null) {
               bytes += generator.imageRaster(rowImage, align: PosAlign.left);
             }

@@ -15,8 +15,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _usernameController = TextEditingController(text: 'sbs-001');
+  final _passwordController = TextEditingController(text: '12345678');
 
   bool _isLoading = false;
   bool _obscurePassword = true;
@@ -60,10 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message),
-          backgroundColor: AppColors.error,
-        ),
+        SnackBar(content: Text(e.message), backgroundColor: AppColors.error),
       );
     } catch (e) {
       if (!mounted) return;
@@ -98,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 // App logo
                 Center(
                   child: Image.asset(
-                    'assets/icons/parkup-logo.png',
+                    'assets/icons/parkup-agent-logo.png',
                     width: 120,
                     height: 120,
                   ),
