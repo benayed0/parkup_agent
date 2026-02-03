@@ -9,14 +9,12 @@ class TicketListItem extends StatelessWidget {
   final Ticket ticket;
   final VoidCallback? onTap;
   final VoidCallback? onGoToLocation;
-  final VoidCallback? onPrint;
 
   const TicketListItem({
     super.key,
     required this.ticket,
     this.onTap,
     this.onGoToLocation,
-    this.onPrint,
   });
 
   @override
@@ -120,39 +118,23 @@ class TicketListItem extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
 
-                    // Action buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: onGoToLocation,
-                            icon: const Icon(Icons.location_on, size: 18),
-                            label: Text(
-                              AppLocalizations.of(context)!.goToLocation,
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.primary,
-                              side: const BorderSide(color: AppColors.primary),
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                            ),
-                          ),
+                    // Action button
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: onGoToLocation,
+                        icon: const Icon(Icons.location_on_outlined, size: 18),
+                        label: Text(
+                          AppLocalizations.of(context)!.goToLocation,
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: onPrint,
-                            icon: const Icon(Icons.print, size: 18),
-                            label: Text(AppLocalizations.of(context)!.print),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                            ),
-                          ),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.primary,
+                          side: const BorderSide(color: AppColors.primary),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

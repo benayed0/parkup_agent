@@ -347,7 +347,6 @@ class _HistoryPageState extends State<HistoryPage> {
               ticket: ticket,
               onTap: () => _openPrintPreview(ticket),
               onGoToLocation: () => _openInMaps(ticket),
-              onPrint: () => _openPrintPreview(ticket),
             ),
           );
         },
