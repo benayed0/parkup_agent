@@ -457,7 +457,8 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+              subdomains: const ['a', 'b', 'c', 'd'],
               userAgentPackageName: 'com.parkup.agent',
               maxZoom: 19,
             ),
