@@ -596,4 +596,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get thisMonth => 'This Month';
+
+  @override
+  String get expiredFilter => 'Expired';
+
+  @override
+  String get last15min => 'Last 15 min';
+
+  @override
+  String get last24h => 'Last 24h';
 }

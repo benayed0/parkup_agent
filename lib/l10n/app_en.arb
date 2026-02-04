@@ -1017,5 +1017,20 @@
   "thisMonth": "This Month",
   "@thisMonth": {
     "description": "Filter label for this month's tickets"
+  },
+
+  "expiredFilter": "Expired",
+  "@expiredFilter": {
+    "description": "Label for expired sessions time filter"
+  },
+
+  "last15min": "Last 15 min",
+  "@last15min": {
+    "description": "Filter option: sessions expired in the last 15 minutes"
+  },
+
+  "last24h": "Last 24h",
+  "@last24h": {
+    "description": "Filter option: sessions expired in the last 24 hours"
   }
 }

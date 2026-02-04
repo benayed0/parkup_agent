@@ -12,6 +12,17 @@ import '../../../../shared/models/models.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../data/repositories/active_sessions_repository.dart';
 
+/// Filter options for expired sessions time range
+enum ExpiredTimeFilter {
+  last15min(0.25, 'last15min'),
+  last24h(24, 'last24h');
+
+  final double maxExpiredHours;
+  final String l10nKey;
+
+  const ExpiredTimeFilter(this.maxExpiredHours, this.l10nKey);
+}
+
 /// Helper class to group sessions by zone
 class ZoneGroup {
   final String zoneId;
@@ -56,6 +67,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   String _searchQuery = '';
   bool _isSheetExpanded = false;
   bool _showTicketed = false; // Toggle to show already ticketed sessions
+  ExpiredTimeFilter _expiredTimeFilter = ExpiredTimeFilter.last15min;
 
   // Socket subscriptions for real-time notifications
   StreamSubscription<ExpiringSessionEvent>? _expiringSub;
@@ -161,6 +173,7 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
       final data = await activeSessionsRepository.getEnforcementData(
         zoneId: _selectedZone?.id,
         expiringThresholdMinutes: 15,
+        maxExpiredHours: _expiredTimeFilter.maxExpiredHours,
         includeTicketed: _showTicketed,
       );
       if (mounted) {
@@ -280,6 +293,14 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
   void _toggleShowTicketed() {
     setState(() {
       _showTicketed = !_showTicketed;
+    });
+    _loadEnforcementData();
+  }
+
+  void _onExpiredFilterChanged(ExpiredTimeFilter filter) {
+    if (filter == _expiredTimeFilter) return;
+    setState(() {
+      _expiredTimeFilter = filter;
     });
     _loadEnforcementData();
   }
@@ -820,6 +841,36 @@ class _ActiveSessionsMapPageState extends State<ActiveSessionsMapPage> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  // Expired time filter chips
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                    child: Row(
+                      children: ExpiredTimeFilter.values.map((filter) {
+                        final isSelected = _expiredTimeFilter == filter;
+                        final label = filter == ExpiredTimeFilter.last15min
+                            ? l10n.last15min
+                            : l10n.last24h;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(label),
+                            selected: isSelected,
+                            onSelected: (_) => _onExpiredFilterChanged(filter),
+                            selectedColor: AppColors.primary.withValues(alpha: 0.2),
+                            labelStyle: AppTextStyles.caption.copyWith(
+                              color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                            ),
+                            side: BorderSide(
+                              color: isSelected ? AppColors.primary : AppColors.border,
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                   // Selected session details at top of sheet
                   if (_selectedSession != null) ...[
                     Padding(

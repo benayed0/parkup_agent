@@ -609,4 +609,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get thisMonth => 'Ce mois';
+
+  @override
+  String get expiredFilter => 'Expirées';
+
+  @override
+  String get last15min => '15 dernières min';
+
+  @override
+  String get last24h => 'Dernières 24h';
 }

@@ -355,5 +355,11 @@
 
   "thisWeek": "هالجمعة",
 
-  "thisMonth": "هالشهر"
+  "thisMonth": "هالشهر",
+
+  "expiredFilter": "منتهية",
+
+  "last15min": "آخر 15 دقيقة",
+
+  "last24h": "آخر 24 ساعة"
 }

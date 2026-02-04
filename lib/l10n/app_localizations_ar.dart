@@ -593,4 +593,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get thisMonth => 'هالشهر';
+
+  @override
+  String get expiredFilter => 'منتهية';
+
+  @override
+  String get last15min => 'آخر 15 دقيقة';
+
+  @override
+  String get last24h => 'آخر 24 ساعة';
 }

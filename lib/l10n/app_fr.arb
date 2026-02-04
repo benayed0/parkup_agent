@@ -355,5 +355,11 @@
 
   "thisWeek": "Cette semaine",
 
-  "thisMonth": "Ce mois"
+  "thisMonth": "Ce mois",
+
+  "expiredFilter": "Expirées",
+
+  "last15min": "15 dernières min",
+
+  "last24h": "Dernières 24h"
 }

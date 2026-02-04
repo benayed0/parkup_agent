@@ -1167,6 +1167,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This Month'**
   String get thisMonth;
+
+  /// Label for expired sessions time filter
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expiredFilter;
+
+  /// Filter option: sessions expired in the last 15 minutes
+  ///
+  /// In en, this message translates to:
+  /// **'Last 15 min'**
+  String get last15min;
+
+  /// Filter option: sessions expired in the last 24 hours
+  ///
+  /// In en, this message translates to:
+  /// **'Last 24h'**
+  String get last24h;
 }
 
 class _AppLocalizationsDelegate
