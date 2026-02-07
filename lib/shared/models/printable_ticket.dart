@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import '../../core/widgets/license_plate_input.dart';
+import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../l10n/app_localizations.dart';
 import 'ticket.dart';
 
@@ -194,14 +195,16 @@ class PrintableTicketData {
         ));
       }
 
-      // Zone phone
-      if (parkingZone.phoneNumber != null && parkingZone.phoneNumber!.isNotEmpty) {
-        lines.add(PrintableTicketLine(
-          label: l10n.printLabelZonePhone,
-          value: parkingZone.phoneNumber!,
-          type: PrintLineType.phone,
-        ));
-      }
+    }
+
+    // Agent phone
+    final agentPhone = authRepository.currentAgent?.phone;
+    if (agentPhone != null && agentPhone.isNotEmpty) {
+      lines.add(PrintableTicketLine(
+        label: l10n.printLabelZonePhone,
+        value: agentPhone,
+        type: PrintLineType.phone,
+      ));
     }
 
     return PrintableTicketData(

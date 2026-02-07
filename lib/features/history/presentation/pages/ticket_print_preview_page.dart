@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
+import '../../../auth/data/repositories/auth_repository.dart';
 import '../../../create_ticket/data/repositories/ticket_repository.dart';
 
 class TicketPrintPreviewPage extends StatefulWidget {
@@ -457,13 +458,15 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                           l10n.printLabelZoneAddress,
                           parkingZone.address!,
                         ),
-                      if (parkingZone.phoneNumber != null &&
-                          parkingZone.phoneNumber!.isNotEmpty)
-                        _buildPhoneRow(
-                          l10n.printLabelZonePhone,
-                          parkingZone.phoneNumber!,
-                        ),
                     ],
+
+                    // Agent phone
+                    if (authRepository.currentAgent?.phone != null &&
+                        authRepository.currentAgent!.phone!.isNotEmpty)
+                      _buildPhoneRow(
+                        l10n.printLabelZonePhone,
+                        authRepository.currentAgent!.phone!,
+                      ),
 
                     // Location
                     _buildLocationRow(l10n, ticket),
