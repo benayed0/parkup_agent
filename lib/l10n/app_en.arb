@@ -1032,5 +1032,20 @@
   "last24h": "Last 24h",
   "@last24h": {
     "description": "Filter option: sessions expired in the last 24 hours"
+  },
+
+  "noInternetConnection": "No internet connection",
+  "@noInternetConnection": {
+    "description": "Banner text when device is offline"
+  },
+
+  "backOnline": "Back online",
+  "@backOnline": {
+    "description": "Banner text when connection is restored"
+  },
+
+  "noInternetTryAgain": "No internet connection. Please try again.",
+  "@noInternetTryAgain": {
+    "description": "Error message for offline API calls"
   }
 }

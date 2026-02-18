@@ -13,6 +13,9 @@ void main() async {
   // Initialize locale service to load saved language preference
   await localeService.init();
 
+  // Initialize connectivity monitoring
+  await connectivityService.init();
+
   // Pre-initialize location service for instant GPS availability
   // Runs in background - doesn't block app startup
   locationService.init();
@@ -72,6 +75,11 @@ class _ParkUpAgentAppState extends State<ParkUpAgentApp> {
 
       // Apply custom theme
       theme: AppTheme.lightTheme,
+
+      // Wrap all routes with connectivity banner
+      builder: (context, child) {
+        return ConnectivityBanner(child: child ?? const SizedBox.shrink());
+      },
 
       // Initial route - based on auth state
       initialRoute: initialRoute,

@@ -618,4 +618,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get last24h => 'Dernières 24h';
+
+  @override
+  String get noInternetConnection => 'Pas de connexion internet';
+
+  @override
+  String get backOnline => 'Connexion rétablie';
+
+  @override
+  String get noInternetTryAgain =>
+      'Pas de connexion internet. Veuillez réessayer.';
 }

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'api_config.dart';
+import 'connectivity_interceptor.dart';
 
 /// API Client
 /// Singleton Dio instance for all API calls
@@ -19,6 +20,9 @@ class ApiClient {
         },
       ),
     );
+
+    // Fail fast when offline — before any other interceptor
+    _dio.interceptors.add(ConnectivityInterceptor());
 
     // Add logging interceptor for debug
     _dio.interceptors.add(

@@ -1185,6 +1185,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last 24h'**
   String get last24h;
+
+  /// Banner text when device is offline
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternetConnection;
+
+  /// Banner text when connection is restored
+  ///
+  /// In en, this message translates to:
+  /// **'Back online'**
+  String get backOnline;
+
+  /// Error message for offline API calls
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please try again.'**
+  String get noInternetTryAgain;
 }
 
 class _AppLocalizationsDelegate

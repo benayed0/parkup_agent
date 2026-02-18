@@ -361,5 +361,11 @@
 
   "last15min": "15 dernières min",
 
-  "last24h": "Dernières 24h"
+  "last24h": "Dernières 24h",
+
+  "noInternetConnection": "Pas de connexion internet",
+
+  "backOnline": "Connexion rétablie",
+
+  "noInternetTryAgain": "Pas de connexion internet. Veuillez réessayer."
 }

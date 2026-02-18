@@ -605,4 +605,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get last24h => 'Last 24h';
+
+  @override
+  String get noInternetConnection => 'No internet connection';
+
+  @override
+  String get backOnline => 'Back online';
+
+  @override
+  String get noInternetTryAgain => 'No internet connection. Please try again.';
 }

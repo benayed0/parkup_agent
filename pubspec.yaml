@@ -45,6 +45,7 @@ dependencies:
   esc_pos_utils: ^1.1.0 # ESC/POS command generation
   permission_handler: ^11.3.0 # Runtime permission management
   image: ^3.3.0 # Image processing for Arabic text printing
+  connectivity_plus: ^7.0.0
 
 dev_dependencies:
   flutter_test:

@@ -602,4 +602,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get last24h => 'آخر 24 ساعة';
+
+  @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get backOnline => 'تم استعادة الاتصال';
+
+  @override
+  String get noInternetTryAgain =>
+      'لا يوجد اتصال بالإنترنت. يرجى المحاولة مرة أخرى.';
 }
