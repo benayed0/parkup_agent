@@ -628,4 +628,38 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get noInternetTryAgain =>
       'Pas de connexion internet. Veuillez réessayer.';
+
+  @override
+  String get addBadge => 'Ajouter une vignette';
+
+  @override
+  String badgeActive(int year) {
+    return 'Vignette active · $year';
+  }
+
+  @override
+  String get badgeAdded => 'Vignette ajoutée avec succès';
+
+  @override
+  String get badgeAlreadyExists =>
+      'Une vignette existe déjà pour cette plaque cette année';
+
+  @override
+  String get failedToAddBadge =>
+      'Échec de l\'ajout de la vignette. Veuillez réessayer.';
+
+  @override
+  String get invalidateBadge => 'Invalider la vignette';
+
+  @override
+  String invalidateBadgeConfirm(int year) {
+    return 'Invalider cette vignette pour $year ?';
+  }
+
+  @override
+  String get badgeInvalidated => 'Vignette invalidée';
+
+  @override
+  String get failedToInvalidateBadge =>
+      'Échec de l\'invalidation de la vignette';
 }

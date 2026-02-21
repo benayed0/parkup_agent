@@ -65,6 +65,30 @@ class CheckResultCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                // Badge indicator
+                if (result.hasBadge)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.verified,
+                          size: 14,
+                          color: AppColors.success,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Badge ${result.badge!.year}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.success,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

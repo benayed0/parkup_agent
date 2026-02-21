@@ -1047,5 +1047,60 @@
   "noInternetTryAgain": "No internet connection. Please try again.",
   "@noInternetTryAgain": {
     "description": "Error message for offline API calls"
+  },
+
+  "addBadge": "Add Badge",
+  "@addBadge": {
+    "description": "Button to add a yearly badge to a license plate"
+  },
+
+  "badgeActive": "Badge Active · {year}",
+  "@badgeActive": {
+    "description": "Indicator showing an active badge and its year",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+
+  "badgeAdded": "Badge added successfully",
+  "@badgeAdded": {
+    "description": "Success message after adding a badge"
+  },
+
+  "badgeAlreadyExists": "A badge already exists for this plate this year",
+  "@badgeAlreadyExists": {
+    "description": "Error when trying to add a duplicate badge"
+  },
+
+  "failedToAddBadge": "Failed to add badge. Please try again.",
+  "@failedToAddBadge": {
+    "description": "Error message when badge creation fails"
+  },
+
+  "invalidateBadge": "Invalidate Badge",
+  "@invalidateBadge": {
+    "description": "Action to invalidate an active badge"
+  },
+
+  "invalidateBadgeConfirm": "Invalidate this badge for {year}?",
+  "@invalidateBadgeConfirm": {
+    "description": "Confirmation dialog message for badge invalidation",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+
+  "badgeInvalidated": "Badge invalidated",
+  "@badgeInvalidated": {
+    "description": "Success message after invalidating a badge"
+  },
+
+  "failedToInvalidateBadge": "Failed to invalidate badge",
+  "@failedToInvalidateBadge": {
+    "description": "Error message when badge invalidation fails"
   }
 }

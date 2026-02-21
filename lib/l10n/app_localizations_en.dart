@@ -614,4 +614,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noInternetTryAgain => 'No internet connection. Please try again.';
+
+  @override
+  String get addBadge => 'Add Badge';
+
+  @override
+  String badgeActive(int year) {
+    return 'Badge Active · $year';
+  }
+
+  @override
+  String get badgeAdded => 'Badge added successfully';
+
+  @override
+  String get badgeAlreadyExists =>
+      'A badge already exists for this plate this year';
+
+  @override
+  String get failedToAddBadge => 'Failed to add badge. Please try again.';
+
+  @override
+  String get invalidateBadge => 'Invalidate Badge';
+
+  @override
+  String invalidateBadgeConfirm(int year) {
+    return 'Invalidate this badge for $year?';
+  }
+
+  @override
+  String get badgeInvalidated => 'Badge invalidated';
+
+  @override
+  String get failedToInvalidateBadge => 'Failed to invalidate badge';
 }

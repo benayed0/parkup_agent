@@ -3,67 +3,65 @@ import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 
 /// Vehicle repository
-/// Handles vehicle check operations with the API
+/// Handles vehicle check and badge operations with the API
 class VehicleRepository {
   final Dio _dio = ApiClient.instance.dio;
 
   /// Check a vehicle by structured license plate
-  /// Calls the API to check for active parking sessions in the specified zone
+  /// Calls POST /vehicles/check — returns active session + current-year badge
   Future<VehicleCheckResult> checkVehicle(LicensePlate plate, {String? zoneId}) async {
     try {
-      // Check for active parking sessions with structured plate data
       final response = await _dio.post(
-        ApiConfig.checkVehicle,
+        ApiConfig.vehiclesCheck,
         data: {
           'plate': plate.toJson(),
           if (zoneId != null) 'zoneId': zoneId,
         },
       );
 
-      final data = response.data as Map<String, dynamic>;
-      final sessions = (data['data'] as List?)
-              ?.map((s) => ParkingSession.fromJson(s as Map<String, dynamic>))
-              .toList() ??
-          [];
+      final data = response.data['data'] as Map<String, dynamic>;
 
-      if (sessions.isEmpty) {
-        // No active session found
+      // Parse badge (may be null)
+      final badgeJson = data['badge'] as Map<String, dynamic>?;
+      final badge = badgeJson != null ? LicensePlateBadge.fromJson(badgeJson) : null;
+
+      // Parse active session (may be null)
+      final sessionJson = data['activeParkingSession'] as Map<String, dynamic>?;
+
+      if (sessionJson == null) {
         return VehicleCheckResult(
           licensePlate: plate.formatted,
           status: VehicleStatus.notFound,
           message: 'No active parking session found for this vehicle',
+          badge: badge,
           checkedAt: DateTime.now(),
         );
       }
 
-      // Sort sessions by endTime descending to get the one with latest end time
-      sessions.sort((a, b) => b.endTime.compareTo(a.endTime));
+      final session = ParkingSession.fromJson(sessionJson);
 
-      // Get the session with the latest end time
-      final session = sessions.first;
-
-      // Check if session is expired (time-based check)
       if (session.isExpired) {
-        final expiredMinutesAgo = DateTime.now().difference(session.endTime).inMinutes;
+        final expiredMinutesAgo =
+            DateTime.now().difference(session.endTime).inMinutes;
         return VehicleCheckResult(
           licensePlate: plate.formatted,
           status: VehicleStatus.expired,
           message: 'Parking session expired ${_formatExpiredTime(expiredMinutesAgo)}',
           activeSession: session,
+          badge: badge,
           checkedAt: DateTime.now(),
         );
       }
 
-      // Valid active session
       return VehicleCheckResult(
         licensePlate: plate.formatted,
         status: VehicleStatus.valid,
         message: 'Parking is valid until ${_formatTime(session.endTime)}',
         activeSession: session,
+        badge: badge,
         checkedAt: DateTime.now(),
       );
     } on DioException catch (e) {
-      // Handle 404 - no session found
       if (e.response?.statusCode == 404) {
         return VehicleCheckResult(
           licensePlate: plate.formatted,
@@ -72,8 +70,47 @@ class VehicleRepository {
           checkedAt: DateTime.now(),
         );
       }
+      final message = _extractErrorMessage(e);
+      throw ApiException(
+        message: message,
+        statusCode: e.response?.statusCode,
+      );
+    }
+  }
 
-      // Re-throw other errors
+  /// Add a badge to a license plate for the current year
+  /// Calls POST /license-plate-badges — agent JWT required
+  Future<LicensePlateBadge> addBadge(
+    LicensePlate plate, {
+    required String zoneId,
+    required String zoneName,
+  }) async {
+    try {
+      final response = await _dio.post(
+        ApiConfig.licensePlateBadges,
+        data: {
+          'plate': plate.toJson(),
+          'zoneId': zoneId,
+          'zoneName': zoneName,
+        },
+      );
+      return LicensePlateBadge.fromJson(
+          response.data['data'] as Map<String, dynamic>);
+    } on DioException catch (e) {
+      final message = _extractErrorMessage(e);
+      throw ApiException(
+        message: message,
+        statusCode: e.response?.statusCode,
+      );
+    }
+  }
+
+  /// Invalidate (soft-delete) a badge
+  /// Calls PATCH /license-plate-badges/:id/invalidate — agent JWT required
+  Future<void> invalidateBadge(String badgeId) async {
+    try {
+      await _dio.patch(ApiConfig.licensePlateBadgeInvalidate(badgeId));
+    } on DioException catch (e) {
       final message = _extractErrorMessage(e);
       throw ApiException(
         message: message,
@@ -104,7 +141,7 @@ class VehicleRepository {
     if (e.response?.data != null) {
       final data = e.response!.data;
       if (data is Map<String, dynamic>) {
-        return data['message'] as String? ?? 'Failed to check vehicle';
+        return data['message'] as String? ?? 'Request failed';
       }
     }
 
@@ -116,7 +153,7 @@ class VehicleRepository {
       case DioExceptionType.connectionError:
         return 'Cannot connect to server. Please check your network.';
       default:
-        return 'Failed to check vehicle. Please try again.';
+        return 'Request failed. Please try again.';
     }
   }
 }

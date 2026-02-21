@@ -367,5 +367,37 @@
 
   "backOnline": "Connexion rétablie",
 
-  "noInternetTryAgain": "Pas de connexion internet. Veuillez réessayer."
+  "noInternetTryAgain": "Pas de connexion internet. Veuillez réessayer.",
+
+  "addBadge": "Ajouter une vignette",
+
+  "badgeActive": "Vignette active · {year}",
+  "@badgeActive": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+
+  "badgeAdded": "Vignette ajoutée avec succès",
+
+  "badgeAlreadyExists": "Une vignette existe déjà pour cette plaque cette année",
+
+  "failedToAddBadge": "Échec de l'ajout de la vignette. Veuillez réessayer.",
+
+  "invalidateBadge": "Invalider la vignette",
+
+  "invalidateBadgeConfirm": "Invalider cette vignette pour {year} ?",
+  "@invalidateBadgeConfirm": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+
+  "badgeInvalidated": "Vignette invalidée",
+
+  "failedToInvalidateBadge": "Échec de l'invalidation de la vignette"
 }

@@ -367,5 +367,37 @@
 
   "backOnline": "تم استعادة الاتصال",
 
-  "noInternetTryAgain": "لا يوجد اتصال بالإنترنت. يرجى المحاولة مرة أخرى."
+  "noInternetTryAgain": "لا يوجد اتصال بالإنترنت. يرجى المحاولة مرة أخرى.",
+
+  "addBadge": "إضافة شارة",
+
+  "badgeActive": "الشارة نشطة · {year}",
+  "@badgeActive": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+
+  "badgeAdded": "تمت إضافة الشارة بنجاح",
+
+  "badgeAlreadyExists": "توجد شارة بالفعل لهذه اللوحة هذا العام",
+
+  "failedToAddBadge": "فشل إضافة الشارة. يرجى المحاولة مرة أخرى.",
+
+  "invalidateBadge": "إلغاء الشارة",
+
+  "invalidateBadgeConfirm": "هل تريد إلغاء هذه الشارة لعام {year}؟",
+  "@invalidateBadgeConfirm": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+
+  "badgeInvalidated": "تم إلغاء الشارة",
+
+  "failedToInvalidateBadge": "فشل إلغاء الشارة"
 }

@@ -1,5 +1,6 @@
 import 'parking_session.dart';
 import 'ticket.dart';
+import 'license_plate_badge.dart';
 
 /// Vehicle check result status
 enum VehicleStatus {
@@ -18,6 +19,7 @@ class VehicleCheckResult {
   final ParkingSession? activeSession;
   final List<Ticket> unpaidTickets;
   final DateTime checkedAt;
+  final LicensePlateBadge? badge;
 
   const VehicleCheckResult({
     required this.licensePlate,
@@ -26,10 +28,14 @@ class VehicleCheckResult {
     this.activeSession,
     this.unpaidTickets = const [],
     required this.checkedAt,
+    this.badge,
   });
 
   /// Check if the vehicle parking is valid
   bool get isValid => status == VehicleStatus.valid;
+
+  /// Check if vehicle has an active badge for the current year
+  bool get hasBadge => badge != null && badge!.isActive;
 
   /// Check if the vehicle has any issue
   bool get hasIssue =>

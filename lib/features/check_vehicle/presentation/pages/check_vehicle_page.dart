@@ -29,6 +29,8 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   int _inputKey = 0; // Key to force rebuild of input widget
   Ticket? _createdTicket; // Track ticket just created for print flow
   bool _isPrinting = false;
+  bool _isAddingBadge = false;
+  bool _isInvalidatingBadge = false;
 
   // Parking zone selection
   List<ParkingZone> _zones = [];
@@ -517,6 +519,156 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
     });
   }
 
+  Future<void> _handleAddBadge() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (_selectedZone == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.pleaseSelectParkingZone),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isAddingBadge = true);
+    HapticFeedback.selectionClick();
+
+    try {
+      final badge = await vehicleRepository.addBadge(
+        _currentPlate,
+        zoneId: _selectedZone!.id,
+        zoneName: _selectedZone!.name,
+      );
+
+      if (!mounted) return;
+
+      HapticFeedback.heavyImpact();
+      setState(() {
+        _checkResult = VehicleCheckResult(
+          licensePlate: _checkResult!.licensePlate,
+          status: _checkResult!.status,
+          message: _checkResult!.message,
+          activeSession: _checkResult!.activeSession,
+          unpaidTickets: _checkResult!.unpaidTickets,
+          checkedAt: _checkResult!.checkedAt,
+          badge: badge,
+        );
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.verified, color: Colors.white),
+              const SizedBox(width: 8),
+              Text(l10n.badgeAdded),
+            ],
+          ),
+          backgroundColor: AppColors.success,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.statusCode == 409 ? l10n.badgeAlreadyExists : e.message,
+          ),
+          backgroundColor: AppColors.warning,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.failedToAddBadge),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isAddingBadge = false);
+    }
+  }
+
+  Future<void> _handleInvalidateBadge() async {
+    final l10n = AppLocalizations.of(context)!;
+    final badge = _checkResult?.badge;
+    if (badge == null) return;
+
+    // Confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.invalidateBadge),
+        content: Text(l10n.invalidateBadgeConfirm(badge.year)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l10n.invalidateBadge),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isInvalidatingBadge = true);
+    HapticFeedback.selectionClick();
+
+    try {
+      await vehicleRepository.invalidateBadge(badge.id);
+
+      if (!mounted) return;
+
+      HapticFeedback.heavyImpact();
+      setState(() {
+        _checkResult = VehicleCheckResult(
+          licensePlate: _checkResult!.licensePlate,
+          status: _checkResult!.status,
+          message: _checkResult!.message,
+          activeSession: _checkResult!.activeSession,
+          unpaidTickets: _checkResult!.unpaidTickets,
+          checkedAt: _checkResult!.checkedAt,
+          badge: null,
+        );
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.badgeInvalidated),
+          backgroundColor: AppColors.success,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.failedToInvalidateBadge),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isInvalidatingBadge = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -655,6 +807,27 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                         const SizedBox(height: 12),
 
                         CheckResultCard(result: _checkResult!),
+
+                        // Badge section — always shown after check if zone is selected
+                        if (_selectedZone != null) ...[
+                          const SizedBox(height: 8),
+                          _checkResult!.hasBadge
+                              ? _BadgeActiveIndicator(
+                                  badge: _checkResult!.badge!,
+                                  isLoading: _isInvalidatingBadge,
+                                  onLongPress: _isInvalidatingBadge
+                                      ? null
+                                      : _handleInvalidateBadge,
+                                )
+                              : _AddBadgeButton(
+                                  isLoading: _isAddingBadge,
+                                  onPressed: _isAddingBadge ||
+                                          _isCreatingTicket ||
+                                          _isInvalidatingBadge
+                                      ? null
+                                      : _handleAddBadge,
+                                ),
+                        ],
 
                         const SizedBox(height: 12),
 
@@ -835,6 +1008,120 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+/// Badge button widget — shown when no badge exists for the plate
+class _AddBadgeButton extends StatelessWidget {
+  final bool isLoading;
+  final VoidCallback? onPressed;
+
+  const _AddBadgeButton({
+    required this.isLoading,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(
+            color: onPressed != null
+                ? Colors.teal
+                : AppColors.border,
+            width: 2,
+          ),
+          foregroundColor: onPressed != null ? Colors.teal : AppColors.textTertiary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        icon: isLoading
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.teal,
+                ),
+              )
+            : const Icon(Icons.verified_user, size: 22),
+        label: Text(
+          l10n.addBadge,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Badge active indicator — shown when plate has an active badge
+/// Long-press triggers invalidation flow
+class _BadgeActiveIndicator extends StatelessWidget {
+  final LicensePlateBadge badge;
+  final bool isLoading;
+  final VoidCallback? onLongPress;
+
+  const _BadgeActiveIndicator({
+    required this.badge,
+    required this.isLoading,
+    this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return GestureDetector(
+      onLongPress: onLongPress,
+      child: Container(
+        width: double.infinity,
+        height: 52,
+        decoration: BoxDecoration(
+          color: AppColors.success.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.success.withValues(alpha: 0.5),
+            width: 2,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            isLoading
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.success,
+                    ),
+                  )
+                : const Icon(
+                    Icons.verified,
+                    size: 22,
+                    color: AppColors.success,
+                  ),
+            const SizedBox(width: 8),
+            Text(
+              l10n.badgeActive(badge.year),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.success,
+              ),
+            ),
+          ],
         ),
       ),
     );

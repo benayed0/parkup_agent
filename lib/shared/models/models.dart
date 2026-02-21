@@ -8,3 +8,4 @@ export 'vehicle_check_result.dart';
 export 'printable_ticket.dart';
 export 'enforcement_session.dart';
 export 'printer_device.dart';
+export 'license_plate_badge.dart';

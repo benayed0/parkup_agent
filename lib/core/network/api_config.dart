@@ -37,4 +37,12 @@ class ApiConfig {
   // Endpoints - Parking Zones
   static const String parkingZones = '/parking-zones';
   static String parkingZoneById(String id) => '/parking-zones/$id';
+
+  // Endpoints - Vehicles
+  static const String vehiclesCheck = '/vehicles/check';
+
+  // Endpoints - License Plate Badges
+  static const String licensePlateBadges = '/license-plate-badges';
+  static String licensePlateBadgeInvalidate(String id) =>
+      '/license-plate-badges/$id/invalidate';
 }

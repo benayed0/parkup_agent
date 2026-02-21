@@ -1203,6 +1203,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No internet connection. Please try again.'**
   String get noInternetTryAgain;
+
+  /// Button to add a yearly badge to a license plate
+  ///
+  /// In en, this message translates to:
+  /// **'Add Badge'**
+  String get addBadge;
+
+  /// Indicator showing an active badge and its year
+  ///
+  /// In en, this message translates to:
+  /// **'Badge Active · {year}'**
+  String badgeActive(int year);
+
+  /// Success message after adding a badge
+  ///
+  /// In en, this message translates to:
+  /// **'Badge added successfully'**
+  String get badgeAdded;
+
+  /// Error when trying to add a duplicate badge
+  ///
+  /// In en, this message translates to:
+  /// **'A badge already exists for this plate this year'**
+  String get badgeAlreadyExists;
+
+  /// Error message when badge creation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add badge. Please try again.'**
+  String get failedToAddBadge;
+
+  /// Action to invalidate an active badge
+  ///
+  /// In en, this message translates to:
+  /// **'Invalidate Badge'**
+  String get invalidateBadge;
+
+  /// Confirmation dialog message for badge invalidation
+  ///
+  /// In en, this message translates to:
+  /// **'Invalidate this badge for {year}?'**
+  String invalidateBadgeConfirm(int year);
+
+  /// Success message after invalidating a badge
+  ///
+  /// In en, this message translates to:
+  /// **'Badge invalidated'**
+  String get badgeInvalidated;
+
+  /// Error message when badge invalidation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to invalidate badge'**
+  String get failedToInvalidateBadge;
 }
 
 class _AppLocalizationsDelegate

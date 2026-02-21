@@ -612,4 +612,35 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get noInternetTryAgain =>
       'لا يوجد اتصال بالإنترنت. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get addBadge => 'إضافة شارة';
+
+  @override
+  String badgeActive(int year) {
+    return 'الشارة نشطة · $year';
+  }
+
+  @override
+  String get badgeAdded => 'تمت إضافة الشارة بنجاح';
+
+  @override
+  String get badgeAlreadyExists => 'توجد شارة بالفعل لهذه اللوحة هذا العام';
+
+  @override
+  String get failedToAddBadge => 'فشل إضافة الشارة. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get invalidateBadge => 'إلغاء الشارة';
+
+  @override
+  String invalidateBadgeConfirm(int year) {
+    return 'هل تريد إلغاء هذه الشارة لعام $year؟';
+  }
+
+  @override
+  String get badgeInvalidated => 'تم إلغاء الشارة';
+
+  @override
+  String get failedToInvalidateBadge => 'فشل إلغاء الشارة';
 }

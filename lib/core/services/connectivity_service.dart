@@ -110,7 +110,12 @@ class ConnectivityService {
   }
 
   /// Do a lightweight HTTP HEAD to verify real internet access
+  /// In dev mode, skip the remote check — having a network interface is enough
+  /// since the app only needs to reach localhost:3000, not the public internet
   Future<bool> _hasRealInternet() async {
+    const env = String.fromEnvironment('ENV', defaultValue: 'prod');
+    if (env == 'dev') return true;
+
     try {
       final dio = Dio(BaseOptions(
         connectTimeout: const Duration(seconds: 5),
