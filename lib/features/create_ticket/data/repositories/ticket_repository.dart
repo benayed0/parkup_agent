@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
@@ -8,6 +9,36 @@ import '../../../auth/data/repositories/auth_repository.dart';
 class TicketRepository {
   final Dio _dio = ApiClient.instance.dio;
 
+  /// Upload a single evidence photo to Cloudinary via the API.
+  /// Returns the secure URL of the uploaded image.
+  Future<String> uploadEvidencePhoto(XFile photo) async {
+    try {
+      final bytes = await photo.readAsBytes();
+      final formData = FormData.fromMap({
+        'photo': MultipartFile.fromBytes(
+          bytes,
+          filename: 'evidence.jpg',
+          contentType: DioMediaType('image', 'jpeg'),
+        ),
+      });
+      final response = await _dio.post(
+        ApiConfig.ticketsEvidenceUpload,
+        data: formData,
+      );
+      final data = response.data as Map<String, dynamic>;
+      if (data['success'] == true) {
+        return data['data']['url'] as String;
+      }
+      throw const ApiException(
+        message: 'Failed to upload evidence photo',
+        statusCode: 500,
+      );
+    } on DioException catch (e) {
+      final message = _extractErrorMessage(e);
+      throw ApiException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
   /// Create a new ticket
   Future<Ticket> createTicket({
     required LicensePlate plate,
@@ -16,6 +47,7 @@ class TicketRepository {
     required double fineAmount,
     required String parkingZoneId,
     String? notes,
+    List<String>? evidencePhotos,
   }) async {
     try {
       // Get current agent ID
@@ -44,6 +76,8 @@ class TicketRepository {
           'agentId': agent.id,
           'parkingZoneId': parkingZoneId,
           'notes': notes,
+          if (evidencePhotos != null && evidencePhotos.isNotEmpty)
+            'evidencePhotos': evidencePhotos,
         },
       );
 

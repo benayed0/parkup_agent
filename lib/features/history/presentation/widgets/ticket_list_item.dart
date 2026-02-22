@@ -114,6 +114,15 @@ class TicketListItem extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
+                        if (ticket.evidencePhotos != null &&
+                            ticket.evidencePhotos!.isNotEmpty) ...[
+                          const Icon(
+                            Icons.photo_camera,
+                            size: 14,
+                            color: AppColors.textTertiary,
+                          ),
+                          const SizedBox(width: 4),
+                        ],
                         Text(ticket.ticketNumber, style: AppTextStyles.caption),
                       ],
                     ),

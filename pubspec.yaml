@@ -40,6 +40,9 @@ dependencies:
   # Path provider for file operations
   path_provider: ^2.1.5
 
+  # Image capture for evidence photos
+  image_picker: ^1.1.2
+
   # Bluetooth thermal printing
   flutter_bluetooth_serial: ^0.4.0 # Classic Bluetooth discovery + connection
   esc_pos_utils: ^1.1.0 # ESC/POS command generation

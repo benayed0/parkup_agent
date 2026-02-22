@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/models/models.dart';
@@ -27,10 +28,11 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
   Position? _position;
   Timer? _debounceTimer;
   int _inputKey = 0; // Key to force rebuild of input widget
-  Ticket? _createdTicket; // Track ticket just created for print flow
-  bool _isPrinting = false;
   bool _isAddingBadge = false;
   bool _isInvalidatingBadge = false;
+  XFile? _evidencePhoto;
+  Uint8List? _evidencePhotoBytes;
+  bool _isUploadingPhoto = false;
 
   // Parking zone selection
   List<ParkingZone> _zones = [];
@@ -368,17 +370,32 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
         : _selectedZone!.prices.pound;
 
     try {
+      // Upload evidence photo first if one was taken
+      List<String>? evidencePhotos;
+      if (_evidencePhoto != null) {
+        setState(() => _isUploadingPhoto = true);
+        try {
+          final url = await ticketRepository.uploadEvidencePhoto(_evidencePhoto!);
+          evidencePhotos = [url];
+        } finally {
+          if (mounted) setState(() => _isUploadingPhoto = false);
+        }
+      }
+
       final ticket = await ticketRepository.createTicket(
         plate: _currentPlate,
         position: ticketPosition,
         reason: reason,
         fineAmount: fineAmount,
         parkingZoneId: _selectedZone!.id,
+        evidencePhotos: evidencePhotos,
       );
 
       if (!mounted) return;
 
       HapticFeedback.heavyImpact();
+      _clearAndReset();
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -389,11 +406,9 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
             ],
           ),
           backgroundColor: AppColors.success,
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 3),
         ),
       );
-
-      setState(() => _createdTicket = ticket);
 
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -420,103 +435,31 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
     }
   }
 
-  Future<void> _printTicket(Ticket ticket) async {
-    final l10n = AppLocalizations.of(context)!;
-
-    if (!printerService.isConnected) {
-      PrinterBottomSheet.show(context);
-      return;
-    }
-
-    setState(() => _isPrinting = true);
-
-    try {
-      // Re-fetch ticket to get QR code data
-      final fullTicket = await ticketRepository.getTicketById(ticket.id);
-      if (!mounted) return;
-
-      final printData = PrintableTicketData.fromTicket(
-        ticket: fullTicket,
-        l10n: l10n,
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Text(l10n.printing)),
-            ],
-          ),
-          action: SnackBarAction(
-            label: l10n.stopPrint,
-            textColor: Colors.white,
-            onPressed: () => printerService.cancelPrint(),
-          ),
-          duration: const Duration(seconds: 30),
-        ),
-      );
-
-      final success = await printerService.printTicket(printData);
-
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      final wasCancelled = printerService.errorMessage == l10n.printCancelled;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            success
-                ? l10n.printSuccess
-                : wasCancelled
-                    ? l10n.printCancelled
-                    : '${l10n.printFailed}: ${printerService.errorMessage ?? l10n.unknownError}',
-          ),
-          backgroundColor: success
-              ? AppColors.success
-              : wasCancelled
-                  ? AppColors.warning
-                  : AppColors.error,
-          duration: Duration(seconds: success ? 3 : 5),
-        ),
-      );
-
-      if (success) {
-        _clearAndReset();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.printFailed),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isPrinting = false);
-      }
-    }
-  }
-
   void _clearAndReset() {
     setState(() {
       _checkResult = null;
-      _createdTicket = null;
       _currentPlate = const LicensePlate.empty();
       _lastCheckedPlate = null;
+      _evidencePhoto = null;
+      _evidencePhotoBytes = null;
       _inputKey++; // Force input widget to rebuild with empty values
     });
+  }
+
+  Future<void> _handleTakePhoto() async {
+    final picker = ImagePicker();
+    final photo = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+      maxWidth: 1920,
+    );
+    if (photo != null && mounted) {
+      final bytes = await photo.readAsBytes();
+      setState(() {
+        _evidencePhoto = photo;
+        _evidencePhotoBytes = bytes;
+      });
+    }
   }
 
   Future<void> _handleAddBadge() async {
@@ -808,6 +751,22 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 
                         CheckResultCard(result: _checkResult!),
 
+                        // Evidence photo — shown when there is an issue to ticket
+                        if (_checkResult!.hasIssue && _selectedZone != null) ...[
+                          const SizedBox(height: 8),
+                          _EvidencePhotoButton(
+                            photoBytes: _evidencePhotoBytes,
+                            isDisabled: _isCreatingTicket || _isUploadingPhoto,
+                            onTap: _handleTakePhoto,
+                            onDelete: _evidencePhoto != null
+                                ? () => setState(() {
+                                      _evidencePhoto = null;
+                                      _evidencePhotoBytes = null;
+                                    })
+                                : null,
+                          ),
+                        ],
+
                         // Badge section — always shown after check if zone is selected
                         if (_selectedZone != null) ...[
                           const SizedBox(height: 8),
@@ -831,74 +790,14 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
 
                         const SizedBox(height: 12),
 
-                        // Post-creation: show Print + Done buttons
-                        if (_createdTicket != null)
-                          Row(
-                            children: [
-                              // Print ticket button
-                              Expanded(
-                                child: SizedBox(
-                                  height: 52,
-                                  child: ElevatedButton.icon(
-                                    onPressed: _isPrinting
-                                        ? null
-                                        : () => _printTicket(_createdTicket!),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primary,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    icon: _isPrinting
-                                        ? const SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : const Icon(Icons.print, size: 22),
-                                    label: Text(
-                                      _isPrinting ? l10n.printing : l10n.print,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              // Done / clear button
-                              Expanded(
-                                child: SizedBox(
-                                  height: 52,
-                                  child: OutlinedButton.icon(
-                                    onPressed: _isPrinting ? null : _clearAndReset,
-                                    style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(color: AppColors.primary, width: 2),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    icon: const Icon(Icons.check_circle_outline, size: 22),
-                                    label: Text(
-                                      l10n.done,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        else ...[
-                          // Only show ticket buttons if vehicle has an issue (not valid) and zone is selected
-                          if (_checkResult!.hasIssue && _selectedZone != null) ...[
+                        // Only show ticket buttons if vehicle has an issue (not valid) and zone is selected
+                        if (_checkResult!.hasIssue && _selectedZone != null) ...[
+                          // Loading state while uploading photo or creating ticket
+                          if (_isUploadingPhoto || _isCreatingTicket)
+                            _TicketLoadingIndicator(
+                              isUploading: _isUploadingPhoto,
+                            )
+                          else ...[
                             // Ticket reason buttons - large and easy to tap
                             Row(
                               children: [
@@ -908,7 +807,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                                     fineAmount: _selectedZone!.prices.carSabot,
                                     icon: Icons.lock,
                                     color: AppColors.warning,
-                                    isLoading: _isCreatingTicket,
+                                    isLoading: false,
                                     onPressed: () => _handleCreateTicket(TicketReason.carSabot),
                                   ),
                                 ),
@@ -919,7 +818,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                                     fineAmount: _selectedZone!.prices.pound,
                                     icon: Icons.local_shipping,
                                     color: AppColors.error,
-                                    isLoading: _isCreatingTicket,
+                                    isLoading: false,
                                     onPressed: () => _handleCreateTicket(TicketReason.pound),
                                   ),
                                 ),
@@ -936,7 +835,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                                 child: SizedBox(
                                   height: 52,
                                   child: ElevatedButton.icon(
-                                    onPressed: _isCreatingTicket || _isLoading ? null : _handleManualCheck,
+                                    onPressed: _isCreatingTicket || _isUploadingPhoto || _isLoading ? null : _handleManualCheck,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primary,
                                       foregroundColor: Colors.white,
@@ -961,7 +860,7 @@ class _CheckVehiclePageState extends State<CheckVehiclePage> {
                                 child: SizedBox(
                                   height: 52,
                                   child: OutlinedButton.icon(
-                                    onPressed: _isCreatingTicket ? null : _clearAndReset,
+                                    onPressed: _isCreatingTicket || _isUploadingPhoto ? null : _clearAndReset,
                                     style: OutlinedButton.styleFrom(
                                       side: const BorderSide(color: AppColors.primary, width: 2),
                                       shape: RoundedRectangleBorder(
@@ -1192,6 +1091,150 @@ class _ReasonButton extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Loading indicator shown while uploading a photo or creating a ticket.
+class _TicketLoadingIndicator extends StatelessWidget {
+  final bool isUploading;
+
+  const _TicketLoadingIndicator({required this.isUploading});
+
+  @override
+  Widget build(BuildContext context) {
+    final label = isUploading ? 'Uploading photo…' : 'Creating ticket…';
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2.5),
+          ),
+          const SizedBox(width: 14),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Evidence photo capture button.
+/// Shows a dashed camera tile when no photo is taken.
+/// Shows a thumbnail with a checkmark when a photo has been selected.
+class _EvidencePhotoButton extends StatelessWidget {
+  final Uint8List? photoBytes;
+  final bool isDisabled;
+  final VoidCallback onTap;
+  final VoidCallback? onDelete;
+
+  const _EvidencePhotoButton({
+    required this.photoBytes,
+    required this.isDisabled,
+    required this.onTap,
+    this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasPhoto = photoBytes != null;
+
+    return GestureDetector(
+      onTap: isDisabled ? null : onTap,
+      child: Container(
+        width: double.infinity,
+        height: 72,
+        decoration: BoxDecoration(
+          color: hasPhoto
+              ? AppColors.success.withValues(alpha: 0.08)
+              : AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: hasPhoto
+                ? AppColors.success.withValues(alpha: 0.5)
+                : AppColors.border,
+            width: hasPhoto ? 2 : 1.5,
+          ),
+        ),
+        child: hasPhoto
+            ? Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.horizontal(
+                      left: Radius.circular(10),
+                    ),
+                    child: Image.memory(
+                      photoBytes!,
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Icon(Icons.check_circle, color: AppColors.success, size: 24),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Evidence photo added',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: isDisabled ? null : onTap,
+                    icon: const Icon(Icons.cameraswitch_outlined, size: 20),
+                    color: AppColors.textTertiary,
+                    tooltip: 'Retake',
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  IconButton(
+                    onPressed: isDisabled ? null : onDelete,
+                    icon: const Icon(Icons.delete_outline, size: 20),
+                    color: AppColors.error,
+                    tooltip: 'Remove photo',
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  const SizedBox(width: 4),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.camera_alt_outlined,
+                    size: 28,
+                    color: isDisabled ? AppColors.textTertiary : AppColors.primary,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Add evidence photo (optional)',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: isDisabled ? AppColors.textTertiary : AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

@@ -471,6 +471,11 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                     // Location
                     _buildLocationRow(l10n, ticket),
 
+                    // Evidence photos
+                    if (ticket.evidencePhotos != null &&
+                        ticket.evidencePhotos!.isNotEmpty)
+                      _buildEvidencePhotos(ticket.evidencePhotos!),
+
                     const SizedBox(height: 24),
                     const Divider(),
                     const SizedBox(height: 16),
@@ -597,6 +602,62 @@ class _TicketPrintPreviewPageState extends State<TicketPrintPreviewPage> {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEvidencePhotos(List<String> urls) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              const Icon(Icons.photo_camera, size: 16, color: AppColors.textSecondary),
+              const SizedBox(width: 6),
+              Text(
+                'Evidence Photo${urls.length > 1 ? 's' : ''}',
+                style: AppTextStyles.bodySmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ...urls.map(
+            (url) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  url,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
+                    return Container(
+                      height: 160,
+                      color: AppColors.surface,
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                  errorBuilder: (context, _, __) => Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.broken_image_outlined, color: AppColors.textTertiary),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],
